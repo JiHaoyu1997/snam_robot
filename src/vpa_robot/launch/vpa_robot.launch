@@ -1,0 +1,13 @@
+<launch>
+    <arg name="robot_name"      value="$(env robot_name)"/>
+    <arg name="test_mode"       default="false"/> 
+    <arg name="acc_on"          default="false"/>
+    <arg name="publish_mask"    default="false"/>
+    <group ns="$(arg robot_name)">
+        <include file="$(find vpa_robot_vision)/launch/robot_vision.launch" />
+        <include file="$(find vpa_robot_decision)/launch/robot_decision.launch" />
+        <include file="$(find vpa_robot_interface)/launch/vpa_camera.launch"/>
+        <include file="$(find vpa_robot_interface)/launch/vpa_traction_start.launch"/>
+        <node name="republish_result" pkg="image_transport" type="republish" args="raw in:=result_image compressed out:=result_image" />
+    </group>  
+</launch>

@@ -1,0 +1,5 @@
+<launch>
+    <node name="robot_vision" pkg="vpa_robot_vision" type="robot_vision.py" output="screen">
+        <param name="robot_name" value="$(arg robot_name)"/>
+    </node>
+</launch>

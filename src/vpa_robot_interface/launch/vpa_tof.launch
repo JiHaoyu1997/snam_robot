@@ -1,0 +1,9 @@
+<launch>
+    <arg name="interface" default="i2c"/>
+    <group if="$(eval interface== 'i2c')">
+        <node name="tof_sensor" pkg="vpa_robot_interface" type="tof_driver_i2c.py" output="screen" required="true"/>
+    </group>
+    <group if="$(eval interface== 'usb')">
+        <node name="tof_sensor_usart" pkg="vpa_robot_interface" type="tof_driver_usart.py" output="screen" required="true"/>
+    </group>   
+</launch>

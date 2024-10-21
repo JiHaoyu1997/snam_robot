@@ -1,0 +1,7 @@
+<launch>
+    <arg name="throttle_input" default = "False"/>
+    <node name="traction_wheels" pkg="vpa_robot_interface" type="wheel_driver.py" output="screen" required="true">
+        <param name="direct_mode" value ="$(arg throttle_input)"/>
+    </node>
+    <node name="traction_encdors" pkg="vpa_robot_interface" type="wheel_encoders.py" output="screen" required="true"/>
+</launch>
