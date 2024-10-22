@@ -8,6 +8,9 @@
 
 # modified environment variables
 export CMAKE_PREFIX_PATH="/home/student/snam_robot/devel:$CMAKE_PREFIX_PATH"
+export LD_LIBRARY_PATH="/home/student/snam_robot/devel/lib:$LD_LIBRARY_PATH"
+export PKG_CONFIG_PATH="/home/student/snam_robot/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
 export PWD='/home/student/snam_robot/build'
+export PYTHONPATH="/home/student/snam_robot/devel/lib/python3/dist-packages:$PYTHONPATH"
 export ROSLISP_PACKAGE_DIRECTORIES="/home/student/snam_robot/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
 export ROS_PACKAGE_PATH="/home/student/snam_robot/src:$ROS_PACKAGE_PATH"

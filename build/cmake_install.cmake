@@ -131,6 +131,11 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/student/snam_robot/build/gtest/cmake_install.cmake")
+  include("/home/student/snam_robot/build/vpa_robot/cmake_install.cmake")
+  include("/home/student/snam_robot/build/vpa_robot_decision/cmake_install.cmake")
+  include("/home/student/snam_robot/build/vpa_robot_interface/cmake_install.cmake")
+  include("/home/student/snam_robot/build/vpa_robot_task/cmake_install.cmake")
+  include("/home/student/snam_robot/build/vpa_robot_vision/cmake_install.cmake")
 
 endif()
 

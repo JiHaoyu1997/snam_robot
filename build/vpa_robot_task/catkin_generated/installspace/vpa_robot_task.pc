@@ -1,0 +1,8 @@
+prefix=/home/student/snam_robot/install
+
+Name: vpa_robot_task
+Description: Description of vpa_robot_task
+Version: 0.0.0
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib 
+Requires: 

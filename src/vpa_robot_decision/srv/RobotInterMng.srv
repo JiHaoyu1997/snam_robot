@@ -1,0 +1,7 @@
+std_msgs/Header header
+string robot_name
+int8 from_inter_index
+int8 to_inter_index
+---
+bool success
+string message

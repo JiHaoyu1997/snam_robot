@@ -1,2 +1,2 @@
-
+vpa_robot:vpa_robot_decision:vpa_robot_interface:vpa_robot_task:vpa_robot_vision
 -DCATKIN_DEVEL_PREFIX=/home/student/snam_robot/devel -DCMAKE_INSTALL_PREFIX=/home/student/snam_robot/install -G Unix Makefiles

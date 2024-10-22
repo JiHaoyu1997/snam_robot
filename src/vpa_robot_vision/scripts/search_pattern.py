@@ -27,16 +27,17 @@ def search_buffer_line(mask) -> list:
 
     _height_center = int(mask.shape[0]/2)
     _line_center   = 0
-    for i in range(low_bound,upper_bound,15):
+
+    for i in range(low_bound, upper_bound, 15):
         # search this part of the picture
         _line = np.nonzero(mask[_height_center + i,:])[0]
         
         if len(_line) > 8 and len(_line) < 50:
             # there are proper amount of points at this part
             _line_center = int(np.mean(_line))        
-            return _line_center,i + _height_center
+            return _line_center, _height_center + i
     
-    return None,None
+    return None, None
     
 def search_line(hsv_image, hsv_space: HSVSpace) -> Union[int, float]:
     mask = hsv_space.apply_mask(hsv_image)

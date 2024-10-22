@@ -1,0 +1,8 @@
+\subsubsection usage Usage
+\verbatim
+<node name="vpa_robot_interface" pkg="vpa_robot_interface" type="vpa_robot_interface">
+  <param name="kp" type="double" value="0.1" />
+  <param name="ki" type="double" value="0.005" />
+</node>
+\endverbatim
+

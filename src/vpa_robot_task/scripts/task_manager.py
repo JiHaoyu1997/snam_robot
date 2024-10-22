@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
 import rospy
+from std_msgs.msg import Bool
+
+from vpa_robot_task.srv import AssignTask, AssignTaskRequest, AssignTaskResponse
 
 class TaskManager:
     # Properties
@@ -9,40 +12,60 @@ class TaskManager:
         rospy.init_node('task_manager')
 
         # get the robot name, by default it will be the hostname of the robot
-        self._robot_name     = rospy.get_param('~robot_name', 'db19')
+        self.robot_name = rospy.get_param('~robot_name', 'db19')
+
+        # Task Lits
+        self.task_list = []
 
         # Intersection Robot List
         self.inter_info = []
 
         # Publishers
-        
-        
+        self.local_brake_pub = rospy.Publisher('local_brake', Bool, queue_size=1)
 
         # Subscribers
 
 
         # Servers
+ 
 
-
-        # ServiceProxy
+        # Clients
+        self.assgin_task_client = rospy.ServiceProxy('/assgin_task_srv', AssignTask)
 
         
         # Init Log
         rospy.loginfo('Task Manager is Online')
 
-        # 
+        # Start
+        self.status_init()
 
-    # Methods    
-    def _request_task_init(self):
-        rospy.loginfo("%s: Waiting for task server", self._robot_name)
-        rospy.wait_for_service("/AssignTask")
-        self._task_proxy = rospy.ServiceProxy("/AssignTask", AssignTask)
-        rospy.loginfo("%s: Task server online", self._robot_name)
+    # Methods
+    def status_init(self):
+        if self.request_task():
+            rospy.loginfo("%s: already confirmed Task List and will release local Brake", self.robot_name)
+            msg = Bool()
+            msg.data = False
+            self.local_brake_pub.publish(msg)
+            
+    def request_task(self) -> list:
+        rospy.loginfo("%s: Waiting for Task Assign Server", self.robot_name)
+        rospy.wait_for_service("/assgin_task_srv")
+        try:
+            resp: AssignTaskResponse = self.assgin_task_client.call(self.robot_name)
+            # TODO: task list valid check
+            if self.validate_task_list(resp.task_list):
+                self.task_list = resp.task_list
+                return True
+            else:
+                pass           
+        except rospy.ServiceException as e:
+            rospy.logerr(f'{self.robot_name}: Service call fail: {e}')
     
-    def _request_task_service(self,task_index) -> list:
-        rospy.loginfo_once('%s: arrive ready line, inquiring task',self._robot_name)
-        resp = self._task_proxy(self._robot_name,task_index)
-        return resp.node_list
+    def update_task(self) -> list:
+        pass
+
+    def validate_task_list(self, task_list):
+        return True
     
 if __name__ == '__main__':
     N = TaskManager()

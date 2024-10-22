@@ -1,5 +1,10 @@
 <launch>
-    <node name="robot_vision" pkg="vpa_robot_vision" type="robot_vision.py" output="screen">
+    <arg name="width" default="320"/>
+    <arg name="height" default="240"/>
+    <arg name="robot_name"/>
+    <node name="robot_vision" pkg="vpa_robot_vision" type="visual_detector.py" output="screen">
         <param name="robot_name" value="$(arg robot_name)"/>
+        <param name="image_width" value="$(arg width)"/>
+        <param name="image_height" value="$(arg height)"/>
     </node>
 </launch>
