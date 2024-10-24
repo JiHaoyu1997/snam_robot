@@ -55,6 +55,7 @@ def inter_pi_control(ref, sig, vf=0.3,vs=0.3):
         t_gap = 0
     else:
         t_gap = rospy.get_time() - last_time_called
+        
     last_time_called = rospy.get_time()
     
     kp = 5

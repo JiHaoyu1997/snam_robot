@@ -11,7 +11,7 @@ from hsv import HSVSpace, from_cv_to_hsv
 from pid_controller import pid_controller
 
 # Msg
-from std_msgs.msg import Bool
+from std_msgs.msg import Bool, Int8MultiArray
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Image 
 
@@ -38,6 +38,9 @@ class RobotVision:
         # Robot Name   
         self.robot_name = rospy.get_param('~robot_name', 'db19')
 
+        # Current route (two intersections: current and next)
+        self.curr_route = []
+
         # Current Zone
         self.current_zone = Zone.BUFFER_AREA
 
@@ -46,9 +49,6 @@ class RobotVision:
 
         # Stop Operation
         self.stop = False
-
-        # No Task List Status
-        self.no_task_list = True
 
         # Simple ACC Function: on or off, default on
         self._acc_mode = bool(rospy.get_param('~acc_on', True))
@@ -67,12 +67,12 @@ class RobotVision:
         self.cmd_vel_from_img_pub = rospy.Publisher('cmd_vel_from_img', Twist, queue_size=1)
 
         # Subscribers
-        self.image_raw_sub = rospy.Subscriber("robot_cam/image_raw", Image, self.image_raw_cb)
+        self.curr_route_sub = rospy.Subscriber('curr_route', Int8MultiArray, self.curr_route_sub_cb)
+        self.image_raw_sub = rospy.Subscriber("robot_cam/image_raw", Image, self.image_raw_sub_cb)
 
         # Servers
 
-        # Clients
-        
+        # Clients        
 
         rospy.loginfo('Visual Detector is Online')
 
@@ -132,8 +132,12 @@ class RobotVision:
         # self._exit_line_hsv   = HSVSpace( 50,  20, 240, 140, 220, 130)
         
         # self.task_line_hsv    = HSVSpace(100,  50, 255,   3, 255, 150)
+    
+    def curr_route_sub_cb(self, route_msg: Int8MultiArray):
+        if route_msg:
+            self.curr_route = route_msg.data
 
-    def image_raw_cb(self, data: Image):
+    def image_raw_sub_cb(self, data: Image):
         """Step1 HSV IMAGE"""
         # the function is supposed to be called at about 10Hz based on fps settins  
         try:
@@ -153,7 +157,16 @@ class RobotVision:
 
         """Step2 FROM HSV IMAGE TO TARGET COORDINATE"""
         # BUFFER AREA
-        if self.current_zone == Zone.BUFFER_AREA:
+        if self.curr_route == [6, 6]:
+            dis2ready = search_pattern.search_line(cv_hsv_img, self.ready_line_hsv)
+            if dis2ready > 25:
+                self.stop = True
+                return
+            
+        if self.curr_route[0] == [6]:
+            # 
+            self.current_zone == Zone.BUFFER_AREA
+            
             # Buffer Mask Image
             buffer_line_mask_img = self.buffer_line_hsv.apply_mask(cv_hsv_img)
             
@@ -166,19 +179,13 @@ class RobotVision:
             else:
                 target_x = self.image_width / 2 
             
-            # if get new Task List, just along the buffer line to inter.
-            if not self.no_task_list:
-                # detect intersection boundary line
-                self.detect_inter_boundary_line(cv_hsv_img)                    
-            # else stop at the ready line
-            else:
-                # check ready line
-                dis2ready = search_pattern.search_line(cv_hsv_img, self.ready_line_hsv)
-                if dis2ready > 25:
-                    self.stop = True
+            # 
+            self.detect_inter_boundary_line(cv_hsv_img)                    
 
         # INTERSECTION AREA
-        elif self.current_zone == Zone.INTERSECTION:
+        else: 
+            
+            self.current_zone == Zone.INTERSECTION:
             # detect lane line
             pass
         
@@ -212,8 +219,6 @@ class RobotVision:
     def detect_inter_boundary_line(self, cv_hsv_img: Image):
         dis2bound = search_pattern.search_line(cv_hsv_img, self.inter_boundary_line_hsv)
         corss_inter_boundary = dis2bound > 25
-        if corss_inter_boundary:
-            self.current_zone = Zone.INTERSECTION
         self.inter_boundary_line_detect_pub.publish(corss_inter_boundary)
     
     def pub_cmd_vel_from_img(self, v_x, omega_z, v_factor):

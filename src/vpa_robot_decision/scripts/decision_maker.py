@@ -2,7 +2,7 @@
 
 import rospy
 
-from std_msgs.msg import Bool
+from std_msgs.msg import Bool, Int8MultiArray
 
 from geometry_msgs.msg import Twist
 
@@ -17,16 +17,27 @@ class DecisionMaker:
 
         # Intersection Info Init
         self.robot_name = rospy.get_param('~robot_name', 'db19')
-        self.task_list = []
+
+        # Current route (two intersections: current and next)
+        self.curr_route = []
+
+        # 
         self.inter_local_index = 0
+
+        # 
         self.robot_inter_info_local = []
 
+        # 
         self.cross_inter_boundary_line_count = 0
+        
+        # 
         self.entered = False
+        
         # Publishers
         self.cmd_vel_pub= rospy.Publisher('cmd_vel', Twist, queue_size=1)
 
         # Subscribers
+        self.curr_route_sub = rospy.Subscriber('curr_route', Int8MultiArray, self.curr_route_sub_cb)
         self.cmd_vel_from_img_sub = rospy.Publisher('cmd_vel_from_img', Twist, self.cmd_vel_from_img_sub_cb)
         self.inter_boundary_line_detect_sub = rospy.Subscriber('inter_boundary_line_detect', Bool, self.inter_boundary_line_detect_sub_cb) 
         self.robot_inter_info_sub = rospy.Subscriber('/robot_inter_info', RobotInterInfo, self.robot_inter_info_sub_cb)
@@ -49,6 +60,7 @@ class DecisionMaker:
         self.cmd_vel_pub.publish(msg)
         
     def inter_boundary_line_detect_sub_cb(self, msg: Bool):
+        """ req new robot inter info """
         # 
         if msg.data:
             self.cross_inter_boundary_line_count += 1
