@@ -142,6 +142,11 @@ class RobotVision:
             self.curr_route = route_msg.data
 
     def image_raw_sub_cb(self, data: Image):
+        if self.curr_route == [0, 0]:
+            return
+        
+        target_x = self.image_width / 2 
+
         """Step1 CONVERT RAW IMAGE TO HSV IMAGE"""
         # the function is supposed to be called at about 10Hz based on fps settins  
         try:
@@ -171,21 +176,23 @@ class RobotVision:
                 self.stop = True
                 return
             
-        if self.curr_route[0] == [6]:
+        if self.curr_route[0] == 6:
             # 
             self.current_zone == Zone.BUFFER_AREA
             
             # Buffer Mask Image
             buffer_line_mask_img = self.buffer_line_hsv.apply_mask(cv_hsv_img)
+            self.pub_mask_image(mask_img=buffer_line_mask_img)
             
             # buffer line center ==> target coordinate
             buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(buffer_line_mask_img)
             
             if not buffer_line_x == None:
                 cv2.circle(cv_img, (buffer_line_x, buffer_line_y), 5, (255, 100, 0), 5)
+                self.pub_img(cv_img=cv_img)
                 target_x = buffer_line_x
             else:
-                target_x = self.image_width / 2               
+                target_x = self.image_width / 2      
 
         # INTERSECTION AREA
         else: 

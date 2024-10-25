@@ -72,7 +72,8 @@ class DecisionMaker:
 
         # 
         if self.curr_route == new_route:
-            rospy.loginfo("Current route unchanged.")
+            # rospy.loginfo("Current route unchanged.")
+            pass
         elif self.curr_route[1] == new_route[0]:  # Valid route update
             last_inter_id, curr_inter_id = self.curr_route
             self.update_global_inter_info(last_inter_id, curr_inter_id)
