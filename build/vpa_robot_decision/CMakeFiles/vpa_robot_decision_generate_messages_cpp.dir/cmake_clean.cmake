@@ -1,6 +1,7 @@
 file(REMOVE_RECURSE
-  "/home/student/snam_robot/devel/include/vpa_robot_decision/RobotInterInfo.h"
-  "/home/student/snam_robot/devel/include/vpa_robot_decision/RobotInterMng.h"
+  "/home/student/snam_robot/devel/include/vpa_robot_decision/InterInfo.h"
+  "/home/student/snam_robot/devel/include/vpa_robot_decision/InterMng.h"
+  "/home/student/snam_robot/devel/include/vpa_robot_decision/RobotInfo.h"
   "CMakeFiles/vpa_robot_decision_generate_messages_cpp"
 )
 

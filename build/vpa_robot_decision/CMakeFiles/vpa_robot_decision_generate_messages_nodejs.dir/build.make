@@ -53,24 +53,32 @@ CMAKE_BINARY_DIR = /home/student/snam_robot/build
 # Include the progress variables for this target.
 include vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/progress.make
 
-vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs: /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/msg/RobotInterInfo.js
-vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs: /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/srv/RobotInterMng.js
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs: /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/msg/RobotInfo.js
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs: /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/msg/InterInfo.js
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs: /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/srv/InterMng.js
 
 
-/home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/msg/RobotInterInfo.js: /opt/ros/noetic/lib/gennodejs/gen_nodejs.py
-/home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/msg/RobotInterInfo.js: /home/student/snam_robot/src/vpa_robot_decision/msg/RobotInterInfo.msg
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating Javascript code from vpa_robot_decision/RobotInterInfo.msg"
-	cd /home/student/snam_robot/build/vpa_robot_decision && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gennodejs/cmake/../../../lib/gennodejs/gen_nodejs.py /home/student/snam_robot/src/vpa_robot_decision/msg/RobotInterInfo.msg -Ivpa_robot_decision:/home/student/snam_robot/src/vpa_robot_decision/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p vpa_robot_decision -o /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/msg
+/home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/msg/RobotInfo.js: /opt/ros/noetic/lib/gennodejs/gen_nodejs.py
+/home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/msg/RobotInfo.js: /home/student/snam_robot/src/vpa_robot_decision/msg/RobotInfo.msg
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating Javascript code from vpa_robot_decision/RobotInfo.msg"
+	cd /home/student/snam_robot/build/vpa_robot_decision && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gennodejs/cmake/../../../lib/gennodejs/gen_nodejs.py /home/student/snam_robot/src/vpa_robot_decision/msg/RobotInfo.msg -Ivpa_robot_decision:/home/student/snam_robot/src/vpa_robot_decision/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p vpa_robot_decision -o /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/msg
 
-/home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/srv/RobotInterMng.js: /opt/ros/noetic/lib/gennodejs/gen_nodejs.py
-/home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/srv/RobotInterMng.js: /home/student/snam_robot/src/vpa_robot_decision/srv/RobotInterMng.srv
-/home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/srv/RobotInterMng.js: /opt/ros/noetic/share/std_msgs/msg/Header.msg
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Generating Javascript code from vpa_robot_decision/RobotInterMng.srv"
-	cd /home/student/snam_robot/build/vpa_robot_decision && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gennodejs/cmake/../../../lib/gennodejs/gen_nodejs.py /home/student/snam_robot/src/vpa_robot_decision/srv/RobotInterMng.srv -Ivpa_robot_decision:/home/student/snam_robot/src/vpa_robot_decision/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p vpa_robot_decision -o /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/srv
+/home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/msg/InterInfo.js: /opt/ros/noetic/lib/gennodejs/gen_nodejs.py
+/home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/msg/InterInfo.js: /home/student/snam_robot/src/vpa_robot_decision/msg/InterInfo.msg
+/home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/msg/InterInfo.js: /home/student/snam_robot/src/vpa_robot_decision/msg/RobotInfo.msg
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Generating Javascript code from vpa_robot_decision/InterInfo.msg"
+	cd /home/student/snam_robot/build/vpa_robot_decision && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gennodejs/cmake/../../../lib/gennodejs/gen_nodejs.py /home/student/snam_robot/src/vpa_robot_decision/msg/InterInfo.msg -Ivpa_robot_decision:/home/student/snam_robot/src/vpa_robot_decision/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p vpa_robot_decision -o /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/msg
+
+/home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/srv/InterMng.js: /opt/ros/noetic/lib/gennodejs/gen_nodejs.py
+/home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/srv/InterMng.js: /home/student/snam_robot/src/vpa_robot_decision/srv/InterMng.srv
+/home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/srv/InterMng.js: /opt/ros/noetic/share/std_msgs/msg/Header.msg
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Generating Javascript code from vpa_robot_decision/InterMng.srv"
+	cd /home/student/snam_robot/build/vpa_robot_decision && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gennodejs/cmake/../../../lib/gennodejs/gen_nodejs.py /home/student/snam_robot/src/vpa_robot_decision/srv/InterMng.srv -Ivpa_robot_decision:/home/student/snam_robot/src/vpa_robot_decision/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p vpa_robot_decision -o /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/srv
 
 vpa_robot_decision_generate_messages_nodejs: vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs
-vpa_robot_decision_generate_messages_nodejs: /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/msg/RobotInterInfo.js
-vpa_robot_decision_generate_messages_nodejs: /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/srv/RobotInterMng.js
+vpa_robot_decision_generate_messages_nodejs: /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/msg/RobotInfo.js
+vpa_robot_decision_generate_messages_nodejs: /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/msg/InterInfo.js
+vpa_robot_decision_generate_messages_nodejs: /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/srv/InterMng.js
 vpa_robot_decision_generate_messages_nodejs: vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/build.make
 
 .PHONY : vpa_robot_decision_generate_messages_nodejs

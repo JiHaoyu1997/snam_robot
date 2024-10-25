@@ -1,1 +1,2 @@
-from ._RobotInterInfo import *
+from ._InterInfo import *
+from ._RobotInfo import *

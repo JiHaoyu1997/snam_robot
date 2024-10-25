@@ -1,1 +1,1 @@
-from ._RobotInterMng import *
+from ._InterMng import *

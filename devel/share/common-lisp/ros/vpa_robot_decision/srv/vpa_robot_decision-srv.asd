@@ -5,6 +5,6 @@
   :depends-on (:roslisp-msg-protocol :roslisp-utils :std_msgs-msg
 )
   :components ((:file "_package")
-    (:file "RobotInterMng" :depends-on ("_package_RobotInterMng"))
-    (:file "_package_RobotInterMng" :depends-on ("_package"))
+    (:file "InterMng" :depends-on ("_package_InterMng"))
+    (:file "_package_InterMng" :depends-on ("_package"))
   ))

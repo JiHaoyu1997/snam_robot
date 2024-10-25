@@ -1,8 +1,8 @@
 
 "use strict";
 
-let RobotInterMng = require('./RobotInterMng.js')
+let InterMng = require('./InterMng.js')
 
 module.exports = {
-  RobotInterMng: RobotInterMng,
+  InterMng: InterMng,
 };

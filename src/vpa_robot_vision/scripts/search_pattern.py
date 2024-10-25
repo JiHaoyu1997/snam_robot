@@ -46,7 +46,7 @@ def search_line(hsv_image, hsv_space: HSVSpace) -> Union[int, float]:
     width_center = int(hsv_image.shape[1]/2)
 
     point = np.nonzero(mask[lower_bound : upper_bound, width_center - 50])
-    return len(point[0])
+    # return len(point[0])
 
     for i in range(-50, 100, 50):
         point = np.nonzero(mask[lower_bound : upper_bound, width_center + i])

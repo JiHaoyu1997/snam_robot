@@ -1,8 +1,10 @@
 
 "use strict";
 
-let RobotInterInfo = require('./RobotInterInfo.js');
+let InterInfo = require('./InterInfo.js');
+let RobotInfo = require('./RobotInfo.js');
 
 module.exports = {
-  RobotInterInfo: RobotInterInfo,
+  InterInfo: InterInfo,
+  RobotInfo: RobotInfo,
 };

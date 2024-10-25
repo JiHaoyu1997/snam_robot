@@ -91,9 +91,9 @@ endif()
 # flag project as catkin-based to distinguish if a find_package()-ed project is a catkin project
 set(vpa_robot_vision_FOUND_CATKIN_PROJECT TRUE)
 
-if(NOT " " STREQUAL " ")
+if(NOT "include " STREQUAL " ")
   set(vpa_robot_vision_INCLUDE_DIRS "")
-  set(_include_dirs "")
+  set(_include_dirs "include")
   if(NOT " " STREQUAL " ")
     set(_report "Check the issue tracker '' and consider creating a ticket if the problem has not been reported yet.")
   elseif(NOT " " STREQUAL " ")
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /home/student/snam_robot/install/lib;/home/student/snam_run/snam_ws/devel/lib;/home/student/catkin_ws/devel/lib;/opt/ros/noetic/lib)
+    foreach(path /home/student/snam_robot/install/lib;/home/student/snam_robot/devel/lib;/home/student/snam_run/snam_ws/devel/lib;/home/student/catkin_ws/devel/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
@@ -177,7 +177,7 @@ foreach(library ${libraries})
   endif()
 endforeach()
 
-set(vpa_robot_vision_EXPORTED_TARGETS "")
+set(vpa_robot_vision_EXPORTED_TARGETS "vpa_robot_vision_generate_messages_cpp;vpa_robot_vision_generate_messages_eus;vpa_robot_vision_generate_messages_lisp;vpa_robot_vision_generate_messages_nodejs;vpa_robot_vision_generate_messages_py")
 # create dummy targets for exported code generation targets to make life of users easier
 foreach(t ${vpa_robot_vision_EXPORTED_TARGETS})
   if(NOT TARGET ${t})

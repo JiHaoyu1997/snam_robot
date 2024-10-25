@@ -53,24 +53,32 @@ CMAKE_BINARY_DIR = /home/student/snam_robot/build
 # Include the progress variables for this target.
 include vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_lisp.dir/progress.make
 
-vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_lisp: /home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/msg/RobotInterInfo.lisp
-vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_lisp: /home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/srv/RobotInterMng.lisp
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_lisp: /home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/msg/RobotInfo.lisp
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_lisp: /home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/msg/InterInfo.lisp
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_lisp: /home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/srv/InterMng.lisp
 
 
-/home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/msg/RobotInterInfo.lisp: /opt/ros/noetic/lib/genlisp/gen_lisp.py
-/home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/msg/RobotInterInfo.lisp: /home/student/snam_robot/src/vpa_robot_decision/msg/RobotInterInfo.msg
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating Lisp code from vpa_robot_decision/RobotInterInfo.msg"
-	cd /home/student/snam_robot/build/vpa_robot_decision && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/student/snam_robot/src/vpa_robot_decision/msg/RobotInterInfo.msg -Ivpa_robot_decision:/home/student/snam_robot/src/vpa_robot_decision/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p vpa_robot_decision -o /home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/msg
+/home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/msg/RobotInfo.lisp: /opt/ros/noetic/lib/genlisp/gen_lisp.py
+/home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/msg/RobotInfo.lisp: /home/student/snam_robot/src/vpa_robot_decision/msg/RobotInfo.msg
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating Lisp code from vpa_robot_decision/RobotInfo.msg"
+	cd /home/student/snam_robot/build/vpa_robot_decision && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/student/snam_robot/src/vpa_robot_decision/msg/RobotInfo.msg -Ivpa_robot_decision:/home/student/snam_robot/src/vpa_robot_decision/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p vpa_robot_decision -o /home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/msg
 
-/home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/srv/RobotInterMng.lisp: /opt/ros/noetic/lib/genlisp/gen_lisp.py
-/home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/srv/RobotInterMng.lisp: /home/student/snam_robot/src/vpa_robot_decision/srv/RobotInterMng.srv
-/home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/srv/RobotInterMng.lisp: /opt/ros/noetic/share/std_msgs/msg/Header.msg
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Generating Lisp code from vpa_robot_decision/RobotInterMng.srv"
-	cd /home/student/snam_robot/build/vpa_robot_decision && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/student/snam_robot/src/vpa_robot_decision/srv/RobotInterMng.srv -Ivpa_robot_decision:/home/student/snam_robot/src/vpa_robot_decision/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p vpa_robot_decision -o /home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/srv
+/home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/msg/InterInfo.lisp: /opt/ros/noetic/lib/genlisp/gen_lisp.py
+/home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/msg/InterInfo.lisp: /home/student/snam_robot/src/vpa_robot_decision/msg/InterInfo.msg
+/home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/msg/InterInfo.lisp: /home/student/snam_robot/src/vpa_robot_decision/msg/RobotInfo.msg
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Generating Lisp code from vpa_robot_decision/InterInfo.msg"
+	cd /home/student/snam_robot/build/vpa_robot_decision && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/student/snam_robot/src/vpa_robot_decision/msg/InterInfo.msg -Ivpa_robot_decision:/home/student/snam_robot/src/vpa_robot_decision/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p vpa_robot_decision -o /home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/msg
+
+/home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/srv/InterMng.lisp: /opt/ros/noetic/lib/genlisp/gen_lisp.py
+/home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/srv/InterMng.lisp: /home/student/snam_robot/src/vpa_robot_decision/srv/InterMng.srv
+/home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/srv/InterMng.lisp: /opt/ros/noetic/share/std_msgs/msg/Header.msg
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Generating Lisp code from vpa_robot_decision/InterMng.srv"
+	cd /home/student/snam_robot/build/vpa_robot_decision && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/student/snam_robot/src/vpa_robot_decision/srv/InterMng.srv -Ivpa_robot_decision:/home/student/snam_robot/src/vpa_robot_decision/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p vpa_robot_decision -o /home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/srv
 
 vpa_robot_decision_generate_messages_lisp: vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_lisp
-vpa_robot_decision_generate_messages_lisp: /home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/msg/RobotInterInfo.lisp
-vpa_robot_decision_generate_messages_lisp: /home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/srv/RobotInterMng.lisp
+vpa_robot_decision_generate_messages_lisp: /home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/msg/RobotInfo.lisp
+vpa_robot_decision_generate_messages_lisp: /home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/msg/InterInfo.lisp
+vpa_robot_decision_generate_messages_lisp: /home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_decision/srv/InterMng.lisp
 vpa_robot_decision_generate_messages_lisp: vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_lisp.dir/build.make
 
 .PHONY : vpa_robot_decision_generate_messages_lisp

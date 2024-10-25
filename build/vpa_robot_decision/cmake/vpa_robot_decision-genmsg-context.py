@@ -1,7 +1,7 @@
 # generated from genmsg/cmake/pkg-genmsg.context.in
 
-messages_str = "/home/student/snam_robot/src/vpa_robot_decision/msg/RobotInterInfo.msg"
-services_str = "/home/student/snam_robot/src/vpa_robot_decision/srv/RobotInterMng.srv"
+messages_str = "/home/student/snam_robot/src/vpa_robot_decision/msg/RobotInfo.msg;/home/student/snam_robot/src/vpa_robot_decision/msg/InterInfo.msg"
+services_str = "/home/student/snam_robot/src/vpa_robot_decision/srv/InterMng.srv"
 pkg_name = "vpa_robot_decision"
 dependencies_str = "std_msgs"
 langs = "gencpp;geneus;genlisp;gennodejs;genpy"

@@ -2,121 +2,126 @@
 
 import rospy
 
-from std_msgs.msg import Bool, Int8MultiArray
+from typing import List
 
+from std_msgs.msg import Bool, Int8MultiArray
 from geometry_msgs.msg import Twist
 
-from vpa_robot_decision.msg import RobotInterInfo
-from vpa_robot_decision.srv import RobotInterMng, RobotInterMngRequest, RobotInterMngResponse
+from vpa_robot_decision.msg import RobotInfo as RobotInfoMsg
+from vpa_robot_decision.msg import InterInfo as InterInfoMsg
+
+from vpa_robot_decision.srv import InterMng, InterMngRequest, InterMngResponse
+
+class RobotInfo:
+    def __init__(self, name="", robot_id=0, a=0.0, v=0.0, p=0.0, enter_time=0.0, arrive_cp_time=0.0, exit_time=0.0):
+        self.robot_name = name
+        self.robot_id = robot_id
+        self.robot_a = a  # Acceleration
+        self.robot_v = v  # Velocity
+        self.robot_p = p  # Position
+        self.robot_enter_time = enter_time
+        self.robot_arrive_cp_time = arrive_cp_time
+        self.robot_exit_time = exit_time
+
+class InterInfo:
+    def __init__(self, inter=0):
+        self.inter = inter  # Intersection ID
+        self.robot_id_list = []  # List of robot names or IDs
+        self.robot_info = []  # List of RobotInfo instances
 
 class DecisionMaker:
-    # Properties
     def __init__(self) -> None:
-        # Init ROS Node
+        # Initialize ROS node
         rospy.init_node('decision_maker')
 
-        # Intersection Info Init
+        # Robot name
         self.robot_name = rospy.get_param('~robot_name', 'db19')
 
-        # Current route (two intersections: current and next)
-        self.curr_route = []
+        # Initialize route and intersection information
+        self.curr_route = [0, 0]  # Initial dummy route
+        self.local_inter_id = 0
+        self.local_inter_info = InterInfo()
 
-        # 
-        self.inter_local_index = 0
-
-        # 
-        self.robot_inter_info_local = []
-
-        # 
-        self.cross_inter_boundary_line_count = 0
-        
-        # 
-        self.entered = False
-        
         # Publishers
-        self.cmd_vel_pub= rospy.Publisher('cmd_vel', Twist, queue_size=1)
+        self.cmd_vel_pub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
 
         # Subscribers
         self.curr_route_sub = rospy.Subscriber('curr_route', Int8MultiArray, self.curr_route_sub_cb)
-        self.cmd_vel_from_img_sub = rospy.Publisher('cmd_vel_from_img', Twist, self.cmd_vel_from_img_sub_cb)
-        self.inter_boundary_line_detect_sub = rospy.Subscriber('inter_boundary_line_detect', Bool, self.inter_boundary_line_detect_sub_cb) 
-        self.robot_inter_info_sub = rospy.Subscriber('/robot_inter_info', RobotInterInfo, self.robot_inter_info_sub_cb)
+        self.local_inter_info_topic = f'inter_info/{self.local_inter_id}'
+        self.robot_inter_info_sub = rospy.Subscriber(self.local_inter_info_topic, InterInfoMsg, self.robot_inter_info_sub_cb)
+        self.cmd_vel_from_img_sub = rospy.Subscriber('cmd_vel_from_img', Twist, self.cmd_vel_from_img_sub_cb)
 
-        # Servers
-        self.robot_inter_mng_service = rospy.ServiceProxy('/robot_inter_mng_srv', RobotInterMng)
-
-        # ServiceProxy
-
+        # Service client
+        self.robot_inter_mng_client = rospy.ServiceProxy('/robot_inter_mng_srv', InterMng)
 
         rospy.loginfo('Decision Maker is Online')
-    
-    # Methods
-    def make_decision(self, twist_from_img: Twist, robot_inter_info_local) -> Twist:
-        pass
 
-
-    def cmd_vel_from_img_sub_cb(self, msg: Twist):
-        # cmd_vel = self.make_decision(msg, self.robot_inter_info_local)
-        self.cmd_vel_pub.publish(msg)
+    def curr_route_sub_cb(self, route_msg: Int8MultiArray):
+        """Callback for the current route, updates route if conditions are met."""
+        if len(route_msg.data) != 2:
+            rospy.logerr("Route message does not contain two elements.")
+            return
         
-    def inter_boundary_line_detect_sub_cb(self, msg: Bool):
-        """ req new robot inter info """
-        # 
-        if msg.data:
-            self.cross_inter_boundary_line_count += 1
+        new_route = [route_msg.data[0], route_msg.data[1]]
 
-            if self.cross_inter_boundary_line_count >= 3 and not self.entered:
-
-                rospy.loginfo(f'{self.robot_name} is going to req a regist')
-                from_inter_index = 2
-                to_inter_index = 5
-                # from_inter_index = self.task_list[0]
-                # to_inter_index = self.task_list[1]
-                self.update_location(from_inter_index, to_inter_index)
-
-                self.entered = True
-
+        if self.curr_route == new_route:
+            rospy.loginfo("Current route unchanged.")
+        elif self.curr_route[1] == new_route[0]:  # Valid route update
+            last_inter_id, curr_inter_id = self.curr_route
+            self.update_global_inter_info(last_inter_id, curr_inter_id)
+            self.curr_route = new_route
+            self.local_inter_id = curr_inter_id
         else:
-            self.cross_inter_boundary_line_count = 0
-            self.entered = False
+            rospy.logerr("Route update sequence mismatch.")
 
-    def update_location(self, from_inter_index, to_inter_index):   
-        # 
+    def update_global_inter_info(self, last_inter_id, curr_inter_id):
+        """Update global intersection info by calling the service."""
         rospy.wait_for_service('/robot_inter_mng_srv')
-        
         try:
-            # 
-            req = RobotInterMngRequest()
+            req = InterMngRequest()
             req.header.stamp = rospy.Time.now()
             req.robot_name = self.robot_name
-            req.from_inter_index = from_inter_index
-            req.to_inter_index = to_inter_index
-            
-            # 
-            resp: RobotInterMngResponse = self.robot_inter_mng_service.call(req)
-            
+            req.last_inter_id = last_inter_id
+            req.curr_inter_id = curr_inter_id
+
+            resp: InterMngResponse = self.robot_inter_mng_client.call(req)
             if resp.success:
-                rospy.loginfo(f'{self.robot_name} {resp.message}')
-                self.inter_local_index = to_inter_index
+                rospy.loginfo(f'{self.robot_name} - {resp.message}')
             else:
-                pass
+                rospy.logwarn(f'{self.robot_name} - Service response not successful: {resp.message}')
         except rospy.ServiceException as e:
-            rospy.logerr(f'{self.robot_name}: Service call fail: {e}')    
-    
-    def robot_inter_info_sub_cb(self, msg: RobotInterInfo):
-        inter_local = f'inter_{self.inter_local_index}'
-        self.robot_inter_info_local = getattr(msg, inter_local, [])
+            rospy.logerr(f'{self.robot_name}: Service call failed - {e}')
 
-        if isinstance(self.robot_inter_info_local, tuple):
-            self.robot_inter_info_local = list(self.robot_inter_info_local)
-            rospy.logwarn('tuple')
-        
-        if self.robot_inter_info_local is not None:
-            rospy.loginfo(self.robot_inter_info_local)
-        else:
-            rospy.logwarn(f"{self.robot_name} not found in RobotInterInfo message.")
+    def robot_inter_info_sub_cb(self, inter_info_msg: InterInfoMsg):
+        """Updates local intersection information based on the message."""
+        self.local_inter_info.inter = inter_info_msg.inter_id
+        self.local_inter_info.robot_id_list = inter_info_msg.robot_id_list
+        robot_info: List[RobotInfoMsg] = inter_info_msg.robot_info
+        self.local_inter_info.robot_info = [
+            RobotInfo(
+                name=info.robot_name,
+                robot_id=info.robot_id,
+                a=info.robot_a,
+                v=info.robot_v,
+                p=info.robot_p,
+                enter_time=info.robot_enter_time,
+                arrive_cp_time=info.robot_arrive_cp_time,
+                exit_time=info.robot_exit_time
+            ) for info in robot_info
+        ]
 
-    
+    def cmd_vel_from_img_sub_cb(self, msg: Twist):
+        """Publishes Twist messages received from the vision system."""
+        # Make a decision or directly forward based on image input
+        cmd_vel = self.make_decision(msg, self.local_inter_info)
+        self.cmd_vel_pub.publish(cmd_vel)
+
+    def make_decision(self, twist_from_img: Twist, robot_inter_info: InterInfo) -> Twist:
+        """Decision-making process based on the robot's current state and received command."""
+        # Example: Placeholder - logic to be implemented
+        rospy.logdebug(f"Making decision based on intersection {robot_inter_info.inter} and incoming command.")
+        return twist_from_img
+
 if __name__ == '__main__':
     N = DecisionMaker()
     rospy.spin()

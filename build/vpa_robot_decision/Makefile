@@ -90,6 +90,18 @@ list_install_components/fast: list_install_components
 
 .PHONY : list_install_components/fast
 
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
+
+# Special rule for the target install/strip
+install/strip/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip/fast
+
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
@@ -111,18 +123,6 @@ edit_cache:
 edit_cache/fast: edit_cache
 
 .PHONY : edit_cache/fast
-
-# Special rule for the target install/strip
-install/strip: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
-	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
-.PHONY : install/strip
-
-# Special rule for the target install/strip
-install/strip/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
-	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
-.PHONY : install/strip/fast
 
 # Special rule for the target test
 test:
@@ -168,6 +168,21 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/rule:
+	cd /home/student/snam_robot/build && $(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/rule
+.PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/rule
+
+# Convenience name for target.
+vpa_robot_decision_genpy: vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/rule
+
+.PHONY : vpa_robot_decision_genpy
+
+# fast build rule for target.
+vpa_robot_decision_genpy/fast:
+	cd /home/student/snam_robot/build && $(MAKE) -f vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/build.make vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/build
+.PHONY : vpa_robot_decision_genpy/fast
+
+# Convenience name for target.
 vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages.dir/rule:
 	cd /home/student/snam_robot/build && $(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages.dir/rule
 .PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages.dir/rule
@@ -183,19 +198,19 @@ vpa_robot_decision_generate_messages/fast:
 .PHONY : vpa_robot_decision_generate_messages/fast
 
 # Convenience name for target.
-vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/rule:
-	cd /home/student/snam_robot/build && $(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/rule
-.PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/rule
+vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir/rule:
+	cd /home/student/snam_robot/build && $(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir/rule
+.PHONY : vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir/rule
 
 # Convenience name for target.
-vpa_robot_decision_generate_messages_nodejs: vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/rule
+_vpa_robot_decision_generate_messages_check_deps_RobotInfo: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir/rule
 
-.PHONY : vpa_robot_decision_generate_messages_nodejs
+.PHONY : _vpa_robot_decision_generate_messages_check_deps_RobotInfo
 
 # fast build rule for target.
-vpa_robot_decision_generate_messages_nodejs/fast:
-	cd /home/student/snam_robot/build && $(MAKE) -f vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/build.make vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/build
-.PHONY : vpa_robot_decision_generate_messages_nodejs/fast
+_vpa_robot_decision_generate_messages_check_deps_RobotInfo/fast:
+	cd /home/student/snam_robot/build && $(MAKE) -f vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir/build.make vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir/build
+.PHONY : _vpa_robot_decision_generate_messages_check_deps_RobotInfo/fast
 
 # Convenience name for target.
 vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_cpp.dir/rule:
@@ -213,34 +228,49 @@ vpa_robot_decision_generate_messages_cpp/fast:
 .PHONY : vpa_robot_decision_generate_messages_cpp/fast
 
 # Convenience name for target.
-vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir/rule:
-	cd /home/student/snam_robot/build && $(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir/rule
-.PHONY : vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir/rule
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/rule:
+	cd /home/student/snam_robot/build && $(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/rule
+.PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/rule
 
 # Convenience name for target.
-_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir/rule
+vpa_robot_decision_generate_messages_nodejs: vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/rule
 
-.PHONY : _vpa_robot_decision_generate_messages_check_deps_RobotInterInfo
+.PHONY : vpa_robot_decision_generate_messages_nodejs
 
 # fast build rule for target.
-_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo/fast:
-	cd /home/student/snam_robot/build && $(MAKE) -f vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir/build.make vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir/build
-.PHONY : _vpa_robot_decision_generate_messages_check_deps_RobotInterInfo/fast
+vpa_robot_decision_generate_messages_nodejs/fast:
+	cd /home/student/snam_robot/build && $(MAKE) -f vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/build.make vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/build
+.PHONY : vpa_robot_decision_generate_messages_nodejs/fast
 
 # Convenience name for target.
-vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir/rule:
-	cd /home/student/snam_robot/build && $(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir/rule
-.PHONY : vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir/rule
+vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir/rule:
+	cd /home/student/snam_robot/build && $(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir/rule
+.PHONY : vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir/rule
 
 # Convenience name for target.
-_vpa_robot_decision_generate_messages_check_deps_RobotInterMng: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir/rule
+_vpa_robot_decision_generate_messages_check_deps_InterInfo: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir/rule
 
-.PHONY : _vpa_robot_decision_generate_messages_check_deps_RobotInterMng
+.PHONY : _vpa_robot_decision_generate_messages_check_deps_InterInfo
 
 # fast build rule for target.
-_vpa_robot_decision_generate_messages_check_deps_RobotInterMng/fast:
-	cd /home/student/snam_robot/build && $(MAKE) -f vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir/build.make vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir/build
-.PHONY : _vpa_robot_decision_generate_messages_check_deps_RobotInterMng/fast
+_vpa_robot_decision_generate_messages_check_deps_InterInfo/fast:
+	cd /home/student/snam_robot/build && $(MAKE) -f vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir/build.make vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir/build
+.PHONY : _vpa_robot_decision_generate_messages_check_deps_InterInfo/fast
+
+# Convenience name for target.
+vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/rule:
+	cd /home/student/snam_robot/build && $(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/rule
+.PHONY : vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/rule
+
+# Convenience name for target.
+_vpa_robot_decision_generate_messages_check_deps_InterMng: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/rule
+
+.PHONY : _vpa_robot_decision_generate_messages_check_deps_InterMng
+
+# fast build rule for target.
+_vpa_robot_decision_generate_messages_check_deps_InterMng/fast:
+	cd /home/student/snam_robot/build && $(MAKE) -f vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/build.make vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/build
+.PHONY : _vpa_robot_decision_generate_messages_check_deps_InterMng/fast
 
 # Convenience name for target.
 vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_eus.dir/rule:
@@ -347,21 +377,6 @@ vpa_robot_decision_gennodejs/fast:
 	cd /home/student/snam_robot/build && $(MAKE) -f vpa_robot_decision/CMakeFiles/vpa_robot_decision_gennodejs.dir/build.make vpa_robot_decision/CMakeFiles/vpa_robot_decision_gennodejs.dir/build
 .PHONY : vpa_robot_decision_gennodejs/fast
 
-# Convenience name for target.
-vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/rule:
-	cd /home/student/snam_robot/build && $(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/rule
-.PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/rule
-
-# Convenience name for target.
-vpa_robot_decision_genpy: vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/rule
-
-.PHONY : vpa_robot_decision_genpy
-
-# fast build rule for target.
-vpa_robot_decision_genpy/fast:
-	cd /home/student/snam_robot/build && $(MAKE) -f vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/build.make vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/build
-.PHONY : vpa_robot_decision_genpy/fast
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -371,14 +386,16 @@ help:
 	@echo "... install/local"
 	@echo "... install"
 	@echo "... list_install_components"
-	@echo "... rebuild_cache"
-	@echo "... edit_cache"
+	@echo "... vpa_robot_decision_genpy"
 	@echo "... vpa_robot_decision_generate_messages"
-	@echo "... vpa_robot_decision_generate_messages_nodejs"
+	@echo "... _vpa_robot_decision_generate_messages_check_deps_RobotInfo"
 	@echo "... install/strip"
 	@echo "... vpa_robot_decision_generate_messages_cpp"
-	@echo "... _vpa_robot_decision_generate_messages_check_deps_RobotInterInfo"
-	@echo "... _vpa_robot_decision_generate_messages_check_deps_RobotInterMng"
+	@echo "... vpa_robot_decision_generate_messages_nodejs"
+	@echo "... _vpa_robot_decision_generate_messages_check_deps_InterInfo"
+	@echo "... rebuild_cache"
+	@echo "... edit_cache"
+	@echo "... _vpa_robot_decision_generate_messages_check_deps_InterMng"
 	@echo "... test"
 	@echo "... vpa_robot_decision_generate_messages_eus"
 	@echo "... vpa_robot_decision_geneus"
@@ -387,7 +404,6 @@ help:
 	@echo "... vpa_robot_decision_gencpp"
 	@echo "... vpa_robot_decision_genlisp"
 	@echo "... vpa_robot_decision_gennodejs"
-	@echo "... vpa_robot_decision_genpy"
 .PHONY : help
 
 

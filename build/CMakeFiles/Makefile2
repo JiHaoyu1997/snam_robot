@@ -180,11 +180,13 @@ vpa_robot_decision/preinstall:
 .PHONY : vpa_robot_decision/preinstall
 
 # Recursive "clean" directory target.
+vpa_robot_decision/clean: vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/clean
 vpa_robot_decision/clean: vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages.dir/clean
-vpa_robot_decision/clean: vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/clean
+vpa_robot_decision/clean: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir/clean
 vpa_robot_decision/clean: vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_cpp.dir/clean
-vpa_robot_decision/clean: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir/clean
-vpa_robot_decision/clean: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir/clean
+vpa_robot_decision/clean: vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/clean
+vpa_robot_decision/clean: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir/clean
+vpa_robot_decision/clean: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/clean
 vpa_robot_decision/clean: vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_eus.dir/clean
 vpa_robot_decision/clean: vpa_robot_decision/CMakeFiles/vpa_robot_decision_geneus.dir/clean
 vpa_robot_decision/clean: vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_py.dir/clean
@@ -192,7 +194,6 @@ vpa_robot_decision/clean: vpa_robot_decision/CMakeFiles/vpa_robot_decision_gener
 vpa_robot_decision/clean: vpa_robot_decision/CMakeFiles/vpa_robot_decision_gencpp.dir/clean
 vpa_robot_decision/clean: vpa_robot_decision/CMakeFiles/vpa_robot_decision_genlisp.dir/clean
 vpa_robot_decision/clean: vpa_robot_decision/CMakeFiles/vpa_robot_decision_gennodejs.dir/clean
-vpa_robot_decision/clean: vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/clean
 
 .PHONY : vpa_robot_decision/clean
 
@@ -278,17 +279,28 @@ vpa_robot_vision/preinstall:
 .PHONY : vpa_robot_vision/preinstall
 
 # Recursive "clean" directory target.
+vpa_robot_vision/clean: vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_py.dir/clean
+vpa_robot_vision/clean: vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_lisp.dir/clean
+vpa_robot_vision/clean: vpa_robot_vision/CMakeFiles/vpa_robot_vision_genpy.dir/clean
+vpa_robot_vision/clean: vpa_robot_vision/CMakeFiles/vpa_robot_vision_gencpp.dir/clean
+vpa_robot_vision/clean: vpa_robot_vision/CMakeFiles/vpa_robot_vision_genlisp.dir/clean
 vpa_robot_vision/clean: vpa_robot_vision/CMakeFiles/roscpp_generate_messages_cpp.dir/clean
 vpa_robot_vision/clean: vpa_robot_vision/CMakeFiles/roscpp_generate_messages_eus.dir/clean
+vpa_robot_vision/clean: vpa_robot_vision/CMakeFiles/vpa_robot_vision_gennodejs.dir/clean
+vpa_robot_vision/clean: vpa_robot_vision/CMakeFiles/vpa_robot_vision_geneus.dir/clean
 vpa_robot_vision/clean: vpa_robot_vision/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/clean
+vpa_robot_vision/clean: vpa_robot_vision/CMakeFiles/_vpa_robot_vision_generate_messages_check_deps_CrossInfo.dir/clean
 vpa_robot_vision/clean: vpa_robot_vision/CMakeFiles/roscpp_generate_messages_py.dir/clean
 vpa_robot_vision/clean: vpa_robot_vision/CMakeFiles/roscpp_generate_messages_nodejs.dir/clean
 vpa_robot_vision/clean: vpa_robot_vision/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/clean
 vpa_robot_vision/clean: vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages.dir/clean
 vpa_robot_vision/clean: vpa_robot_vision/CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/clean
+vpa_robot_vision/clean: vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_nodejs.dir/clean
+vpa_robot_vision/clean: vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_eus.dir/clean
 vpa_robot_vision/clean: vpa_robot_vision/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir/clean
 vpa_robot_vision/clean: vpa_robot_vision/CMakeFiles/roscpp_generate_messages_lisp.dir/clean
 vpa_robot_vision/clean: vpa_robot_vision/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/clean
+vpa_robot_vision/clean: vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_cpp.dir/clean
 
 .PHONY : vpa_robot_vision/clean
 
@@ -672,11 +684,38 @@ vpa_robot/CMakeFiles/std_msgs_generate_messages_cpp.dir/clean:
 .PHONY : vpa_robot/CMakeFiles/std_msgs_generate_messages_cpp.dir/clean
 
 #=============================================================================
+# Target rules for target vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir
+
+# All Build rule for target.
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/all: vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_py.dir/all
+	$(MAKE) -f vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/build.make vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/depend
+	$(MAKE) -f vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/build.make vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num= "Built target vpa_robot_decision_genpy"
+.PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/all
+
+# Build rule for subdir invocation for target.
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 5
+	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
+.PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/rule
+
+# Convenience name for target.
+vpa_robot_decision_genpy: vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/rule
+
+.PHONY : vpa_robot_decision_genpy
+
+# clean rule for target.
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/clean:
+	$(MAKE) -f vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/build.make vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/clean
+.PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/clean
+
+#=============================================================================
 # Target rules for target vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages.dir
 
 # All Build rule for target.
-vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages.dir/all: vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/all
 vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages.dir/all: vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_cpp.dir/all
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages.dir/all: vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/all
 vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages.dir/all: vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_eus.dir/all
 vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages.dir/all: vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_py.dir/all
 vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages.dir/all: vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_lisp.dir/all
@@ -687,7 +726,7 @@ vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages.dir/all: vpa_
 
 # Build rule for subdir invocation for target.
 vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 13
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 18
 	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
 .PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages.dir/rule
@@ -703,49 +742,48 @@ vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages.dir/clean:
 .PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages.dir/clean
 
 #=============================================================================
-# Target rules for target vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir
+# Target rules for target vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir
 
 # All Build rule for target.
-vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/all: vpa_robot/CMakeFiles/std_msgs_generate_messages_nodejs.dir/all
-vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/all: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir/all
-vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/all: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir/all
-	$(MAKE) -f vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/build.make vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/depend
-	$(MAKE) -f vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/build.make vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=16,17 "Built target vpa_robot_decision_generate_messages_nodejs"
-.PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/all
+vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir/all:
+	$(MAKE) -f vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir/build.make vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir/depend
+	$(MAKE) -f vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir/build.make vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num= "Built target _vpa_robot_decision_generate_messages_check_deps_RobotInfo"
+.PHONY : vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir/all
 
 # Build rule for subdir invocation for target.
-vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 2
-	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/all
+vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
-.PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/rule
+	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
+.PHONY : vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir/rule
 
 # Convenience name for target.
-vpa_robot_decision_generate_messages_nodejs: vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/rule
+_vpa_robot_decision_generate_messages_check_deps_RobotInfo: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir/rule
 
-.PHONY : vpa_robot_decision_generate_messages_nodejs
+.PHONY : _vpa_robot_decision_generate_messages_check_deps_RobotInfo
 
 # clean rule for target.
-vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/clean:
-	$(MAKE) -f vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/build.make vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/clean
-.PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/clean
+vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir/clean:
+	$(MAKE) -f vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir/build.make vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir/clean
+.PHONY : vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir/clean
 
 #=============================================================================
 # Target rules for target vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_cpp.dir
 
 # All Build rule for target.
 vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_cpp.dir/all: vpa_robot/CMakeFiles/std_msgs_generate_messages_cpp.dir/all
-vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_cpp.dir/all: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir/all
-vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_cpp.dir/all: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir/all
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_cpp.dir/all: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir/all
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_cpp.dir/all: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir/all
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_cpp.dir/all: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/all
 	$(MAKE) -f vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_cpp.dir/build.make vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_cpp.dir/depend
 	$(MAKE) -f vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_cpp.dir/build.make vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_cpp.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=9,10 "Built target vpa_robot_decision_generate_messages_cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=9,10,11 "Built target vpa_robot_decision_generate_messages_cpp"
 .PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_cpp.dir/all
 
 # Build rule for subdir invocation for target.
 vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_cpp.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 3
 	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_cpp.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
 .PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_cpp.dir/rule
@@ -761,74 +799,105 @@ vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_cpp.dir/clean
 .PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_cpp.dir/clean
 
 #=============================================================================
-# Target rules for target vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir
+# Target rules for target vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir
 
 # All Build rule for target.
-vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir/all:
-	$(MAKE) -f vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir/build.make vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir/depend
-	$(MAKE) -f vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir/build.make vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num= "Built target _vpa_robot_decision_generate_messages_check_deps_RobotInterInfo"
-.PHONY : vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir/all
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/all: vpa_robot/CMakeFiles/std_msgs_generate_messages_nodejs.dir/all
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/all: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir/all
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/all: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir/all
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/all: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/all
+	$(MAKE) -f vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/build.make vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/depend
+	$(MAKE) -f vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/build.make vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=19,20,21 "Built target vpa_robot_decision_generate_messages_nodejs"
+.PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/all
 
 # Build rule for subdir invocation for target.
-vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir/rule: cmake_check_build_system
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 3
+	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
-	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
-.PHONY : vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir/rule
+.PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/rule
 
 # Convenience name for target.
-_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir/rule
+vpa_robot_decision_generate_messages_nodejs: vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/rule
 
-.PHONY : _vpa_robot_decision_generate_messages_check_deps_RobotInterInfo
+.PHONY : vpa_robot_decision_generate_messages_nodejs
 
 # clean rule for target.
-vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir/clean:
-	$(MAKE) -f vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir/build.make vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir/clean
-.PHONY : vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir/clean
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/clean:
+	$(MAKE) -f vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/build.make vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/clean
+.PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_nodejs.dir/clean
 
 #=============================================================================
-# Target rules for target vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir
+# Target rules for target vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir
 
 # All Build rule for target.
-vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir/all:
-	$(MAKE) -f vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir/build.make vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir/depend
-	$(MAKE) -f vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir/build.make vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num= "Built target _vpa_robot_decision_generate_messages_check_deps_RobotInterMng"
-.PHONY : vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir/all
+vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir/all:
+	$(MAKE) -f vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir/build.make vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir/depend
+	$(MAKE) -f vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir/build.make vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num= "Built target _vpa_robot_decision_generate_messages_check_deps_InterInfo"
+.PHONY : vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir/all
 
 # Build rule for subdir invocation for target.
-vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir/rule: cmake_check_build_system
+vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir/rule: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
-	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir/all
+	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
-.PHONY : vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir/rule
+.PHONY : vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir/rule
 
 # Convenience name for target.
-_vpa_robot_decision_generate_messages_check_deps_RobotInterMng: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir/rule
+_vpa_robot_decision_generate_messages_check_deps_InterInfo: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir/rule
 
-.PHONY : _vpa_robot_decision_generate_messages_check_deps_RobotInterMng
+.PHONY : _vpa_robot_decision_generate_messages_check_deps_InterInfo
 
 # clean rule for target.
-vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir/clean:
-	$(MAKE) -f vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir/build.make vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir/clean
-.PHONY : vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir/clean
+vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir/clean:
+	$(MAKE) -f vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir/build.make vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir/clean
+.PHONY : vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir/clean
+
+#=============================================================================
+# Target rules for target vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir
+
+# All Build rule for target.
+vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/all:
+	$(MAKE) -f vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/build.make vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/depend
+	$(MAKE) -f vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/build.make vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num= "Built target _vpa_robot_decision_generate_messages_check_deps_InterMng"
+.PHONY : vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/all
+
+# Build rule for subdir invocation for target.
+vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
+	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
+.PHONY : vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/rule
+
+# Convenience name for target.
+_vpa_robot_decision_generate_messages_check_deps_InterMng: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/rule
+
+.PHONY : _vpa_robot_decision_generate_messages_check_deps_InterMng
+
+# clean rule for target.
+vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/clean:
+	$(MAKE) -f vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/build.make vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/clean
+.PHONY : vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/clean
 
 #=============================================================================
 # Target rules for target vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_eus.dir
 
 # All Build rule for target.
 vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_eus.dir/all: vpa_robot/CMakeFiles/std_msgs_generate_messages_eus.dir/all
-vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_eus.dir/all: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir/all
-vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_eus.dir/all: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir/all
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_eus.dir/all: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir/all
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_eus.dir/all: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir/all
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_eus.dir/all: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/all
 	$(MAKE) -f vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_eus.dir/build.make vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_eus.dir/depend
 	$(MAKE) -f vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_eus.dir/build.make vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_eus.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=11,12,13 "Built target vpa_robot_decision_generate_messages_eus"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=12,13,14,15 "Built target vpa_robot_decision_generate_messages_eus"
 .PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_eus.dir/all
 
 # Build rule for subdir invocation for target.
 vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_eus.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 4
 	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_eus.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
 .PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_eus.dir/rule
@@ -855,7 +924,7 @@ vpa_robot_decision/CMakeFiles/vpa_robot_decision_geneus.dir/all: vpa_robot_decis
 
 # Build rule for subdir invocation for target.
 vpa_robot_decision/CMakeFiles/vpa_robot_decision_geneus.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 4
 	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/vpa_robot_decision_geneus.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
 .PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_geneus.dir/rule
@@ -875,16 +944,17 @@ vpa_robot_decision/CMakeFiles/vpa_robot_decision_geneus.dir/clean:
 
 # All Build rule for target.
 vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_py.dir/all: vpa_robot/CMakeFiles/std_msgs_generate_messages_py.dir/all
-vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_py.dir/all: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir/all
-vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_py.dir/all: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir/all
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_py.dir/all: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir/all
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_py.dir/all: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir/all
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_py.dir/all: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/all
 	$(MAKE) -f vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_py.dir/build.make vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_py.dir/depend
 	$(MAKE) -f vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_py.dir/build.make vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_py.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=18,19,20,21 "Built target vpa_robot_decision_generate_messages_py"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=22,23,24,25,26 "Built target vpa_robot_decision_generate_messages_py"
 .PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_py.dir/all
 
 # Build rule for subdir invocation for target.
 vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_py.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 4
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 5
 	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_py.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
 .PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_py.dir/rule
@@ -904,16 +974,17 @@ vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_py.dir/clean:
 
 # All Build rule for target.
 vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_lisp.dir/all: vpa_robot/CMakeFiles/std_msgs_generate_messages_lisp.dir/all
-vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_lisp.dir/all: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterInfo.dir/all
-vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_lisp.dir/all: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInterMng.dir/all
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_lisp.dir/all: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo.dir/all
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_lisp.dir/all: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo.dir/all
+vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_lisp.dir/all: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/all
 	$(MAKE) -f vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_lisp.dir/build.make vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_lisp.dir/depend
 	$(MAKE) -f vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_lisp.dir/build.make vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_lisp.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=14,15 "Built target vpa_robot_decision_generate_messages_lisp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=16,17,18 "Built target vpa_robot_decision_generate_messages_lisp"
 .PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_lisp.dir/all
 
 # Build rule for subdir invocation for target.
 vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_lisp.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 3
 	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_lisp.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
 .PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_lisp.dir/rule
@@ -940,7 +1011,7 @@ vpa_robot_decision/CMakeFiles/vpa_robot_decision_gencpp.dir/all: vpa_robot_decis
 
 # Build rule for subdir invocation for target.
 vpa_robot_decision/CMakeFiles/vpa_robot_decision_gencpp.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 3
 	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/vpa_robot_decision_gencpp.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
 .PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_gencpp.dir/rule
@@ -967,7 +1038,7 @@ vpa_robot_decision/CMakeFiles/vpa_robot_decision_genlisp.dir/all: vpa_robot_deci
 
 # Build rule for subdir invocation for target.
 vpa_robot_decision/CMakeFiles/vpa_robot_decision_genlisp.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 3
 	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/vpa_robot_decision_genlisp.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
 .PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_genlisp.dir/rule
@@ -994,7 +1065,7 @@ vpa_robot_decision/CMakeFiles/vpa_robot_decision_gennodejs.dir/all: vpa_robot_de
 
 # Build rule for subdir invocation for target.
 vpa_robot_decision/CMakeFiles/vpa_robot_decision_gennodejs.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 3
 	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/vpa_robot_decision_gennodejs.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
 .PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_gennodejs.dir/rule
@@ -1008,33 +1079,6 @@ vpa_robot_decision_gennodejs: vpa_robot_decision/CMakeFiles/vpa_robot_decision_g
 vpa_robot_decision/CMakeFiles/vpa_robot_decision_gennodejs.dir/clean:
 	$(MAKE) -f vpa_robot_decision/CMakeFiles/vpa_robot_decision_gennodejs.dir/build.make vpa_robot_decision/CMakeFiles/vpa_robot_decision_gennodejs.dir/clean
 .PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_gennodejs.dir/clean
-
-#=============================================================================
-# Target rules for target vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir
-
-# All Build rule for target.
-vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/all: vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_py.dir/all
-	$(MAKE) -f vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/build.make vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/depend
-	$(MAKE) -f vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/build.make vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num= "Built target vpa_robot_decision_genpy"
-.PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/all
-
-# Build rule for subdir invocation for target.
-vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 4
-	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
-.PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/rule
-
-# Convenience name for target.
-vpa_robot_decision_genpy: vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/rule
-
-.PHONY : vpa_robot_decision_genpy
-
-# clean rule for target.
-vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/clean:
-	$(MAKE) -f vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/build.make vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/clean
-.PHONY : vpa_robot_decision/CMakeFiles/vpa_robot_decision_genpy.dir/clean
 
 #=============================================================================
 # Target rules for target vpa_robot_interface/CMakeFiles/vpa_robot_interface_gennodejs.dir
@@ -1073,7 +1117,7 @@ vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_nodejs.dir/
 vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_nodejs.dir/all: vpa_robot_interface/CMakeFiles/_vpa_robot_interface_generate_messages_check_deps_WheelsEncoder.dir/all
 	$(MAKE) -f vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_nodejs.dir/build.make vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_nodejs.dir/depend
 	$(MAKE) -f vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_nodejs.dir/build.make vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_nodejs.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=33,34,35 "Built target vpa_robot_interface_generate_messages_nodejs"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=38,39,40 "Built target vpa_robot_interface_generate_messages_nodejs"
 .PHONY : vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_nodejs.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1130,7 +1174,7 @@ vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_lisp.dir/al
 vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_lisp.dir/all: vpa_robot_interface/CMakeFiles/_vpa_robot_interface_generate_messages_check_deps_WheelsEncoder.dir/all
 	$(MAKE) -f vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_lisp.dir/build.make vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_lisp.dir/depend
 	$(MAKE) -f vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_lisp.dir/build.make vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_lisp.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=30,31,32 "Built target vpa_robot_interface_generate_messages_lisp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=35,36,37 "Built target vpa_robot_interface_generate_messages_lisp"
 .PHONY : vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_lisp.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1322,7 +1366,7 @@ vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_cpp.dir/all
 vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_cpp.dir/all: vpa_robot_interface/CMakeFiles/_vpa_robot_interface_generate_messages_check_deps_WheelsEncoder.dir/all
 	$(MAKE) -f vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_cpp.dir/build.make vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_cpp.dir/depend
 	$(MAKE) -f vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_cpp.dir/build.make vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_cpp.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=23,24,25 "Built target vpa_robot_interface_generate_messages_cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=28,29,30 "Built target vpa_robot_interface_generate_messages_cpp"
 .PHONY : vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_cpp.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1376,7 +1420,7 @@ vpa_robot_interface/CMakeFiles/dynamic_reconfigure_generate_messages_nodejs.dir/
 vpa_robot_interface/CMakeFiles/vpa_robot_interface_gencfg.dir/all:
 	$(MAKE) -f vpa_robot_interface/CMakeFiles/vpa_robot_interface_gencfg.dir/build.make vpa_robot_interface/CMakeFiles/vpa_robot_interface_gencfg.dir/depend
 	$(MAKE) -f vpa_robot_interface/CMakeFiles/vpa_robot_interface_gencfg.dir/build.make vpa_robot_interface/CMakeFiles/vpa_robot_interface_gencfg.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=22 "Built target vpa_robot_interface_gencfg"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=27 "Built target vpa_robot_interface_gencfg"
 .PHONY : vpa_robot_interface/CMakeFiles/vpa_robot_interface_gencfg.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1545,7 +1589,7 @@ vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py.dir/all:
 vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py.dir/all: vpa_robot_interface/CMakeFiles/_vpa_robot_interface_generate_messages_check_deps_WheelsEncoder.dir/all
 	$(MAKE) -f vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py.dir/build.make vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py.dir/depend
 	$(MAKE) -f vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py.dir/build.make vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=36,37,38,39 "Built target vpa_robot_interface_generate_messages_py"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=41,42,43,44 "Built target vpa_robot_interface_generate_messages_py"
 .PHONY : vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1602,7 +1646,7 @@ vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus.dir/all
 vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus.dir/all: vpa_robot_interface/CMakeFiles/_vpa_robot_interface_generate_messages_check_deps_WheelsEncoder.dir/all
 	$(MAKE) -f vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus.dir/build.make vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus.dir/depend
 	$(MAKE) -f vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus.dir/build.make vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=26,27,28,29 "Built target vpa_robot_interface_generate_messages_eus"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=31,32,33,34 "Built target vpa_robot_interface_generate_messages_eus"
 .PHONY : vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1684,7 +1728,7 @@ vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_py.dir/all: vpa_robot
 vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_py.dir/all: vpa_robot_task/CMakeFiles/_vpa_robot_task_generate_messages_check_deps_AssignTask.dir/all
 	$(MAKE) -f vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_py.dir/build.make vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_py.dir/depend
 	$(MAKE) -f vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_py.dir/build.make vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_py.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=45,46 "Built target vpa_robot_task_generate_messages_py"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=50,51 "Built target vpa_robot_task_generate_messages_py"
 .PHONY : vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_py.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1824,7 +1868,7 @@ vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_cpp.dir/all: vpa_robo
 vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_cpp.dir/all: vpa_robot_task/CMakeFiles/_vpa_robot_task_generate_messages_check_deps_AssignTask.dir/all
 	$(MAKE) -f vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_cpp.dir/build.make vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_cpp.dir/depend
 	$(MAKE) -f vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_cpp.dir/build.make vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_cpp.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=40 "Built target vpa_robot_task_generate_messages_cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=45 "Built target vpa_robot_task_generate_messages_cpp"
 .PHONY : vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_cpp.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1852,7 +1896,7 @@ vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_eus.dir/all: vpa_robo
 vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_eus.dir/all: vpa_robot_task/CMakeFiles/_vpa_robot_task_generate_messages_check_deps_AssignTask.dir/all
 	$(MAKE) -f vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_eus.dir/build.make vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_eus.dir/depend
 	$(MAKE) -f vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_eus.dir/build.make vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_eus.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=41,42 "Built target vpa_robot_task_generate_messages_eus"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=46,47 "Built target vpa_robot_task_generate_messages_eus"
 .PHONY : vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_eus.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1880,7 +1924,7 @@ vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_lisp.dir/all: vpa_rob
 vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_lisp.dir/all: vpa_robot_task/CMakeFiles/_vpa_robot_task_generate_messages_check_deps_AssignTask.dir/all
 	$(MAKE) -f vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_lisp.dir/build.make vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_lisp.dir/depend
 	$(MAKE) -f vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_lisp.dir/build.make vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_lisp.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=43 "Built target vpa_robot_task_generate_messages_lisp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=48 "Built target vpa_robot_task_generate_messages_lisp"
 .PHONY : vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_lisp.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1908,7 +1952,7 @@ vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_nodejs.dir/all: vpa_r
 vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_nodejs.dir/all: vpa_robot_task/CMakeFiles/_vpa_robot_task_generate_messages_check_deps_AssignTask.dir/all
 	$(MAKE) -f vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_nodejs.dir/build.make vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_nodejs.dir/depend
 	$(MAKE) -f vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_nodejs.dir/build.make vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_nodejs.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=44 "Built target vpa_robot_task_generate_messages_nodejs"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=49 "Built target vpa_robot_task_generate_messages_nodejs"
 .PHONY : vpa_robot_task/CMakeFiles/vpa_robot_task_generate_messages_nodejs.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1954,6 +1998,143 @@ vpa_robot_task_gennodejs: vpa_robot_task/CMakeFiles/vpa_robot_task_gennodejs.dir
 vpa_robot_task/CMakeFiles/vpa_robot_task_gennodejs.dir/clean:
 	$(MAKE) -f vpa_robot_task/CMakeFiles/vpa_robot_task_gennodejs.dir/build.make vpa_robot_task/CMakeFiles/vpa_robot_task_gennodejs.dir/clean
 .PHONY : vpa_robot_task/CMakeFiles/vpa_robot_task_gennodejs.dir/clean
+
+#=============================================================================
+# Target rules for target vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_py.dir
+
+# All Build rule for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_py.dir/all: vpa_robot/CMakeFiles/std_msgs_generate_messages_py.dir/all
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_py.dir/all: vpa_robot_vision/CMakeFiles/_vpa_robot_vision_generate_messages_check_deps_CrossInfo.dir/all
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_py.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_py.dir/depend
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_py.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_py.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=57,58 "Built target vpa_robot_vision_generate_messages_py"
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_py.dir/all
+
+# Build rule for subdir invocation for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_py.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_py.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_py.dir/rule
+
+# Convenience name for target.
+vpa_robot_vision_generate_messages_py: vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_py.dir/rule
+
+.PHONY : vpa_robot_vision_generate_messages_py
+
+# clean rule for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_py.dir/clean:
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_py.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_py.dir/clean
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_py.dir/clean
+
+#=============================================================================
+# Target rules for target vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_lisp.dir
+
+# All Build rule for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_lisp.dir/all: vpa_robot/CMakeFiles/std_msgs_generate_messages_lisp.dir/all
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_lisp.dir/all: vpa_robot_vision/CMakeFiles/_vpa_robot_vision_generate_messages_check_deps_CrossInfo.dir/all
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_lisp.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_lisp.dir/depend
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_lisp.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_lisp.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=55 "Built target vpa_robot_vision_generate_messages_lisp"
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_lisp.dir/all
+
+# Build rule for subdir invocation for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_lisp.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 1
+	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_lisp.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_lisp.dir/rule
+
+# Convenience name for target.
+vpa_robot_vision_generate_messages_lisp: vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_lisp.dir/rule
+
+.PHONY : vpa_robot_vision_generate_messages_lisp
+
+# clean rule for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_lisp.dir/clean:
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_lisp.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_lisp.dir/clean
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_lisp.dir/clean
+
+#=============================================================================
+# Target rules for target vpa_robot_vision/CMakeFiles/vpa_robot_vision_genpy.dir
+
+# All Build rule for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_genpy.dir/all: vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_py.dir/all
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_genpy.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_genpy.dir/depend
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_genpy.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_genpy.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num= "Built target vpa_robot_vision_genpy"
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_genpy.dir/all
+
+# Build rule for subdir invocation for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_genpy.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_vision/CMakeFiles/vpa_robot_vision_genpy.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_genpy.dir/rule
+
+# Convenience name for target.
+vpa_robot_vision_genpy: vpa_robot_vision/CMakeFiles/vpa_robot_vision_genpy.dir/rule
+
+.PHONY : vpa_robot_vision_genpy
+
+# clean rule for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_genpy.dir/clean:
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_genpy.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_genpy.dir/clean
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_genpy.dir/clean
+
+#=============================================================================
+# Target rules for target vpa_robot_vision/CMakeFiles/vpa_robot_vision_gencpp.dir
+
+# All Build rule for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_gencpp.dir/all: vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_cpp.dir/all
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_gencpp.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_gencpp.dir/depend
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_gencpp.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_gencpp.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num= "Built target vpa_robot_vision_gencpp"
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_gencpp.dir/all
+
+# Build rule for subdir invocation for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_gencpp.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 1
+	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_vision/CMakeFiles/vpa_robot_vision_gencpp.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_gencpp.dir/rule
+
+# Convenience name for target.
+vpa_robot_vision_gencpp: vpa_robot_vision/CMakeFiles/vpa_robot_vision_gencpp.dir/rule
+
+.PHONY : vpa_robot_vision_gencpp
+
+# clean rule for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_gencpp.dir/clean:
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_gencpp.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_gencpp.dir/clean
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_gencpp.dir/clean
+
+#=============================================================================
+# Target rules for target vpa_robot_vision/CMakeFiles/vpa_robot_vision_genlisp.dir
+
+# All Build rule for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_genlisp.dir/all: vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_lisp.dir/all
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_genlisp.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_genlisp.dir/depend
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_genlisp.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_genlisp.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num= "Built target vpa_robot_vision_genlisp"
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_genlisp.dir/all
+
+# Build rule for subdir invocation for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_genlisp.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 1
+	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_vision/CMakeFiles/vpa_robot_vision_genlisp.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_genlisp.dir/rule
+
+# Convenience name for target.
+vpa_robot_vision_genlisp: vpa_robot_vision/CMakeFiles/vpa_robot_vision_genlisp.dir/rule
+
+.PHONY : vpa_robot_vision_genlisp
+
+# clean rule for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_genlisp.dir/clean:
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_genlisp.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_genlisp.dir/clean
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_genlisp.dir/clean
 
 #=============================================================================
 # Target rules for target vpa_robot_vision/CMakeFiles/roscpp_generate_messages_cpp.dir
@@ -2010,6 +2191,60 @@ vpa_robot_vision/CMakeFiles/roscpp_generate_messages_eus.dir/clean:
 .PHONY : vpa_robot_vision/CMakeFiles/roscpp_generate_messages_eus.dir/clean
 
 #=============================================================================
+# Target rules for target vpa_robot_vision/CMakeFiles/vpa_robot_vision_gennodejs.dir
+
+# All Build rule for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_gennodejs.dir/all: vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_nodejs.dir/all
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_gennodejs.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_gennodejs.dir/depend
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_gennodejs.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_gennodejs.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num= "Built target vpa_robot_vision_gennodejs"
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_gennodejs.dir/all
+
+# Build rule for subdir invocation for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_gennodejs.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 1
+	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_vision/CMakeFiles/vpa_robot_vision_gennodejs.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_gennodejs.dir/rule
+
+# Convenience name for target.
+vpa_robot_vision_gennodejs: vpa_robot_vision/CMakeFiles/vpa_robot_vision_gennodejs.dir/rule
+
+.PHONY : vpa_robot_vision_gennodejs
+
+# clean rule for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_gennodejs.dir/clean:
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_gennodejs.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_gennodejs.dir/clean
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_gennodejs.dir/clean
+
+#=============================================================================
+# Target rules for target vpa_robot_vision/CMakeFiles/vpa_robot_vision_geneus.dir
+
+# All Build rule for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_geneus.dir/all: vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_eus.dir/all
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_geneus.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_geneus.dir/depend
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_geneus.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_geneus.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num= "Built target vpa_robot_vision_geneus"
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_geneus.dir/all
+
+# Build rule for subdir invocation for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_geneus.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_vision/CMakeFiles/vpa_robot_vision_geneus.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_geneus.dir/rule
+
+# Convenience name for target.
+vpa_robot_vision_geneus: vpa_robot_vision/CMakeFiles/vpa_robot_vision_geneus.dir/rule
+
+.PHONY : vpa_robot_vision_geneus
+
+# clean rule for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_geneus.dir/clean:
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_geneus.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_geneus.dir/clean
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_geneus.dir/clean
+
+#=============================================================================
 # Target rules for target vpa_robot_vision/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir
 
 # All Build rule for target.
@@ -2035,6 +2270,33 @@ rosgraph_msgs_generate_messages_nodejs: vpa_robot_vision/CMakeFiles/rosgraph_msg
 vpa_robot_vision/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/clean:
 	$(MAKE) -f vpa_robot_vision/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/build.make vpa_robot_vision/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/clean
 .PHONY : vpa_robot_vision/CMakeFiles/rosgraph_msgs_generate_messages_nodejs.dir/clean
+
+#=============================================================================
+# Target rules for target vpa_robot_vision/CMakeFiles/_vpa_robot_vision_generate_messages_check_deps_CrossInfo.dir
+
+# All Build rule for target.
+vpa_robot_vision/CMakeFiles/_vpa_robot_vision_generate_messages_check_deps_CrossInfo.dir/all:
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/_vpa_robot_vision_generate_messages_check_deps_CrossInfo.dir/build.make vpa_robot_vision/CMakeFiles/_vpa_robot_vision_generate_messages_check_deps_CrossInfo.dir/depend
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/_vpa_robot_vision_generate_messages_check_deps_CrossInfo.dir/build.make vpa_robot_vision/CMakeFiles/_vpa_robot_vision_generate_messages_check_deps_CrossInfo.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num= "Built target _vpa_robot_vision_generate_messages_check_deps_CrossInfo"
+.PHONY : vpa_robot_vision/CMakeFiles/_vpa_robot_vision_generate_messages_check_deps_CrossInfo.dir/all
+
+# Build rule for subdir invocation for target.
+vpa_robot_vision/CMakeFiles/_vpa_robot_vision_generate_messages_check_deps_CrossInfo.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
+	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_vision/CMakeFiles/_vpa_robot_vision_generate_messages_check_deps_CrossInfo.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
+.PHONY : vpa_robot_vision/CMakeFiles/_vpa_robot_vision_generate_messages_check_deps_CrossInfo.dir/rule
+
+# Convenience name for target.
+_vpa_robot_vision_generate_messages_check_deps_CrossInfo: vpa_robot_vision/CMakeFiles/_vpa_robot_vision_generate_messages_check_deps_CrossInfo.dir/rule
+
+.PHONY : _vpa_robot_vision_generate_messages_check_deps_CrossInfo
+
+# clean rule for target.
+vpa_robot_vision/CMakeFiles/_vpa_robot_vision_generate_messages_check_deps_CrossInfo.dir/clean:
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/_vpa_robot_vision_generate_messages_check_deps_CrossInfo.dir/build.make vpa_robot_vision/CMakeFiles/_vpa_robot_vision_generate_messages_check_deps_CrossInfo.dir/clean
+.PHONY : vpa_robot_vision/CMakeFiles/_vpa_robot_vision_generate_messages_check_deps_CrossInfo.dir/clean
 
 #=============================================================================
 # Target rules for target vpa_robot_vision/CMakeFiles/roscpp_generate_messages_py.dir
@@ -2121,7 +2383,11 @@ vpa_robot_vision/CMakeFiles/rosgraph_msgs_generate_messages_cpp.dir/clean:
 # Target rules for target vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages.dir
 
 # All Build rule for target.
-vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages.dir/all:
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages.dir/all: vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_py.dir/all
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages.dir/all: vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_lisp.dir/all
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages.dir/all: vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_nodejs.dir/all
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages.dir/all: vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_eus.dir/all
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages.dir/all: vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_cpp.dir/all
 	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages.dir/depend
 	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages.dir/build
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num= "Built target vpa_robot_vision_generate_messages"
@@ -2129,7 +2395,7 @@ vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages.dir/all:
 
 # Build rule for subdir invocation for target.
 vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 7
 	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
 .PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages.dir/rule
@@ -2170,6 +2436,62 @@ rosgraph_msgs_generate_messages_eus: vpa_robot_vision/CMakeFiles/rosgraph_msgs_g
 vpa_robot_vision/CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/clean:
 	$(MAKE) -f vpa_robot_vision/CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/build.make vpa_robot_vision/CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/clean
 .PHONY : vpa_robot_vision/CMakeFiles/rosgraph_msgs_generate_messages_eus.dir/clean
+
+#=============================================================================
+# Target rules for target vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_nodejs.dir
+
+# All Build rule for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_nodejs.dir/all: vpa_robot/CMakeFiles/std_msgs_generate_messages_nodejs.dir/all
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_nodejs.dir/all: vpa_robot_vision/CMakeFiles/_vpa_robot_vision_generate_messages_check_deps_CrossInfo.dir/all
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_nodejs.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_nodejs.dir/depend
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_nodejs.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_nodejs.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=56 "Built target vpa_robot_vision_generate_messages_nodejs"
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_nodejs.dir/all
+
+# Build rule for subdir invocation for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_nodejs.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 1
+	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_nodejs.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_nodejs.dir/rule
+
+# Convenience name for target.
+vpa_robot_vision_generate_messages_nodejs: vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_nodejs.dir/rule
+
+.PHONY : vpa_robot_vision_generate_messages_nodejs
+
+# clean rule for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_nodejs.dir/clean:
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_nodejs.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_nodejs.dir/clean
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_nodejs.dir/clean
+
+#=============================================================================
+# Target rules for target vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_eus.dir
+
+# All Build rule for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_eus.dir/all: vpa_robot/CMakeFiles/std_msgs_generate_messages_eus.dir/all
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_eus.dir/all: vpa_robot_vision/CMakeFiles/_vpa_robot_vision_generate_messages_check_deps_CrossInfo.dir/all
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_eus.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_eus.dir/depend
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_eus.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_eus.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=53,54 "Built target vpa_robot_vision_generate_messages_eus"
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_eus.dir/all
+
+# Build rule for subdir invocation for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_eus.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 2
+	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_eus.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_eus.dir/rule
+
+# Convenience name for target.
+vpa_robot_vision_generate_messages_eus: vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_eus.dir/rule
+
+.PHONY : vpa_robot_vision_generate_messages_eus
+
+# clean rule for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_eus.dir/clean:
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_eus.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_eus.dir/clean
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_eus.dir/clean
 
 #=============================================================================
 # Target rules for target vpa_robot_vision/CMakeFiles/rosgraph_msgs_generate_messages_lisp.dir
@@ -2251,6 +2573,34 @@ rosgraph_msgs_generate_messages_py: vpa_robot_vision/CMakeFiles/rosgraph_msgs_ge
 vpa_robot_vision/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/clean:
 	$(MAKE) -f vpa_robot_vision/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/build.make vpa_robot_vision/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/clean
 .PHONY : vpa_robot_vision/CMakeFiles/rosgraph_msgs_generate_messages_py.dir/clean
+
+#=============================================================================
+# Target rules for target vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_cpp.dir
+
+# All Build rule for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_cpp.dir/all: vpa_robot/CMakeFiles/std_msgs_generate_messages_cpp.dir/all
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_cpp.dir/all: vpa_robot_vision/CMakeFiles/_vpa_robot_vision_generate_messages_check_deps_CrossInfo.dir/all
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_cpp.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_cpp.dir/depend
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_cpp.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_cpp.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=52 "Built target vpa_robot_vision_generate_messages_cpp"
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_cpp.dir/all
+
+# Build rule for subdir invocation for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_cpp.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 1
+	$(MAKE) -f CMakeFiles/Makefile2 vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_cpp.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/student/snam_robot/build/CMakeFiles 0
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_cpp.dir/rule
+
+# Convenience name for target.
+vpa_robot_vision_generate_messages_cpp: vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_cpp.dir/rule
+
+.PHONY : vpa_robot_vision_generate_messages_cpp
+
+# clean rule for target.
+vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_cpp.dir/clean:
+	$(MAKE) -f vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_cpp.dir/build.make vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_cpp.dir/clean
+.PHONY : vpa_robot_vision/CMakeFiles/vpa_robot_vision_generate_messages_cpp.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

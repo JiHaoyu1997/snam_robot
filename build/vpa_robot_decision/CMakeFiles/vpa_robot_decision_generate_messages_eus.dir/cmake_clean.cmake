@@ -1,7 +1,8 @@
 file(REMOVE_RECURSE
   "/home/student/snam_robot/devel/share/roseus/ros/vpa_robot_decision/manifest.l"
-  "/home/student/snam_robot/devel/share/roseus/ros/vpa_robot_decision/msg/RobotInterInfo.l"
-  "/home/student/snam_robot/devel/share/roseus/ros/vpa_robot_decision/srv/RobotInterMng.l"
+  "/home/student/snam_robot/devel/share/roseus/ros/vpa_robot_decision/msg/InterInfo.l"
+  "/home/student/snam_robot/devel/share/roseus/ros/vpa_robot_decision/msg/RobotInfo.l"
+  "/home/student/snam_robot/devel/share/roseus/ros/vpa_robot_decision/srv/InterMng.l"
   "CMakeFiles/vpa_robot_decision_generate_messages_eus"
 )
 

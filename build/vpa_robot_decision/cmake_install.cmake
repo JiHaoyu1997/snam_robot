@@ -38,11 +38,14 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/vpa_robot_decision/msg" TYPE FILE FILES "/home/student/snam_robot/src/vpa_robot_decision/msg/RobotInterInfo.msg")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/vpa_robot_decision/msg" TYPE FILE FILES
+    "/home/student/snam_robot/src/vpa_robot_decision/msg/RobotInfo.msg"
+    "/home/student/snam_robot/src/vpa_robot_decision/msg/InterInfo.msg"
+    )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/vpa_robot_decision/srv" TYPE FILE FILES "/home/student/snam_robot/src/vpa_robot_decision/srv/RobotInterMng.srv")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/vpa_robot_decision/srv" TYPE FILE FILES "/home/student/snam_robot/src/vpa_robot_decision/srv/InterMng.srv")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
