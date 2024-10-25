@@ -50,7 +50,7 @@ def search_line(hsv_image, hsv_space: HSVSpace) -> Union[int, float]:
 
     for i in range(-50, 100, 50):
         point = np.nonzero(mask[lower_bound : upper_bound, width_center + i])
-        print(len(point[0]))
+        # print(len(point[0]))
         if len(point[0]) > 5:
             return len(point[0])
         else:

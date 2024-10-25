@@ -39,7 +39,7 @@ class DecisionMaker:
 
         # Initialize route and intersection information
         self.robot_info = RobotInfo(name=self.robot_name)
-        self.curr_route = []
+        self.curr_route = [0, 0]
         self.local_inter_id = 0
         self.local_inter_info = InterInfo()
         self.local_inter_info_topic = f'inter_info/{self.local_inter_id}'

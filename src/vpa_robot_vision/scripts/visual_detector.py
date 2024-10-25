@@ -41,7 +41,7 @@ class RobotVision:
         self.robot_name = rospy.get_param('~robot_name', 'db19')
 
         # Current route (two intersections: current and next)
-        self.curr_route = []
+        self.curr_route = [0, 0]
 
         # Current Zone
         self.current_zone = Zone.BUFFER_AREA
@@ -59,7 +59,7 @@ class RobotVision:
         self.stop = False
 
         # Simple ACC Function: on or off, default on
-        self._acc_mode = bool(rospy.get_param('~acc_on', True))
+        self.acc_mode = bool(rospy.get_param('~acc_on', True))
 
         # std_msgs img ==> ros img
         self.bridge = CvBridge()
@@ -67,6 +67,9 @@ class RobotVision:
         # Image Size
         self.image_width = rospy.get_param('~image_width', 320)
         self.image_height = rospy.get_param('~image_height', 240)
+
+        # init hsv color spaces for selecting 
+        self.color_space_init()
     
         # Publishers
         self.cv_image_pub = rospy.Publisher("cv_image", Image, queue_size=1)
@@ -83,9 +86,6 @@ class RobotVision:
         self.inter_boundary_line_detect_pub = rospy.Publisher('inter_boundary_line_detect', CrossInfo, queue_size=1) 
 
         rospy.loginfo('Visual Detector is Online')
-
-        # init hsv color spaces for selecting 
-        self.color_space_init()
 
     # Methods
     def color_space_init(self) -> None:
@@ -214,8 +214,8 @@ class RobotVision:
             
         """Step5 PUB TWIST TO DECISION MAKER"""
         # since the cmd_vel is sending on a higher frequency than ACC msg, we estimate the distance to further avoid collsions
-        if self._acc_mode:
-            pass
+        if self.acc_mode:
+            v_factor = 1
         else:
             v_factor = 1
 
