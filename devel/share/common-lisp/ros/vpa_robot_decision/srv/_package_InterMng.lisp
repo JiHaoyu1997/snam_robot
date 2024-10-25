@@ -7,6 +7,8 @@
           LAST_INTER_ID
           CURR_INTER_ID-VAL
           CURR_INTER_ID
+          ROBOT_INFO-VAL
+          ROBOT_INFO
           SUCCESS-VAL
           SUCCESS
           MESSAGE-VAL

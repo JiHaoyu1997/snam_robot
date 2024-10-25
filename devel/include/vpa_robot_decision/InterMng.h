@@ -40,7 +40,7 @@ template<>
 struct MD5Sum< ::vpa_robot_decision::InterMng > {
   static const char* value()
   {
-    return "13e12f4673c290ff3d20da14d75e339f";
+    return "6a2d2bfc797d5c6e5fd765f81f56acfb";
   }
 
   static const char* value(const ::vpa_robot_decision::InterMng&) { return value(); }

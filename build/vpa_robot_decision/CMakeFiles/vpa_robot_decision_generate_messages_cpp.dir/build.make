@@ -73,6 +73,7 @@ vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_cpp: /home/st
 
 /home/student/snam_robot/devel/include/vpa_robot_decision/InterMng.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/student/snam_robot/devel/include/vpa_robot_decision/InterMng.h: /home/student/snam_robot/src/vpa_robot_decision/srv/InterMng.srv
+/home/student/snam_robot/devel/include/vpa_robot_decision/InterMng.h: /home/student/snam_robot/src/vpa_robot_decision/msg/RobotInfo.msg
 /home/student/snam_robot/devel/include/vpa_robot_decision/InterMng.h: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 /home/student/snam_robot/devel/include/vpa_robot_decision/InterMng.h: /opt/ros/noetic/share/gencpp/msg.h.template
 /home/student/snam_robot/devel/include/vpa_robot_decision/InterMng.h: /opt/ros/noetic/share/gencpp/srv.h.template

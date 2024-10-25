@@ -7,15 +7,17 @@ import genpy
 import struct
 
 import std_msgs.msg
+import vpa_robot_decision.msg
 
 class InterMngRequest(genpy.Message):
-  _md5sum = "0441c86245f04f14f6cacbb94a77e326"
+  _md5sum = "a208d5c3825c6fd4cc3a482be9ed4727"
   _type = "vpa_robot_decision/InterMngRequest"
   _has_header = True  # flag to mark the presence of a Header object
   _full_text = """std_msgs/Header header
 string robot_name
 int8 last_inter_id
 int8 curr_inter_id
+RobotInfo robot_info
 
 ================================================================================
 MSG: std_msgs/Header
@@ -32,9 +34,20 @@ uint32 seq
 time stamp
 #Frame this data is associated with
 string frame_id
+
+================================================================================
+MSG: vpa_robot_decision/RobotInfo
+string  robot_name
+int8    robot_id
+float32 robot_a  # Acceleration
+float32 robot_v  # Velocity
+float32 robot_p  # Position
+float32 robot_enter_time
+float32 robot_arrive_cp_time
+float32 robot_exit_time
 """
-  __slots__ = ['header','robot_name','last_inter_id','curr_inter_id']
-  _slot_types = ['std_msgs/Header','string','int8','int8']
+  __slots__ = ['header','robot_name','last_inter_id','curr_inter_id','robot_info']
+  _slot_types = ['std_msgs/Header','string','int8','int8','vpa_robot_decision/RobotInfo']
 
   def __init__(self, *args, **kwds):
     """
@@ -44,7 +57,7 @@ string frame_id
     changes.  You cannot mix in-order arguments and keyword arguments.
 
     The available fields are:
-       header,robot_name,last_inter_id,curr_inter_id
+       header,robot_name,last_inter_id,curr_inter_id,robot_info
 
     :param args: complete set of field values, in .msg order
     :param kwds: use keyword arguments corresponding to message field names
@@ -61,11 +74,14 @@ string frame_id
         self.last_inter_id = 0
       if self.curr_inter_id is None:
         self.curr_inter_id = 0
+      if self.robot_info is None:
+        self.robot_info = vpa_robot_decision.msg.RobotInfo()
     else:
       self.header = std_msgs.msg.Header()
       self.robot_name = ''
       self.last_inter_id = 0
       self.curr_inter_id = 0
+      self.robot_info = vpa_robot_decision.msg.RobotInfo()
 
   def _get_types(self):
     """
@@ -95,6 +111,14 @@ string frame_id
       buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
       _x = self
       buff.write(_get_struct_2b().pack(_x.last_inter_id, _x.curr_inter_id))
+      _x = self.robot_info.robot_name
+      length = len(_x)
+      if python3 or type(_x) == unicode:
+        _x = _x.encode('utf-8')
+        length = len(_x)
+      buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
+      _x = self
+      buff.write(_get_struct_b6f().pack(_x.robot_info.robot_id, _x.robot_info.robot_a, _x.robot_info.robot_v, _x.robot_info.robot_p, _x.robot_info.robot_enter_time, _x.robot_info.robot_arrive_cp_time, _x.robot_info.robot_exit_time))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -108,6 +132,8 @@ string frame_id
     try:
       if self.header is None:
         self.header = std_msgs.msg.Header()
+      if self.robot_info is None:
+        self.robot_info = vpa_robot_decision.msg.RobotInfo()
       end = 0
       _x = self
       start = end
@@ -135,6 +161,19 @@ string frame_id
       start = end
       end += 2
       (_x.last_inter_id, _x.curr_inter_id,) = _get_struct_2b().unpack(str[start:end])
+      start = end
+      end += 4
+      (length,) = _struct_I.unpack(str[start:end])
+      start = end
+      end += length
+      if python3:
+        self.robot_info.robot_name = str[start:end].decode('utf-8', 'rosmsg')
+      else:
+        self.robot_info.robot_name = str[start:end]
+      _x = self
+      start = end
+      end += 25
+      (_x.robot_info.robot_id, _x.robot_info.robot_a, _x.robot_info.robot_v, _x.robot_info.robot_p, _x.robot_info.robot_enter_time, _x.robot_info.robot_arrive_cp_time, _x.robot_info.robot_exit_time,) = _get_struct_b6f().unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -163,6 +202,14 @@ string frame_id
       buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
       _x = self
       buff.write(_get_struct_2b().pack(_x.last_inter_id, _x.curr_inter_id))
+      _x = self.robot_info.robot_name
+      length = len(_x)
+      if python3 or type(_x) == unicode:
+        _x = _x.encode('utf-8')
+        length = len(_x)
+      buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
+      _x = self
+      buff.write(_get_struct_b6f().pack(_x.robot_info.robot_id, _x.robot_info.robot_a, _x.robot_info.robot_v, _x.robot_info.robot_p, _x.robot_info.robot_enter_time, _x.robot_info.robot_arrive_cp_time, _x.robot_info.robot_exit_time))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -177,6 +224,8 @@ string frame_id
     try:
       if self.header is None:
         self.header = std_msgs.msg.Header()
+      if self.robot_info is None:
+        self.robot_info = vpa_robot_decision.msg.RobotInfo()
       end = 0
       _x = self
       start = end
@@ -204,6 +253,19 @@ string frame_id
       start = end
       end += 2
       (_x.last_inter_id, _x.curr_inter_id,) = _get_struct_2b().unpack(str[start:end])
+      start = end
+      end += 4
+      (length,) = _struct_I.unpack(str[start:end])
+      start = end
+      end += length
+      if python3:
+        self.robot_info.robot_name = str[start:end].decode('utf-8', 'rosmsg')
+      else:
+        self.robot_info.robot_name = str[start:end]
+      _x = self
+      start = end
+      end += 25
+      (_x.robot_info.robot_id, _x.robot_info.robot_a, _x.robot_info.robot_v, _x.robot_info.robot_p, _x.robot_info.robot_enter_time, _x.robot_info.robot_arrive_cp_time, _x.robot_info.robot_exit_time,) = _get_struct_b6f().unpack(str[start:end])
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -224,6 +286,12 @@ def _get_struct_3I():
     if _struct_3I is None:
         _struct_3I = struct.Struct("<3I")
     return _struct_3I
+_struct_b6f = None
+def _get_struct_b6f():
+    global _struct_b6f
+    if _struct_b6f is None:
+        _struct_b6f = struct.Struct("<b6f")
+    return _struct_b6f
 # This Python file uses the following encoding: utf-8
 """autogenerated by genpy from vpa_robot_decision/InterMngResponse.msg. Do not edit."""
 import codecs
@@ -375,6 +443,6 @@ def _get_struct_B():
     return _struct_B
 class InterMng(object):
   _type          = 'vpa_robot_decision/InterMng'
-  _md5sum = '13e12f4673c290ff3d20da14d75e339f'
+  _md5sum = '6a2d2bfc797d5c6e5fd765f81f56acfb'
   _request_class  = InterMngRequest
   _response_class = InterMngResponse

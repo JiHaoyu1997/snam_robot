@@ -11,6 +11,7 @@ const _deserializer = _ros_msg_utils.Deserialize;
 const _arrayDeserializer = _deserializer.Array;
 const _finder = _ros_msg_utils.Find;
 const _getByteLength = _ros_msg_utils.getByteLength;
+let RobotInfo = require('../msg/RobotInfo.js');
 let std_msgs = _finder('std_msgs');
 
 //-----------------------------------------------------------
@@ -26,6 +27,7 @@ class InterMngRequest {
       this.robot_name = null;
       this.last_inter_id = null;
       this.curr_inter_id = null;
+      this.robot_info = null;
     }
     else {
       if (initObj.hasOwnProperty('header')) {
@@ -52,6 +54,12 @@ class InterMngRequest {
       else {
         this.curr_inter_id = 0;
       }
+      if (initObj.hasOwnProperty('robot_info')) {
+        this.robot_info = initObj.robot_info
+      }
+      else {
+        this.robot_info = new RobotInfo();
+      }
     }
   }
 
@@ -65,6 +73,8 @@ class InterMngRequest {
     bufferOffset = _serializer.int8(obj.last_inter_id, buffer, bufferOffset);
     // Serialize message field [curr_inter_id]
     bufferOffset = _serializer.int8(obj.curr_inter_id, buffer, bufferOffset);
+    // Serialize message field [robot_info]
+    bufferOffset = RobotInfo.serialize(obj.robot_info, buffer, bufferOffset);
     return bufferOffset;
   }
 
@@ -80,6 +90,8 @@ class InterMngRequest {
     data.last_inter_id = _deserializer.int8(buffer, bufferOffset);
     // Deserialize message field [curr_inter_id]
     data.curr_inter_id = _deserializer.int8(buffer, bufferOffset);
+    // Deserialize message field [robot_info]
+    data.robot_info = RobotInfo.deserialize(buffer, bufferOffset);
     return data;
   }
 
@@ -87,6 +99,7 @@ class InterMngRequest {
     let length = 0;
     length += std_msgs.msg.Header.getMessageSize(object.header);
     length += _getByteLength(object.robot_name);
+    length += RobotInfo.getMessageSize(object.robot_info);
     return length + 6;
   }
 
@@ -97,7 +110,7 @@ class InterMngRequest {
 
   static md5sum() {
     //Returns md5sum for a message object
-    return '0441c86245f04f14f6cacbb94a77e326';
+    return 'a208d5c3825c6fd4cc3a482be9ed4727';
   }
 
   static messageDefinition() {
@@ -107,6 +120,7 @@ class InterMngRequest {
     string robot_name
     int8 last_inter_id
     int8 curr_inter_id
+    RobotInfo robot_info
     
     ================================================================================
     MSG: std_msgs/Header
@@ -123,6 +137,17 @@ class InterMngRequest {
     time stamp
     #Frame this data is associated with
     string frame_id
+    
+    ================================================================================
+    MSG: vpa_robot_decision/RobotInfo
+    string  robot_name
+    int8    robot_id
+    float32 robot_a  # Acceleration
+    float32 robot_v  # Velocity
+    float32 robot_p  # Position
+    float32 robot_enter_time
+    float32 robot_arrive_cp_time
+    float32 robot_exit_time
     
     `;
   }
@@ -159,6 +184,13 @@ class InterMngRequest {
     }
     else {
       resolved.curr_inter_id = 0
+    }
+
+    if (msg.robot_info !== undefined) {
+      resolved.robot_info = RobotInfo.Resolve(msg.robot_info)
+    }
+    else {
+      resolved.robot_info = new RobotInfo()
     }
 
     return resolved;
@@ -260,6 +292,6 @@ class InterMngResponse {
 module.exports = {
   Request: InterMngRequest,
   Response: InterMngResponse,
-  md5sum() { return '13e12f4673c290ff3d20da14d75e339f'; },
+  md5sum() { return '6a2d2bfc797d5c6e5fd765f81f56acfb'; },
   datatype() { return 'vpa_robot_decision/InterMng'; }
 };

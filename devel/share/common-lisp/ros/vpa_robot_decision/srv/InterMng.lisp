@@ -26,7 +26,12 @@
     :reader curr_inter_id
     :initarg :curr_inter_id
     :type cl:fixnum
-    :initform 0))
+    :initform 0)
+   (robot_info
+    :reader robot_info
+    :initarg :robot_info
+    :type vpa_robot_decision-msg:RobotInfo
+    :initform (cl:make-instance 'vpa_robot_decision-msg:RobotInfo)))
 )
 
 (cl:defclass InterMng-request (<InterMng-request>)
@@ -56,6 +61,11 @@
 (cl:defmethod curr_inter_id-val ((m <InterMng-request>))
   (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader vpa_robot_decision-srv:curr_inter_id-val is deprecated.  Use vpa_robot_decision-srv:curr_inter_id instead.")
   (curr_inter_id m))
+
+(cl:ensure-generic-function 'robot_info-val :lambda-list '(m))
+(cl:defmethod robot_info-val ((m <InterMng-request>))
+  (roslisp-msg-protocol:msg-deprecation-warning "Using old-style slot reader vpa_robot_decision-srv:robot_info-val is deprecated.  Use vpa_robot_decision-srv:robot_info instead.")
+  (robot_info m))
 (cl:defmethod roslisp-msg-protocol:serialize ((msg <InterMng-request>) ostream)
   "Serializes a message object of type '<InterMng-request>"
   (roslisp-msg-protocol:serialize (cl:slot-value msg 'header) ostream)
@@ -71,6 +81,7 @@
   (cl:let* ((signed (cl:slot-value msg 'curr_inter_id)) (unsigned (cl:if (cl:< signed 0) (cl:+ signed 256) signed)))
     (cl:write-byte (cl:ldb (cl:byte 8 0) unsigned) ostream)
     )
+  (roslisp-msg-protocol:serialize (cl:slot-value msg 'robot_info) ostream)
 )
 (cl:defmethod roslisp-msg-protocol:deserialize ((msg <InterMng-request>) istream)
   "Deserializes a message object of type '<InterMng-request>"
@@ -89,6 +100,7 @@
     (cl:let ((unsigned 0))
       (cl:setf (cl:ldb (cl:byte 8 0) unsigned) (cl:read-byte istream))
       (cl:setf (cl:slot-value msg 'curr_inter_id) (cl:if (cl:< unsigned 128) unsigned (cl:- unsigned 256))))
+  (roslisp-msg-protocol:deserialize (cl:slot-value msg 'robot_info) istream)
   msg
 )
 (cl:defmethod roslisp-msg-protocol:ros-datatype ((msg (cl:eql '<InterMng-request>)))
@@ -99,22 +111,23 @@
   "vpa_robot_decision/InterMngRequest")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<InterMng-request>)))
   "Returns md5sum for a message object of type '<InterMng-request>"
-  "13e12f4673c290ff3d20da14d75e339f")
+  "6a2d2bfc797d5c6e5fd765f81f56acfb")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'InterMng-request)))
   "Returns md5sum for a message object of type 'InterMng-request"
-  "13e12f4673c290ff3d20da14d75e339f")
+  "6a2d2bfc797d5c6e5fd765f81f56acfb")
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<InterMng-request>)))
   "Returns full string definition for message of type '<InterMng-request>"
-  (cl:format cl:nil "std_msgs/Header header~%string robot_name~%int8 last_inter_id~%int8 curr_inter_id~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')~%# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%string frame_id~%~%~%"))
+  (cl:format cl:nil "std_msgs/Header header~%string robot_name~%int8 last_inter_id~%int8 curr_inter_id~%RobotInfo robot_info~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')~%# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%string frame_id~%~%================================================================================~%MSG: vpa_robot_decision/RobotInfo~%string  robot_name~%int8    robot_id~%float32 robot_a  # Acceleration~%float32 robot_v  # Velocity~%float32 robot_p  # Position~%float32 robot_enter_time~%float32 robot_arrive_cp_time~%float32 robot_exit_time~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql 'InterMng-request)))
   "Returns full string definition for message of type 'InterMng-request"
-  (cl:format cl:nil "std_msgs/Header header~%string robot_name~%int8 last_inter_id~%int8 curr_inter_id~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')~%# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%string frame_id~%~%~%"))
+  (cl:format cl:nil "std_msgs/Header header~%string robot_name~%int8 last_inter_id~%int8 curr_inter_id~%RobotInfo robot_info~%~%================================================================================~%MSG: std_msgs/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.sec: seconds (stamp_secs) since epoch (in Python the variable is called 'secs')~%# * stamp.nsec: nanoseconds since stamp_secs (in Python the variable is called 'nsecs')~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%string frame_id~%~%================================================================================~%MSG: vpa_robot_decision/RobotInfo~%string  robot_name~%int8    robot_id~%float32 robot_a  # Acceleration~%float32 robot_v  # Velocity~%float32 robot_p  # Position~%float32 robot_enter_time~%float32 robot_arrive_cp_time~%float32 robot_exit_time~%~%~%"))
 (cl:defmethod roslisp-msg-protocol:serialization-length ((msg <InterMng-request>))
   (cl:+ 0
      (roslisp-msg-protocol:serialization-length (cl:slot-value msg 'header))
      4 (cl:length (cl:slot-value msg 'robot_name))
      1
      1
+     (roslisp-msg-protocol:serialization-length (cl:slot-value msg 'robot_info))
 ))
 (cl:defmethod roslisp-msg-protocol:ros-message-to-list ((msg <InterMng-request>))
   "Converts a ROS message object to a list"
@@ -123,6 +136,7 @@
     (cl:cons ':robot_name (robot_name msg))
     (cl:cons ':last_inter_id (last_inter_id msg))
     (cl:cons ':curr_inter_id (curr_inter_id msg))
+    (cl:cons ':robot_info (robot_info msg))
 ))
 ;//! \htmlinclude InterMng-response.msg.html
 
@@ -187,10 +201,10 @@
   "vpa_robot_decision/InterMngResponse")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql '<InterMng-response>)))
   "Returns md5sum for a message object of type '<InterMng-response>"
-  "13e12f4673c290ff3d20da14d75e339f")
+  "6a2d2bfc797d5c6e5fd765f81f56acfb")
 (cl:defmethod roslisp-msg-protocol:md5sum ((type (cl:eql 'InterMng-response)))
   "Returns md5sum for a message object of type 'InterMng-response"
-  "13e12f4673c290ff3d20da14d75e339f")
+  "6a2d2bfc797d5c6e5fd765f81f56acfb")
 (cl:defmethod roslisp-msg-protocol:message-definition ((type (cl:eql '<InterMng-response>)))
   "Returns full string definition for message of type '<InterMng-response>"
   (cl:format cl:nil "bool success~%string message~%~%~%"))

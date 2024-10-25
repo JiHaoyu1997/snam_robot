@@ -16,6 +16,7 @@
 #include <ros/message_operations.h>
 
 #include <std_msgs/Header.h>
+#include <vpa_robot_decision/RobotInfo.h>
 
 namespace vpa_robot_decision
 {
@@ -28,13 +29,15 @@ struct InterMngRequest_
     : header()
     , robot_name()
     , last_inter_id(0)
-    , curr_inter_id(0)  {
+    , curr_inter_id(0)
+    , robot_info()  {
     }
   InterMngRequest_(const ContainerAllocator& _alloc)
     : header(_alloc)
     , robot_name(_alloc)
     , last_inter_id(0)
-    , curr_inter_id(0)  {
+    , curr_inter_id(0)
+    , robot_info(_alloc)  {
   (void)_alloc;
     }
 
@@ -51,6 +54,9 @@ struct InterMngRequest_
 
    typedef int8_t _curr_inter_id_type;
   _curr_inter_id_type curr_inter_id;
+
+   typedef  ::vpa_robot_decision::RobotInfo_<ContainerAllocator>  _robot_info_type;
+  _robot_info_type robot_info;
 
 
 
@@ -84,7 +90,8 @@ bool operator==(const ::vpa_robot_decision::InterMngRequest_<ContainerAllocator1
   return lhs.header == rhs.header &&
     lhs.robot_name == rhs.robot_name &&
     lhs.last_inter_id == rhs.last_inter_id &&
-    lhs.curr_inter_id == rhs.curr_inter_id;
+    lhs.curr_inter_id == rhs.curr_inter_id &&
+    lhs.robot_info == rhs.robot_info;
 }
 
 template<typename ContainerAllocator1, typename ContainerAllocator2>
@@ -141,12 +148,12 @@ struct MD5Sum< ::vpa_robot_decision::InterMngRequest_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "0441c86245f04f14f6cacbb94a77e326";
+    return "a208d5c3825c6fd4cc3a482be9ed4727";
   }
 
   static const char* value(const ::vpa_robot_decision::InterMngRequest_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x0441c86245f04f14ULL;
-  static const uint64_t static_value2 = 0xf6cacbb94a77e326ULL;
+  static const uint64_t static_value1 = 0xa208d5c3825c6fd4ULL;
+  static const uint64_t static_value2 = 0xcc3a482be9ed4727ULL;
 };
 
 template<class ContainerAllocator>
@@ -169,6 +176,7 @@ struct Definition< ::vpa_robot_decision::InterMngRequest_<ContainerAllocator> >
 "string robot_name\n"
 "int8 last_inter_id\n"
 "int8 curr_inter_id\n"
+"RobotInfo robot_info\n"
 "\n"
 "================================================================================\n"
 "MSG: std_msgs/Header\n"
@@ -185,6 +193,17 @@ struct Definition< ::vpa_robot_decision::InterMngRequest_<ContainerAllocator> >
 "time stamp\n"
 "#Frame this data is associated with\n"
 "string frame_id\n"
+"\n"
+"================================================================================\n"
+"MSG: vpa_robot_decision/RobotInfo\n"
+"string  robot_name\n"
+"int8    robot_id\n"
+"float32 robot_a  # Acceleration\n"
+"float32 robot_v  # Velocity\n"
+"float32 robot_p  # Position\n"
+"float32 robot_enter_time\n"
+"float32 robot_arrive_cp_time\n"
+"float32 robot_exit_time\n"
 ;
   }
 
@@ -207,6 +226,7 @@ namespace serialization
       stream.next(m.robot_name);
       stream.next(m.last_inter_id);
       stream.next(m.curr_inter_id);
+      stream.next(m.robot_info);
     }
 
     ROS_DECLARE_ALLINONE_SERIALIZER
@@ -234,6 +254,9 @@ struct Printer< ::vpa_robot_decision::InterMngRequest_<ContainerAllocator> >
     Printer<int8_t>::stream(s, indent + "  ", v.last_inter_id);
     s << indent << "curr_inter_id: ";
     Printer<int8_t>::stream(s, indent + "  ", v.curr_inter_id);
+    s << indent << "robot_info: ";
+    s << std::endl;
+    Printer< ::vpa_robot_decision::RobotInfo_<ContainerAllocator> >::stream(s, indent + "  ", v.robot_info);
   }
 };
 

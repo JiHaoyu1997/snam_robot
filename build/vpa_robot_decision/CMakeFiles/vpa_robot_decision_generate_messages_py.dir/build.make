@@ -73,6 +73,7 @@ vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_py: /home/stu
 
 /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_decision/srv/_InterMng.py: /opt/ros/noetic/lib/genpy/gensrv_py.py
 /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_decision/srv/_InterMng.py: /home/student/snam_robot/src/vpa_robot_decision/srv/InterMng.srv
+/home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_decision/srv/_InterMng.py: /home/student/snam_robot/src/vpa_robot_decision/msg/RobotInfo.msg
 /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_decision/srv/_InterMng.py: /opt/ros/noetic/share/std_msgs/msg/Header.msg
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Generating Python code from SRV vpa_robot_decision/InterMng"
 	cd /home/student/snam_robot/build/vpa_robot_decision && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genpy/cmake/../../../lib/genpy/gensrv_py.py /home/student/snam_robot/src/vpa_robot_decision/srv/InterMng.srv -Ivpa_robot_decision:/home/student/snam_robot/src/vpa_robot_decision/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p vpa_robot_decision -o /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_decision/srv

@@ -29,7 +29,7 @@ add_custom_target(_vpa_robot_decision_generate_messages_check_deps_${_filename}
 
 get_filename_component(_filename "/home/student/snam_robot/src/vpa_robot_decision/srv/InterMng.srv" NAME_WE)
 add_custom_target(_vpa_robot_decision_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "vpa_robot_decision" "/home/student/snam_robot/src/vpa_robot_decision/srv/InterMng.srv" "std_msgs/Header"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "vpa_robot_decision" "/home/student/snam_robot/src/vpa_robot_decision/srv/InterMng.srv" "vpa_robot_decision/RobotInfo:std_msgs/Header"
 )
 
 #
@@ -55,7 +55,7 @@ _generate_msg_cpp(vpa_robot_decision
 _generate_srv_cpp(vpa_robot_decision
   "/home/student/snam_robot/src/vpa_robot_decision/srv/InterMng.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/home/student/snam_robot/src/vpa_robot_decision/msg/RobotInfo.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/vpa_robot_decision
 )
 
@@ -104,7 +104,7 @@ _generate_msg_eus(vpa_robot_decision
 _generate_srv_eus(vpa_robot_decision
   "/home/student/snam_robot/src/vpa_robot_decision/srv/InterMng.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/home/student/snam_robot/src/vpa_robot_decision/msg/RobotInfo.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/vpa_robot_decision
 )
 
@@ -153,7 +153,7 @@ _generate_msg_lisp(vpa_robot_decision
 _generate_srv_lisp(vpa_robot_decision
   "/home/student/snam_robot/src/vpa_robot_decision/srv/InterMng.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/home/student/snam_robot/src/vpa_robot_decision/msg/RobotInfo.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/vpa_robot_decision
 )
 
@@ -202,7 +202,7 @@ _generate_msg_nodejs(vpa_robot_decision
 _generate_srv_nodejs(vpa_robot_decision
   "/home/student/snam_robot/src/vpa_robot_decision/srv/InterMng.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/home/student/snam_robot/src/vpa_robot_decision/msg/RobotInfo.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/vpa_robot_decision
 )
 
@@ -251,7 +251,7 @@ _generate_msg_py(vpa_robot_decision
 _generate_srv_py(vpa_robot_decision
   "/home/student/snam_robot/src/vpa_robot_decision/srv/InterMng.srv"
   "${MSG_I_FLAGS}"
-  "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
+  "/home/student/snam_robot/src/vpa_robot_decision/msg/RobotInfo.msg;/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/vpa_robot_decision
 )
 

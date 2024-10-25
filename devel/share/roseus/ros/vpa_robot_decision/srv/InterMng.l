@@ -22,7 +22,7 @@
 
 (defclass vpa_robot_decision::InterMngRequest
   :super ros::object
-  :slots (_header _robot_name _last_inter_id _curr_inter_id ))
+  :slots (_header _robot_name _last_inter_id _curr_inter_id _robot_info ))
 
 (defmethod vpa_robot_decision::InterMngRequest
   (:init
@@ -31,12 +31,14 @@
     ((:robot_name __robot_name) "")
     ((:last_inter_id __last_inter_id) 0)
     ((:curr_inter_id __curr_inter_id) 0)
+    ((:robot_info __robot_info) (instance vpa_robot_decision::RobotInfo :init))
     )
    (send-super :init)
    (setq _header __header)
    (setq _robot_name (string __robot_name))
    (setq _last_inter_id (round __last_inter_id))
    (setq _curr_inter_id (round __curr_inter_id))
+   (setq _robot_info __robot_info)
    self)
   (:header
    (&rest __header)
@@ -54,6 +56,13 @@
   (:curr_inter_id
    (&optional __curr_inter_id)
    (if __curr_inter_id (setq _curr_inter_id __curr_inter_id)) _curr_inter_id)
+  (:robot_info
+   (&rest __robot_info)
+   (if (keywordp (car __robot_info))
+       (send* _robot_info __robot_info)
+     (progn
+       (if __robot_info (setq _robot_info (car __robot_info)))
+       _robot_info)))
   (:serialization-length
    ()
    (+
@@ -65,6 +74,8 @@
     1
     ;; int8 _curr_inter_id
     1
+    ;; vpa_robot_decision/RobotInfo _robot_info
+    (send _robot_info :serialization-length)
     ))
   (:serialize
    (&optional strm)
@@ -78,6 +89,8 @@
        (write-byte _last_inter_id s)
      ;; int8 _curr_inter_id
        (write-byte _curr_inter_id s)
+     ;; vpa_robot_decision/RobotInfo _robot_info
+       (send _robot_info :serialize s)
      ;;
      (if (null strm) (get-output-stream-string s))))
   (:deserialize
@@ -92,6 +105,8 @@
    ;; int8 _curr_inter_id
      (setq _curr_inter_id (sys::peek buf ptr- :char)) (incf ptr- 1)
      (if (> _curr_inter_id 127) (setq _curr_inter_id (- _curr_inter_id 256)))
+   ;; vpa_robot_decision/RobotInfo _robot_info
+     (send _robot_info :deserialize buf ptr-) (incf ptr- (send _robot_info :serialization-length))
    ;;
    self)
   )
@@ -148,7 +163,7 @@
   :super ros::object
   :slots ())
 
-(setf (get vpa_robot_decision::InterMng :md5sum-) "13e12f4673c290ff3d20da14d75e339f")
+(setf (get vpa_robot_decision::InterMng :md5sum-) "6a2d2bfc797d5c6e5fd765f81f56acfb")
 (setf (get vpa_robot_decision::InterMng :datatype-) "vpa_robot_decision/InterMng")
 (setf (get vpa_robot_decision::InterMng :request) vpa_robot_decision::InterMngRequest)
 (setf (get vpa_robot_decision::InterMng :response) vpa_robot_decision::InterMngResponse)
@@ -156,13 +171,14 @@
 (defmethod vpa_robot_decision::InterMngRequest
   (:response () (instance vpa_robot_decision::InterMngResponse :init)))
 
-(setf (get vpa_robot_decision::InterMngRequest :md5sum-) "13e12f4673c290ff3d20da14d75e339f")
+(setf (get vpa_robot_decision::InterMngRequest :md5sum-) "6a2d2bfc797d5c6e5fd765f81f56acfb")
 (setf (get vpa_robot_decision::InterMngRequest :datatype-) "vpa_robot_decision/InterMngRequest")
 (setf (get vpa_robot_decision::InterMngRequest :definition-)
       "std_msgs/Header header
 string robot_name
 int8 last_inter_id
 int8 curr_inter_id
+RobotInfo robot_info
 
 ================================================================================
 MSG: std_msgs/Header
@@ -179,18 +195,30 @@ uint32 seq
 time stamp
 #Frame this data is associated with
 string frame_id
+
+================================================================================
+MSG: vpa_robot_decision/RobotInfo
+string  robot_name
+int8    robot_id
+float32 robot_a  # Acceleration
+float32 robot_v  # Velocity
+float32 robot_p  # Position
+float32 robot_enter_time
+float32 robot_arrive_cp_time
+float32 robot_exit_time
 ---
 bool success
 string message
 ")
 
-(setf (get vpa_robot_decision::InterMngResponse :md5sum-) "13e12f4673c290ff3d20da14d75e339f")
+(setf (get vpa_robot_decision::InterMngResponse :md5sum-) "6a2d2bfc797d5c6e5fd765f81f56acfb")
 (setf (get vpa_robot_decision::InterMngResponse :datatype-) "vpa_robot_decision/InterMngResponse")
 (setf (get vpa_robot_decision::InterMngResponse :definition-)
       "std_msgs/Header header
 string robot_name
 int8 last_inter_id
 int8 curr_inter_id
+RobotInfo robot_info
 
 ================================================================================
 MSG: std_msgs/Header
@@ -207,6 +235,17 @@ uint32 seq
 time stamp
 #Frame this data is associated with
 string frame_id
+
+================================================================================
+MSG: vpa_robot_decision/RobotInfo
+string  robot_name
+int8    robot_id
+float32 robot_a  # Acceleration
+float32 robot_v  # Velocity
+float32 robot_p  # Position
+float32 robot_enter_time
+float32 robot_arrive_cp_time
+float32 robot_exit_time
 ---
 bool success
 string message
@@ -214,6 +253,6 @@ string message
 
 
 
-(provide :vpa_robot_decision/InterMng "13e12f4673c290ff3d20da14d75e339f")
+(provide :vpa_robot_decision/InterMng "6a2d2bfc797d5c6e5fd765f81f56acfb")
 
 
