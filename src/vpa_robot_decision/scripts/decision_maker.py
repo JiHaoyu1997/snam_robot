@@ -98,7 +98,7 @@ class DecisionMaker:
 
     def update_global_inter_info(self, last_inter_id, curr_inter_id):
         """Update global intersection info by calling the service."""
-        rospy.wait_for_service('/robot_inter_mng_srv')
+        rospy.wait_for_service('/inter_mng_srv')
         try:
             self.robot_info = RobotInfo(
                 name=self.robot_name,
