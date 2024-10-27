@@ -154,7 +154,7 @@ class WheelDriverNode:
         self.omega_left_sig     = 0
         self.omega_right_sig    = 0
 
-        self.throttle_left      = 1.1e-2
+        self.throttle_left      = 0
         self.throttle_right     = 0
 
         # Kinematics
@@ -204,6 +204,7 @@ class WheelDriverNode:
         if self.estop:
             self.omega_right_ref    = 0
             self.omega_left_ref     = 0
+
         else:
             msg_car_cmd.linear.x    = max(min(msg_car_cmd.linear.x, self._v_max), -self._v_max)
             msg_car_cmd.angular.z   = max(min(msg_car_cmd.angular.z, self._omega_max), -self._omega_max)

@@ -7,10 +7,6 @@
     <group ns="$(arg robot_name)">
         <!-- Pass the robot_name argument to the included launch files -->
 
-        <include file="$(find vpa_robot_task)/launch/robot_task.launch">
-            <arg name="robot_name" value="$(arg robot_name)" />
-        </include>
-
         <include file="$(find vpa_robot_vision)/launch/robot_vision.launch">
             <arg name="robot_name" value="$(arg robot_name)" />
         </include>
@@ -20,8 +16,11 @@
         </include>
 
         <include file="$(find vpa_robot_interface)/launch/vpa_traction_start.launch"/>
+       
+        <include file="$(find vpa_robot_task)/launch/robot_task.launch">
+            <arg name="robot_name" value="$(arg robot_name)" />
+        </include>
 
         <node name="republish_result" pkg="image_transport" type="republish" args="raw in:=result_image compressed out:=result_image" />
-    
     </group>  
 </launch>

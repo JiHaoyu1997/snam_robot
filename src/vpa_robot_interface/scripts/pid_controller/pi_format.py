@@ -5,36 +5,39 @@ class PIController:
     """ A class to implement a PI (Proportional-Intergral) controller """
 
     def __init__(self, kp, ki) -> None:
+        # 控制器参数
         self.kp = kp
         self.ki = ki
-        self.control_output = 0
-        self.err_record     = 0
+        self.frequency = 20
+        self.dt = 1 / self.frequency
 
-    def record_current_error(self, err) -> None:
-        self.err_record = err
+        # 状态变量
+        self.last_error = 0
+        self.last_output     = 0
 
     def pi_control(self, ref, sig) -> float:
         if ref == 0:
-            self.reset_controller()
+            self.reset()
             return 0
         
         # current err
         err = ref - sig
 
-        self.record_current_error(err)
-
-        delta_err = err - self.err_record
+        delta_err = err - self.last_error
         
-        delta_output = self.kp * delta_err + self.ki * err
+        delta_output = self.kp * delta_err + self.ki * self.dt * err
 
-        self.control_output += delta_output
+        output = self.last_output + delta_output
 
-        return self.control_output
+        self.last_error = err
+        self.last_output = output
+
+        return output
     
     def update_controller_param(self,kp,ki) -> None:
         self.kp = kp
         self.ki = ki
         
-    def reset_controller(self):        
-        self.control_output = 0
-        self.err_record     = 0       
+    def reset(self):        
+        self.last_error = 0
+        self.last_output = 0       
