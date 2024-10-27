@@ -1,17 +1,14 @@
 #!/usr/bin/env python3
 
 import rospy
-import socket
-import RPi.GPIO as GPIO
-
-from math import pi
 from enum import IntEnum
 
+import RPi.GPIO as GPIO
+import socket
+from vpa_robot_interface.msg import WheelsCmd,WheelsEncoder
+from math import pi
 from std_msgs.msg import Bool
-
-from vpa_robot_interface.msg import WheelsCmd, WheelsEncoder
-
-class WheelDirection(IntEnum):    
+class WheelDirection(IntEnum):
     FORWARD = 1
     REVERSE = -1
 
@@ -21,14 +18,11 @@ class WheelEncoderDriver:
 
         if not 1 <= gpio_pin <= 40:
             raise ValueError("The pin number must be within the range [1, 40].")
-        
         # validate callback
         if not callable(callback):
             raise ValueError("The callback object must be a callable object")
-        
         # configure GPIO pin
         self._gpio_pin = gpio_pin
-
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(gpio_pin, GPIO.IN)
         GPIO.add_event_detect(gpio_pin, GPIO.RISING, callback=self._cb)
@@ -39,6 +33,8 @@ class WheelEncoderDriver:
         
         self._direction = 1 # because the encodes has one single phase, no reliable to get direction now
 
+
+        
     def get_direction(self) -> WheelDirection:
         return self._direction
 
@@ -52,14 +48,9 @@ class WheelEncoderDriver:
     def __del__(self):
         GPIO.remove_event_detect(self._gpio_pin)
 
-
 class WheelEncodersNode:
 
     def __init__(self) -> None:
-
-        rospy.on_shutdown(self.shut_hook)
-
-        # Get the vehicle name
         self.veh_name           = socket.gethostname()
         
         self.seq = 0
@@ -86,26 +77,24 @@ class WheelEncodersNode:
         self.window_pointer_left    = 0
         self.window_pointer_right   = 0
 
-        # Subscribers
-        self.sub_dir            = rospy.Subscriber('wheel_ref', WheelsCmd, self.dir_cb, queue_size=1)
+        self.sub_dir       = rospy.Subscriber('wheel_ref',WheelsCmd,self.dir_cb)
+        self.pub_omega      = rospy.Publisher('wheel_omega',WheelsEncoder,queue_size=1)
 
-        self.sub_node_shutdown  = rospy.Subscriber("robot_interface_shutdown", Bool, self.signal_shut)
+        self.left_driver    = WheelEncoderDriver(self.left_gpio,self.left_enc_cb)
+        self.right_driver   = WheelEncoderDriver(self.right_gpio,self.right_enc_cb) 
+
+        self._timer       = rospy.Timer(rospy.Duration(1.0 / self._publish_frequency), self._cb_publish)
+        self._timer_omega = rospy.Timer(rospy.Duration(1/20),self._omega_reduce_cb)
+
+        rospy.loginfo("%s: wheel encoders ready",self.veh_name)
+        rospy.Subscriber("robot_interface_shutdown", Bool, self.signal_shut)
+
+    def signal_shut(self,msg:Bool):
+        if msg.data:
+            rospy.signal_shutdown('encoder node shutdown')
+
+    def dir_cb(self,msg:WheelsCmd):
         
-        # Publishers
-        self.pub_omega          = rospy.Publisher('wheel_omega', WheelsEncoder, queue_size=1)
-
-        # Encoder
-        self.left_driver        = WheelEncoderDriver(self.left_gpio, self.left_enc_cb)
-        self.right_driver       = WheelEncoderDriver(self.right_gpio, self.right_enc_cb) 
-
-        # Timer (Publischer Trigger)
-        self._timer             = rospy.Timer(rospy.Duration(1.0 / self._publish_frequency), self._cb_publish)
-        self._timer_omega       = rospy.Timer(rospy.Duration(1/20), self._omega_reduce_cb)
-
-        rospy.loginfo("%s: wheel encoders ready", self.veh_name)
-
-    def dir_cb(self,msg: WheelsCmd):        
-        """ Set Direction """
         if msg.throttle_left < 0:
             self.left_driver.set_direction(-1)
         else:
@@ -116,10 +105,20 @@ class WheelEncodersNode:
         else:
             self.right_driver.set_direction(1)
     
-    def signal_shut(self, msg:Bool):
-        """ Shutdown Node """
-        if msg.data:
-            rospy.signal_shutdown('encoder node shutdown')         
+    def _omega_reduce_cb(self,_):
+        
+        if self._tick_left == self._tick_left_last:
+            # no change for about 20ms -> wheel is not spining or very slow
+            self.omega_left = 0
+            self.omega_window_left = []
+            self.window_pointer_left = 0
+        self._tick_left_last = self._tick_left
+        if self._tick_right == self._tick_right_last:
+            # no change for about 20ms -> wheel is not spining or very slow
+            self.omega_right = 0
+            self.omega_window_right = []
+            self.window_pointer_right = 0        
+        self._tick_right_last = self._tick_right            
 
     def left_enc_cb(self, tick_no) -> None:
 
@@ -142,6 +141,7 @@ class WheelEncodersNode:
                 _omega = (-2*pi/self._resolution)/delat_t
                 if abs(_omega) > 20:
                     _omega = -20
+
            
             if len(self.omega_window_left) < self.window_length:
                 self.omega_window_left.append(_omega)
@@ -151,7 +151,7 @@ class WheelEncodersNode:
                 if self.window_pointer_left > self.window_length - 1:
                     self.window_pointer_left = 0 
 
-    def right_enc_cb(self, tick_no) -> None:
+    def right_enc_cb(self,tick_no) -> None:
         
         self._tick_right = tick_no
 
@@ -170,8 +170,9 @@ class WheelEncodersNode:
             elif self._tick_right < self._tick_right_last:
                 _omega = (-2*pi/self._resolution)/delat_t
                 if abs(_omega) > 20:
-                    _omega = -20            
-    
+                    _omega = -20
+            
+            
             if len(self.omega_window_right) < self.window_length:
                 self.omega_window_right.append(_omega)
             else:
@@ -180,8 +181,7 @@ class WheelEncodersNode:
                 if self.window_pointer_right > self.window_length - 1:
                     self.window_pointer_right = 0 
 
-    def _cb_publish(self, _):
-
+    def _cb_publish(self,_):
         self.seq += 1
         
         if len(self.omega_window_left) > 0:
@@ -202,22 +202,6 @@ class WheelEncodersNode:
         msg_to_send.right_ticks = self._tick_right
 
         self.pub_omega.publish(msg_to_send)
-    
-    def _omega_reduce_cb(self, _):
-        
-        if self._tick_left == self._tick_left_last:
-            # no change for about 20ms -> wheel is not spining or very slow
-            self.omega_left = 0
-            self.omega_window_left = []
-            self.window_pointer_left = 0
-        self._tick_left_last = self._tick_left
-
-        if self._tick_right == self._tick_right_last:
-            # no change for about 20ms -> wheel is not spining or very slow
-            self.omega_right = 0
-            self.omega_window_right = []
-            self.window_pointer_right = 0  
-        self._tick_right_last = self._tick_right  
 
     def shut_hook(self):
         del self.left_driver
