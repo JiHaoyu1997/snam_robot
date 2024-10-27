@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
 import rospy
-
 from typing import List
+
+from vpa_robot.robot.robot import find_id_by_robot_name
 
 from std_msgs.msg import Int8MultiArray
 from geometry_msgs.msg import Twist
