@@ -1,5 +1,5 @@
 <launch>
-    <arg name="robot_name" value="lucas"/>
+    <arg name="robot_name" value="$(env robot_name)"/>
     <arg name="test_mode" default="false"/> 
     <arg name="acc_on" default="false"/>
     <arg name="publish_mask" default="false"/>
