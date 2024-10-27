@@ -196,6 +196,8 @@ class RobotVision:
             self.current_zone == Zone.INTERSECTION
             # detect lane line
             pass
+
+        self.pub_img(cv_img=cv_img)
         
         """Step4 FROM TARGET COORDINATE TO TWIST"""
         if self.stop:
