@@ -6,7 +6,7 @@ from math import fabs, floor
 import os
 from dt_config.dt_hardware_settings import MotorDirection, HATv2
 
-from vpa_robot_interface.msg import WheelsCmd,WheelsEncoder
+from vpa_robot_interface.msg import WheelsCmd, WheelsEncoder
 from vpa_robot_interface.cfg import omegaConfig
 
 from pid_controller.pi_format import PIController
@@ -233,10 +233,6 @@ class WheelDriverNode:
             # self.throttle_left=1.1e-2
             # self.throttle_right=1.1e-2
             self.driver.set_wheels_throttle(left=self.throttle_left, right=self.throttle_right)
-    
-    def change_left_wheel_t_cb(self, msg: LeftWheelT):
-        self.throttle_left = msg.throttle_left
-        rospy.loginfo_once('%s: left wheel throttle: %s',self.veh_name, str(msg.throttle_left))
 
     def estop_cb(self, msg: Bool) -> None:
         self.estop = msg.data
