@@ -176,7 +176,7 @@ class RobotVision:
                 self.stop = True
                 return
             
-        if self.curr_route[0] == [6]:
+        if self.curr_route[0] == 6:
             # 
             self.current_zone == Zone.BUFFER_AREA            
 
@@ -187,11 +187,13 @@ class RobotVision:
             buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(buffer_line_mask_img)
             if not buffer_line_x == None:
                 cv2.circle(cv_img, (buffer_line_x, buffer_line_y), 5, (255, 100, 0), 5)
-                self.pub_img(cv_img=cv_img)
+
                 target_x = buffer_line_x
             else:
-                target_x = self.image_width / 2         
+                target_x = self.image_width / 2 
 
+            self.pub_img(cv_img=cv_img)
+            
         # INTERSECTION AREA
         else: 
             self.current_zone == Zone.INTERSECTION
