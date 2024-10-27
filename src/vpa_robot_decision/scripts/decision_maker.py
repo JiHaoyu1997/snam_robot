@@ -3,7 +3,7 @@
 import rospy
 from typing import List
 
-from vpa_robot.robot.robot import find_id_by_robot_name
+from robot.robot import find_id_by_robot_name
 
 from std_msgs.msg import Int8MultiArray
 from geometry_msgs.msg import Twist
@@ -102,7 +102,7 @@ class DecisionMaker:
         try:
             self.robot_info = RobotInfo(
                 name=self.robot_name,
-                id=4,
+                id=find_id_by_robot_name(robot_name=self.robot_name),
             )
 
             req = InterMngRequest()
