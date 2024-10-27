@@ -5,6 +5,7 @@ cb0c192deb4b414637b74400ae29a74d /home/student/snam_robot/devel/include/vpa_robo
 9e186f19260cb7fa6ab6792e518f47ff /home/student/snam_robot/devel/include/vpa_robot_interface/LeftWheelT.h
 1371ed33134c13a9feff30b2542f5dcd /home/student/snam_robot/devel/include/vpa_robot_interface/WheelsCmd.h
 fae72207204ce1c68e14e0e222262a84 /home/student/snam_robot/devel/include/vpa_robot_interface/WheelsEncoder.h
+712a5f8636405c0074a37a521ddb5655 /home/student/snam_robot/devel/include/vpa_robot_interface/WheelsOmegaInfo.h
 386bc912eced4a1ae980ddb9536edc95 /home/student/snam_robot/devel/include/vpa_robot_interface/omegaConfig.h
 fd7face96fae7e470a04455ce88a7707 /home/student/snam_robot/devel/include/vpa_robot_task/AssignTask.h
 1d8092a00139b42e50e02d9e4d35c581 /home/student/snam_robot/devel/include/vpa_robot_vision/CrossInfo.h
@@ -16,6 +17,7 @@ edd38be8174aaf0c7a4419bf81ae8731 /home/student/snam_robot/devel/lib/python3/dist
 155058f59e7318f09e65da0d632266d5 /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg/_LeftWheelT.py
 45362aeb1ebcea23b6c7b92e6e9954ab /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg/_WheelsCmd.py
 049d371841ec810bcf6489d603cad46c /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg/_WheelsEncoder.py
+61c13487353831bbecede6433dc69d72 /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg/_WheelsOmegaInfo.py
 7d167de73705a016b3078ee62b1204bb /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg/__init__.py
 9f734111f3a0678cf81c1c7ffa9278e4 /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_task/srv/_AssignTask.py
 72f5a117022556fa7d2ffc4ff5e4a20c /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_task/srv/__init__.py
@@ -27,6 +29,7 @@ b1df5da74c051b59abf13f890b274d7e /home/student/snam_robot/devel/share/common-lis
 0f339cff137043555ae609461e926bed /home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_interface/msg/LeftWheelT.lisp
 3b4a0c4755da05f9d20c2af453203774 /home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_interface/msg/WheelsCmd.lisp
 e99e3ceb24f26e17f15ed8c015c12043 /home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_interface/msg/WheelsEncoder.lisp
+b6c73c2270395aab76966fcb32ee5e3b /home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_interface/msg/WheelsOmegaInfo.lisp
 152e6e394ce0ebf2619568c6d1d5492e /home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_task/srv/AssignTask.lisp
 da820222874db33db351ef4563cf2e7b /home/student/snam_robot/devel/share/common-lisp/ros/vpa_robot_vision/msg/CrossInfo.lisp
 8756b673ff3c835584c381bfe8c0be83 /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_decision/msg/InterInfo.js
@@ -35,6 +38,7 @@ a977b92e2400cc162859d6e38cdbf2be /home/student/snam_robot/devel/share/gennodejs/
 c4c6d8b0d0d5155a82e678a27cbff87b /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_interface/msg/LeftWheelT.js
 4960c009144964167811b90fe421b221 /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_interface/msg/WheelsCmd.js
 afa2fa70a6789ef40609c0ce6e99cd9e /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_interface/msg/WheelsEncoder.js
+4a211cf3acf66e2f0db542ec1e831226 /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_interface/msg/WheelsOmegaInfo.js
 317ee4cf36357b65a87a090a86cfe668 /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_task/srv/AssignTask.js
 c42fb3c3eee2e3e43e8e58a04f891f8d /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_vision/msg/CrossInfo.js
 c4ec6841a921edde083b57cacc6cab57 /home/student/snam_robot/devel/share/roseus/ros/vpa_robot_decision/manifest.l
@@ -45,13 +49,14 @@ e3e699aff0ece88abbe5871f72693b36 /home/student/snam_robot/devel/share/roseus/ros
 d305027586f7fad5fe242f43a7073483 /home/student/snam_robot/devel/share/roseus/ros/vpa_robot_interface/msg/LeftWheelT.l
 6bdd9d3fa298dfac3fe7c846e0cfe7b1 /home/student/snam_robot/devel/share/roseus/ros/vpa_robot_interface/msg/WheelsCmd.l
 4c5bb3187cdebcf714d190f02e8442ed /home/student/snam_robot/devel/share/roseus/ros/vpa_robot_interface/msg/WheelsEncoder.l
+304efd2b05c090264751524c3cb3b226 /home/student/snam_robot/devel/share/roseus/ros/vpa_robot_interface/msg/WheelsOmegaInfo.l
 bc1725d612359dbcc19bcc29242e2285 /home/student/snam_robot/devel/share/roseus/ros/vpa_robot_task/manifest.l
 af77208b877e71572ac370ffc1732e0b /home/student/snam_robot/devel/share/roseus/ros/vpa_robot_task/srv/AssignTask.l
 8ad79b1f47030e6ac688013c66e12cad /home/student/snam_robot/devel/share/roseus/ros/vpa_robot_vision/manifest.l
 433941efce6acd34f06eb4df7d30de03 /home/student/snam_robot/devel/share/roseus/ros/vpa_robot_vision/msg/CrossInfo.l
 dd366e6cd9425b142f0ec950d09ab24b CMakeFiles/clean_test_results
 d2045b1b9038a945ed10370471a2a7b3 vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterInfo
-db578232343be902ad5cc82fae3b2651 vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng
+28bc838c8ee632112d78ff401c56f156 vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng
 67ab9f48f111191f3da6e181492834f6 vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_RobotInfo
 fd03704ea00488fb0882ecb266ab868e vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_cpp
 fd03704ea00488fb0882ecb266ab868e vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_eus
@@ -61,6 +66,7 @@ fd03704ea00488fb0882ecb266ab868e vpa_robot_decision/CMakeFiles/vpa_robot_decisio
 ea05fe6a3662f4d391ca910571651c5a vpa_robot_interface/CMakeFiles/_vpa_robot_interface_generate_messages_check_deps_LeftWheelT
 024c12965c010d770ddc308ad2b35593 vpa_robot_interface/CMakeFiles/_vpa_robot_interface_generate_messages_check_deps_WheelsCmd
 ef0fb7bb300b3f85b32d2367f8629d9a vpa_robot_interface/CMakeFiles/_vpa_robot_interface_generate_messages_check_deps_WheelsEncoder
+2fb2cd84d5f1f2725468bc89e62eda19 vpa_robot_interface/CMakeFiles/_vpa_robot_interface_generate_messages_check_deps_WheelsOmegaInfo
 53f1b6fd921c5ee700025d1424cecfbd vpa_robot_interface/CMakeFiles/vpa_robot_interface_gencfg
 53f1b6fd921c5ee700025d1424cecfbd vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_cpp
 53f1b6fd921c5ee700025d1424cecfbd vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus

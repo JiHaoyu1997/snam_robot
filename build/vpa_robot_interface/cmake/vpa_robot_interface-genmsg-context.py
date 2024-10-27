@@ -1,6 +1,6 @@
 # generated from genmsg/cmake/pkg-genmsg.context.in
 
-messages_str = "/home/student/snam_robot/src/vpa_robot_interface/msg/LeftWheelT.msg;/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsCmd.msg;/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsEncoder.msg"
+messages_str = "/home/student/snam_robot/src/vpa_robot_interface/msg/LeftWheelT.msg;/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsCmd.msg;/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsEncoder.msg;/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsOmegaInfo.msg"
 services_str = ""
 pkg_name = "vpa_robot_interface"
 dependencies_str = "std_msgs"

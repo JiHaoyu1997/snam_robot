@@ -42,6 +42,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
     "/home/student/snam_robot/src/vpa_robot_interface/msg/LeftWheelT.msg"
     "/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsCmd.msg"
     "/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsEncoder.msg"
+    "/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsOmegaInfo.msg"
     )
 endif()
 

@@ -56,6 +56,7 @@ include vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py.
 vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py: /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg/_LeftWheelT.py
 vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py: /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg/_WheelsCmd.py
 vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py: /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg/_WheelsEncoder.py
+vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py: /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg/_WheelsOmegaInfo.py
 vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py: /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg/__init__.py
 
 
@@ -75,17 +76,24 @@ vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py: /home/s
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Generating Python from MSG vpa_robot_interface/WheelsEncoder"
 	cd /home/student/snam_robot/build/vpa_robot_interface && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genpy/cmake/../../../lib/genpy/genmsg_py.py /home/student/snam_robot/src/vpa_robot_interface/msg/WheelsEncoder.msg -Ivpa_robot_interface:/home/student/snam_robot/src/vpa_robot_interface/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p vpa_robot_interface -o /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg
 
+/home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg/_WheelsOmegaInfo.py: /opt/ros/noetic/lib/genpy/genmsg_py.py
+/home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg/_WheelsOmegaInfo.py: /home/student/snam_robot/src/vpa_robot_interface/msg/WheelsOmegaInfo.msg
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Generating Python from MSG vpa_robot_interface/WheelsOmegaInfo"
+	cd /home/student/snam_robot/build/vpa_robot_interface && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genpy/cmake/../../../lib/genpy/genmsg_py.py /home/student/snam_robot/src/vpa_robot_interface/msg/WheelsOmegaInfo.msg -Ivpa_robot_interface:/home/student/snam_robot/src/vpa_robot_interface/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p vpa_robot_interface -o /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg
+
 /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg/__init__.py: /opt/ros/noetic/lib/genpy/genmsg_py.py
 /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg/__init__.py: /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg/_LeftWheelT.py
 /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg/__init__.py: /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg/_WheelsCmd.py
 /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg/__init__.py: /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg/_WheelsEncoder.py
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Generating Python msg __init__.py for vpa_robot_interface"
+/home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg/__init__.py: /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg/_WheelsOmegaInfo.py
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Generating Python msg __init__.py for vpa_robot_interface"
 	cd /home/student/snam_robot/build/vpa_robot_interface && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genpy/cmake/../../../lib/genpy/genmsg_py.py -o /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg --initpy
 
 vpa_robot_interface_generate_messages_py: vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py
 vpa_robot_interface_generate_messages_py: /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg/_LeftWheelT.py
 vpa_robot_interface_generate_messages_py: /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg/_WheelsCmd.py
 vpa_robot_interface_generate_messages_py: /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg/_WheelsEncoder.py
+vpa_robot_interface_generate_messages_py: /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg/_WheelsOmegaInfo.py
 vpa_robot_interface_generate_messages_py: /home/student/snam_robot/devel/lib/python3/dist-packages/vpa_robot_interface/msg/__init__.py
 vpa_robot_interface_generate_messages_py: vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py.dir/build.make
 

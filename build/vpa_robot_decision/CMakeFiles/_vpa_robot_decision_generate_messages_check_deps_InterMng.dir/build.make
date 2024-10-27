@@ -54,7 +54,7 @@ CMAKE_BINARY_DIR = /home/student/snam_robot/build
 include vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/progress.make
 
 vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng:
-	cd /home/student/snam_robot/build/vpa_robot_decision && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genmsg/cmake/../../../lib/genmsg/genmsg_check_deps.py vpa_robot_decision /home/student/snam_robot/src/vpa_robot_decision/srv/InterMng.srv vpa_robot_decision/RobotInfo:std_msgs/Header
+	cd /home/student/snam_robot/build/vpa_robot_decision && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genmsg/cmake/../../../lib/genmsg/genmsg_check_deps.py vpa_robot_decision /home/student/snam_robot/src/vpa_robot_decision/srv/InterMng.srv std_msgs/Header:vpa_robot_decision/RobotInfo
 
 _vpa_robot_decision_generate_messages_check_deps_InterMng: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng
 _vpa_robot_decision_generate_messages_check_deps_InterMng: vpa_robot_decision/CMakeFiles/_vpa_robot_decision_generate_messages_check_deps_InterMng.dir/build.make

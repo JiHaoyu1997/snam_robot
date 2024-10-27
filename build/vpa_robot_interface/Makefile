@@ -92,16 +92,6 @@ install/fast: preinstall/fast
 	/usr/bin/cmake -P cmake_install.cmake
 .PHONY : install/fast
 
-# Special rule for the target list_install_components
-list_install_components:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
-.PHONY : list_install_components
-
-# Special rule for the target list_install_components
-list_install_components/fast: list_install_components
-
-.PHONY : list_install_components/fast
-
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
@@ -134,6 +124,16 @@ test:
 test/fast: test
 
 .PHONY : test/fast
+
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+
+.PHONY : list_install_components/fast
 
 # The main all target
 all: cmake_check_build_system
@@ -256,6 +256,51 @@ dynamic_reconfigure_generate_messages_cpp: vpa_robot_interface/CMakeFiles/dynami
 dynamic_reconfigure_generate_messages_cpp/fast:
 	cd /home/student/snam_robot/build && $(MAKE) -f vpa_robot_interface/CMakeFiles/dynamic_reconfigure_generate_messages_cpp.dir/build.make vpa_robot_interface/CMakeFiles/dynamic_reconfigure_generate_messages_cpp.dir/build
 .PHONY : dynamic_reconfigure_generate_messages_cpp/fast
+
+# Convenience name for target.
+vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py.dir/rule:
+	cd /home/student/snam_robot/build && $(MAKE) -f CMakeFiles/Makefile2 vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py.dir/rule
+.PHONY : vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py.dir/rule
+
+# Convenience name for target.
+vpa_robot_interface_generate_messages_py: vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py.dir/rule
+
+.PHONY : vpa_robot_interface_generate_messages_py
+
+# fast build rule for target.
+vpa_robot_interface_generate_messages_py/fast:
+	cd /home/student/snam_robot/build && $(MAKE) -f vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py.dir/build.make vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py.dir/build
+.PHONY : vpa_robot_interface_generate_messages_py/fast
+
+# Convenience name for target.
+vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus.dir/rule:
+	cd /home/student/snam_robot/build && $(MAKE) -f CMakeFiles/Makefile2 vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus.dir/rule
+.PHONY : vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus.dir/rule
+
+# Convenience name for target.
+vpa_robot_interface_generate_messages_eus: vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus.dir/rule
+
+.PHONY : vpa_robot_interface_generate_messages_eus
+
+# fast build rule for target.
+vpa_robot_interface_generate_messages_eus/fast:
+	cd /home/student/snam_robot/build && $(MAKE) -f vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus.dir/build.make vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus.dir/build
+.PHONY : vpa_robot_interface_generate_messages_eus/fast
+
+# Convenience name for target.
+vpa_robot_interface/CMakeFiles/dynamic_reconfigure_generate_messages_eus.dir/rule:
+	cd /home/student/snam_robot/build && $(MAKE) -f CMakeFiles/Makefile2 vpa_robot_interface/CMakeFiles/dynamic_reconfigure_generate_messages_eus.dir/rule
+.PHONY : vpa_robot_interface/CMakeFiles/dynamic_reconfigure_generate_messages_eus.dir/rule
+
+# Convenience name for target.
+dynamic_reconfigure_generate_messages_eus: vpa_robot_interface/CMakeFiles/dynamic_reconfigure_generate_messages_eus.dir/rule
+
+.PHONY : dynamic_reconfigure_generate_messages_eus
+
+# fast build rule for target.
+dynamic_reconfigure_generate_messages_eus/fast:
+	cd /home/student/snam_robot/build && $(MAKE) -f vpa_robot_interface/CMakeFiles/dynamic_reconfigure_generate_messages_eus.dir/build.make vpa_robot_interface/CMakeFiles/dynamic_reconfigure_generate_messages_eus.dir/build
+.PHONY : dynamic_reconfigure_generate_messages_eus/fast
 
 # Convenience name for target.
 vpa_robot_interface/CMakeFiles/dynamic_reconfigure_generate_messages_py.dir/rule:
@@ -438,49 +483,19 @@ _vpa_robot_interface_generate_messages_check_deps_WheelsEncoder/fast:
 .PHONY : _vpa_robot_interface_generate_messages_check_deps_WheelsEncoder/fast
 
 # Convenience name for target.
-vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py.dir/rule:
-	cd /home/student/snam_robot/build && $(MAKE) -f CMakeFiles/Makefile2 vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py.dir/rule
-.PHONY : vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py.dir/rule
+vpa_robot_interface/CMakeFiles/_vpa_robot_interface_generate_messages_check_deps_WheelsOmegaInfo.dir/rule:
+	cd /home/student/snam_robot/build && $(MAKE) -f CMakeFiles/Makefile2 vpa_robot_interface/CMakeFiles/_vpa_robot_interface_generate_messages_check_deps_WheelsOmegaInfo.dir/rule
+.PHONY : vpa_robot_interface/CMakeFiles/_vpa_robot_interface_generate_messages_check_deps_WheelsOmegaInfo.dir/rule
 
 # Convenience name for target.
-vpa_robot_interface_generate_messages_py: vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py.dir/rule
+_vpa_robot_interface_generate_messages_check_deps_WheelsOmegaInfo: vpa_robot_interface/CMakeFiles/_vpa_robot_interface_generate_messages_check_deps_WheelsOmegaInfo.dir/rule
 
-.PHONY : vpa_robot_interface_generate_messages_py
+.PHONY : _vpa_robot_interface_generate_messages_check_deps_WheelsOmegaInfo
 
 # fast build rule for target.
-vpa_robot_interface_generate_messages_py/fast:
-	cd /home/student/snam_robot/build && $(MAKE) -f vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py.dir/build.make vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_py.dir/build
-.PHONY : vpa_robot_interface_generate_messages_py/fast
-
-# Convenience name for target.
-vpa_robot_interface/CMakeFiles/dynamic_reconfigure_generate_messages_eus.dir/rule:
-	cd /home/student/snam_robot/build && $(MAKE) -f CMakeFiles/Makefile2 vpa_robot_interface/CMakeFiles/dynamic_reconfigure_generate_messages_eus.dir/rule
-.PHONY : vpa_robot_interface/CMakeFiles/dynamic_reconfigure_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-dynamic_reconfigure_generate_messages_eus: vpa_robot_interface/CMakeFiles/dynamic_reconfigure_generate_messages_eus.dir/rule
-
-.PHONY : dynamic_reconfigure_generate_messages_eus
-
-# fast build rule for target.
-dynamic_reconfigure_generate_messages_eus/fast:
-	cd /home/student/snam_robot/build && $(MAKE) -f vpa_robot_interface/CMakeFiles/dynamic_reconfigure_generate_messages_eus.dir/build.make vpa_robot_interface/CMakeFiles/dynamic_reconfigure_generate_messages_eus.dir/build
-.PHONY : dynamic_reconfigure_generate_messages_eus/fast
-
-# Convenience name for target.
-vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus.dir/rule:
-	cd /home/student/snam_robot/build && $(MAKE) -f CMakeFiles/Makefile2 vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus.dir/rule
-.PHONY : vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-vpa_robot_interface_generate_messages_eus: vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus.dir/rule
-
-.PHONY : vpa_robot_interface_generate_messages_eus
-
-# fast build rule for target.
-vpa_robot_interface_generate_messages_eus/fast:
-	cd /home/student/snam_robot/build && $(MAKE) -f vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus.dir/build.make vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus.dir/build
-.PHONY : vpa_robot_interface_generate_messages_eus/fast
+_vpa_robot_interface_generate_messages_check_deps_WheelsOmegaInfo/fast:
+	cd /home/student/snam_robot/build && $(MAKE) -f vpa_robot_interface/CMakeFiles/_vpa_robot_interface_generate_messages_check_deps_WheelsOmegaInfo.dir/build.make vpa_robot_interface/CMakeFiles/_vpa_robot_interface_generate_messages_check_deps_WheelsOmegaInfo.dir/build
+.PHONY : _vpa_robot_interface_generate_messages_check_deps_WheelsOmegaInfo/fast
 
 # Help Target
 help:
@@ -491,7 +506,6 @@ help:
 	@echo "... install/strip"
 	@echo "... install/local"
 	@echo "... install"
-	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... vpa_robot_interface_gennodejs"
@@ -500,6 +514,9 @@ help:
 	@echo "... vpa_robot_interface_generate_messages_lisp"
 	@echo "... vpa_robot_interface_geneus"
 	@echo "... dynamic_reconfigure_generate_messages_cpp"
+	@echo "... vpa_robot_interface_generate_messages_py"
+	@echo "... vpa_robot_interface_generate_messages_eus"
+	@echo "... dynamic_reconfigure_generate_messages_eus"
 	@echo "... dynamic_reconfigure_generate_messages_py"
 	@echo "... test"
 	@echo "... vpa_robot_interface_gencpp"
@@ -513,9 +530,8 @@ help:
 	@echo "... _vpa_robot_interface_generate_messages_check_deps_WheelsCmd"
 	@echo "... vpa_robot_interface_generate_messages"
 	@echo "... _vpa_robot_interface_generate_messages_check_deps_WheelsEncoder"
-	@echo "... vpa_robot_interface_generate_messages_py"
-	@echo "... dynamic_reconfigure_generate_messages_eus"
-	@echo "... vpa_robot_interface_generate_messages_eus"
+	@echo "... list_install_components"
+	@echo "... _vpa_robot_interface_generate_messages_check_deps_WheelsOmegaInfo"
 .PHONY : help
 
 

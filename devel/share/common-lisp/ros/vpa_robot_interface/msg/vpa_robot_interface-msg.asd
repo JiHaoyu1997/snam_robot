@@ -11,4 +11,6 @@
     (:file "_package_WheelsCmd" :depends-on ("_package"))
     (:file "WheelsEncoder" :depends-on ("_package_WheelsEncoder"))
     (:file "_package_WheelsEncoder" :depends-on ("_package"))
+    (:file "WheelsOmegaInfo" :depends-on ("_package_WheelsOmegaInfo"))
+    (:file "_package_WheelsOmegaInfo" :depends-on ("_package"))
   ))

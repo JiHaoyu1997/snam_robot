@@ -53,6 +53,7 @@ add_message_files(
   LeftWheelT.msg
   WheelsCmd.msg
   WheelsEncoder.msg
+  WheelsOmegaInfo.msg
   #Message1.msg
   #Message2.msg
 )

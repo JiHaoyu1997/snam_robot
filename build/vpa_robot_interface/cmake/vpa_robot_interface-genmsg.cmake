@@ -1,6 +1,6 @@
 # generated from genmsg/cmake/pkg-genmsg.cmake.em
 
-message(STATUS "vpa_robot_interface: 3 messages, 0 services")
+message(STATUS "vpa_robot_interface: 4 messages, 0 services")
 
 set(MSG_I_FLAGS "-Ivpa_robot_interface:/home/student/snam_robot/src/vpa_robot_interface/msg;-Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg")
 
@@ -32,6 +32,11 @@ add_custom_target(_vpa_robot_interface_generate_messages_check_deps_${_filename}
   COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "vpa_robot_interface" "/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsEncoder.msg" "std_msgs/Header"
 )
 
+get_filename_component(_filename "/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsOmegaInfo.msg" NAME_WE)
+add_custom_target(_vpa_robot_interface_generate_messages_check_deps_${_filename}
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "vpa_robot_interface" "/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsOmegaInfo.msg" ""
+)
+
 #
 #  langs = gencpp;geneus;genlisp;gennodejs;genpy
 #
@@ -56,6 +61,12 @@ _generate_msg_cpp(vpa_robot_interface
   "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/vpa_robot_interface
 )
+_generate_msg_cpp(vpa_robot_interface
+  "/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsOmegaInfo.msg"
+  "${MSG_I_FLAGS}"
+  ""
+  ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/vpa_robot_interface
+)
 
 ### Generating Services
 
@@ -76,6 +87,8 @@ add_dependencies(vpa_robot_interface_generate_messages_cpp _vpa_robot_interface_
 get_filename_component(_filename "/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsCmd.msg" NAME_WE)
 add_dependencies(vpa_robot_interface_generate_messages_cpp _vpa_robot_interface_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsEncoder.msg" NAME_WE)
+add_dependencies(vpa_robot_interface_generate_messages_cpp _vpa_robot_interface_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsOmegaInfo.msg" NAME_WE)
 add_dependencies(vpa_robot_interface_generate_messages_cpp _vpa_robot_interface_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -105,6 +118,12 @@ _generate_msg_eus(vpa_robot_interface
   "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/vpa_robot_interface
 )
+_generate_msg_eus(vpa_robot_interface
+  "/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsOmegaInfo.msg"
+  "${MSG_I_FLAGS}"
+  ""
+  ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/vpa_robot_interface
+)
 
 ### Generating Services
 
@@ -125,6 +144,8 @@ add_dependencies(vpa_robot_interface_generate_messages_eus _vpa_robot_interface_
 get_filename_component(_filename "/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsCmd.msg" NAME_WE)
 add_dependencies(vpa_robot_interface_generate_messages_eus _vpa_robot_interface_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsEncoder.msg" NAME_WE)
+add_dependencies(vpa_robot_interface_generate_messages_eus _vpa_robot_interface_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsOmegaInfo.msg" NAME_WE)
 add_dependencies(vpa_robot_interface_generate_messages_eus _vpa_robot_interface_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -154,6 +175,12 @@ _generate_msg_lisp(vpa_robot_interface
   "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/vpa_robot_interface
 )
+_generate_msg_lisp(vpa_robot_interface
+  "/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsOmegaInfo.msg"
+  "${MSG_I_FLAGS}"
+  ""
+  ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/vpa_robot_interface
+)
 
 ### Generating Services
 
@@ -174,6 +201,8 @@ add_dependencies(vpa_robot_interface_generate_messages_lisp _vpa_robot_interface
 get_filename_component(_filename "/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsCmd.msg" NAME_WE)
 add_dependencies(vpa_robot_interface_generate_messages_lisp _vpa_robot_interface_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsEncoder.msg" NAME_WE)
+add_dependencies(vpa_robot_interface_generate_messages_lisp _vpa_robot_interface_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsOmegaInfo.msg" NAME_WE)
 add_dependencies(vpa_robot_interface_generate_messages_lisp _vpa_robot_interface_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -203,6 +232,12 @@ _generate_msg_nodejs(vpa_robot_interface
   "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/vpa_robot_interface
 )
+_generate_msg_nodejs(vpa_robot_interface
+  "/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsOmegaInfo.msg"
+  "${MSG_I_FLAGS}"
+  ""
+  ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/vpa_robot_interface
+)
 
 ### Generating Services
 
@@ -223,6 +258,8 @@ add_dependencies(vpa_robot_interface_generate_messages_nodejs _vpa_robot_interfa
 get_filename_component(_filename "/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsCmd.msg" NAME_WE)
 add_dependencies(vpa_robot_interface_generate_messages_nodejs _vpa_robot_interface_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsEncoder.msg" NAME_WE)
+add_dependencies(vpa_robot_interface_generate_messages_nodejs _vpa_robot_interface_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsOmegaInfo.msg" NAME_WE)
 add_dependencies(vpa_robot_interface_generate_messages_nodejs _vpa_robot_interface_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -252,6 +289,12 @@ _generate_msg_py(vpa_robot_interface
   "/opt/ros/noetic/share/std_msgs/cmake/../msg/Header.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/vpa_robot_interface
 )
+_generate_msg_py(vpa_robot_interface
+  "/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsOmegaInfo.msg"
+  "${MSG_I_FLAGS}"
+  ""
+  ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/vpa_robot_interface
+)
 
 ### Generating Services
 
@@ -272,6 +315,8 @@ add_dependencies(vpa_robot_interface_generate_messages_py _vpa_robot_interface_g
 get_filename_component(_filename "/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsCmd.msg" NAME_WE)
 add_dependencies(vpa_robot_interface_generate_messages_py _vpa_robot_interface_generate_messages_check_deps_${_filename})
 get_filename_component(_filename "/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsEncoder.msg" NAME_WE)
+add_dependencies(vpa_robot_interface_generate_messages_py _vpa_robot_interface_generate_messages_check_deps_${_filename})
+get_filename_component(_filename "/home/student/snam_robot/src/vpa_robot_interface/msg/WheelsOmegaInfo.msg" NAME_WE)
 add_dependencies(vpa_robot_interface_generate_messages_py _vpa_robot_interface_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility

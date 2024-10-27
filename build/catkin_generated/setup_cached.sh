@@ -7,7 +7,7 @@
 # new environment variables
 
 # modified environment variables
-export LD_LIBRARY_PATH='/home/student/snam_run/snam_ws/devel/lib:/home/student/catkin_ws/devel/lib:/opt/ros/noetic/lib'
-export PKG_CONFIG_PATH='/home/student/snam_run/snam_ws/devel/lib/pkgconfig:/home/student/catkin_ws/devel/lib/pkgconfig:/opt/ros/noetic/lib/pkgconfig'
+export CMAKE_PREFIX_PATH="/home/student/snam_robot/devel:$CMAKE_PREFIX_PATH"
 export PWD='/home/student/snam_robot/build'
-export PYTHONPATH='/home/student/snam_run/snam_ws/devel/lib/python3/dist-packages:/home/student/catkin_ws/devel/lib/python3/dist-packages:/opt/ros/noetic/lib/python3/dist-packages'
+export ROSLISP_PACKAGE_DIRECTORIES="/home/student/snam_robot/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
+export ROS_PACKAGE_PATH="/home/student/snam_robot/src:$ROS_PACKAGE_PATH"

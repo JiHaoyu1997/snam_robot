@@ -56,6 +56,7 @@ include vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_nod
 vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_nodejs: /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_interface/msg/LeftWheelT.js
 vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_nodejs: /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_interface/msg/WheelsCmd.js
 vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_nodejs: /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_interface/msg/WheelsEncoder.js
+vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_nodejs: /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_interface/msg/WheelsOmegaInfo.js
 
 
 /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_interface/msg/LeftWheelT.js: /opt/ros/noetic/lib/gennodejs/gen_nodejs.py
@@ -74,10 +75,16 @@ vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_nodejs: /ho
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Generating Javascript code from vpa_robot_interface/WheelsEncoder.msg"
 	cd /home/student/snam_robot/build/vpa_robot_interface && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gennodejs/cmake/../../../lib/gennodejs/gen_nodejs.py /home/student/snam_robot/src/vpa_robot_interface/msg/WheelsEncoder.msg -Ivpa_robot_interface:/home/student/snam_robot/src/vpa_robot_interface/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p vpa_robot_interface -o /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_interface/msg
 
+/home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_interface/msg/WheelsOmegaInfo.js: /opt/ros/noetic/lib/gennodejs/gen_nodejs.py
+/home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_interface/msg/WheelsOmegaInfo.js: /home/student/snam_robot/src/vpa_robot_interface/msg/WheelsOmegaInfo.msg
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Generating Javascript code from vpa_robot_interface/WheelsOmegaInfo.msg"
+	cd /home/student/snam_robot/build/vpa_robot_interface && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gennodejs/cmake/../../../lib/gennodejs/gen_nodejs.py /home/student/snam_robot/src/vpa_robot_interface/msg/WheelsOmegaInfo.msg -Ivpa_robot_interface:/home/student/snam_robot/src/vpa_robot_interface/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p vpa_robot_interface -o /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_interface/msg
+
 vpa_robot_interface_generate_messages_nodejs: vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_nodejs
 vpa_robot_interface_generate_messages_nodejs: /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_interface/msg/LeftWheelT.js
 vpa_robot_interface_generate_messages_nodejs: /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_interface/msg/WheelsCmd.js
 vpa_robot_interface_generate_messages_nodejs: /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_interface/msg/WheelsEncoder.js
+vpa_robot_interface_generate_messages_nodejs: /home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_interface/msg/WheelsOmegaInfo.js
 vpa_robot_interface_generate_messages_nodejs: vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_nodejs.dir/build.make
 
 .PHONY : vpa_robot_interface_generate_messages_nodejs

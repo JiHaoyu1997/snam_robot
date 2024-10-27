@@ -2,6 +2,7 @@ file(REMOVE_RECURSE
   "/home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_interface/msg/LeftWheelT.js"
   "/home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_interface/msg/WheelsCmd.js"
   "/home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_interface/msg/WheelsEncoder.js"
+  "/home/student/snam_robot/devel/share/gennodejs/ros/vpa_robot_interface/msg/WheelsOmegaInfo.js"
   "CMakeFiles/vpa_robot_interface_generate_messages_nodejs"
 )
 

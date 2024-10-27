@@ -73,8 +73,8 @@ vpa_robot_decision/CMakeFiles/vpa_robot_decision_generate_messages_cpp: /home/st
 
 /home/student/snam_robot/devel/include/vpa_robot_decision/InterMng.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
 /home/student/snam_robot/devel/include/vpa_robot_decision/InterMng.h: /home/student/snam_robot/src/vpa_robot_decision/srv/InterMng.srv
-/home/student/snam_robot/devel/include/vpa_robot_decision/InterMng.h: /home/student/snam_robot/src/vpa_robot_decision/msg/RobotInfo.msg
 /home/student/snam_robot/devel/include/vpa_robot_decision/InterMng.h: /opt/ros/noetic/share/std_msgs/msg/Header.msg
+/home/student/snam_robot/devel/include/vpa_robot_decision/InterMng.h: /home/student/snam_robot/src/vpa_robot_decision/msg/RobotInfo.msg
 /home/student/snam_robot/devel/include/vpa_robot_decision/InterMng.h: /opt/ros/noetic/share/gencpp/msg.h.template
 /home/student/snam_robot/devel/include/vpa_robot_decision/InterMng.h: /opt/ros/noetic/share/gencpp/srv.h.template
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Generating C++ code from vpa_robot_decision/InterMng.srv"

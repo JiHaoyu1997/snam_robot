@@ -56,6 +56,7 @@ include vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_cpp
 vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_cpp: /home/student/snam_robot/devel/include/vpa_robot_interface/LeftWheelT.h
 vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_cpp: /home/student/snam_robot/devel/include/vpa_robot_interface/WheelsCmd.h
 vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_cpp: /home/student/snam_robot/devel/include/vpa_robot_interface/WheelsEncoder.h
+vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_cpp: /home/student/snam_robot/devel/include/vpa_robot_interface/WheelsOmegaInfo.h
 
 
 /home/student/snam_robot/devel/include/vpa_robot_interface/LeftWheelT.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
@@ -77,10 +78,17 @@ vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_cpp: /home/
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Generating C++ code from vpa_robot_interface/WheelsEncoder.msg"
 	cd /home/student/snam_robot/src/vpa_robot_interface && /home/student/snam_robot/build/catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/student/snam_robot/src/vpa_robot_interface/msg/WheelsEncoder.msg -Ivpa_robot_interface:/home/student/snam_robot/src/vpa_robot_interface/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p vpa_robot_interface -o /home/student/snam_robot/devel/include/vpa_robot_interface -e /opt/ros/noetic/share/gencpp/cmake/..
 
+/home/student/snam_robot/devel/include/vpa_robot_interface/WheelsOmegaInfo.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
+/home/student/snam_robot/devel/include/vpa_robot_interface/WheelsOmegaInfo.h: /home/student/snam_robot/src/vpa_robot_interface/msg/WheelsOmegaInfo.msg
+/home/student/snam_robot/devel/include/vpa_robot_interface/WheelsOmegaInfo.h: /opt/ros/noetic/share/gencpp/msg.h.template
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Generating C++ code from vpa_robot_interface/WheelsOmegaInfo.msg"
+	cd /home/student/snam_robot/src/vpa_robot_interface && /home/student/snam_robot/build/catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/student/snam_robot/src/vpa_robot_interface/msg/WheelsOmegaInfo.msg -Ivpa_robot_interface:/home/student/snam_robot/src/vpa_robot_interface/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p vpa_robot_interface -o /home/student/snam_robot/devel/include/vpa_robot_interface -e /opt/ros/noetic/share/gencpp/cmake/..
+
 vpa_robot_interface_generate_messages_cpp: vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_cpp
 vpa_robot_interface_generate_messages_cpp: /home/student/snam_robot/devel/include/vpa_robot_interface/LeftWheelT.h
 vpa_robot_interface_generate_messages_cpp: /home/student/snam_robot/devel/include/vpa_robot_interface/WheelsCmd.h
 vpa_robot_interface_generate_messages_cpp: /home/student/snam_robot/devel/include/vpa_robot_interface/WheelsEncoder.h
+vpa_robot_interface_generate_messages_cpp: /home/student/snam_robot/devel/include/vpa_robot_interface/WheelsOmegaInfo.h
 vpa_robot_interface_generate_messages_cpp: vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_cpp.dir/build.make
 
 .PHONY : vpa_robot_interface_generate_messages_cpp

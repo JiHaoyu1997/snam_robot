@@ -2,6 +2,7 @@ file(REMOVE_RECURSE
   "/home/student/snam_robot/devel/include/vpa_robot_interface/LeftWheelT.h"
   "/home/student/snam_robot/devel/include/vpa_robot_interface/WheelsCmd.h"
   "/home/student/snam_robot/devel/include/vpa_robot_interface/WheelsEncoder.h"
+  "/home/student/snam_robot/devel/include/vpa_robot_interface/WheelsOmegaInfo.h"
   "CMakeFiles/vpa_robot_interface_generate_messages_cpp"
 )
 

@@ -56,6 +56,7 @@ include vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus
 vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus: /home/student/snam_robot/devel/share/roseus/ros/vpa_robot_interface/msg/LeftWheelT.l
 vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus: /home/student/snam_robot/devel/share/roseus/ros/vpa_robot_interface/msg/WheelsCmd.l
 vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus: /home/student/snam_robot/devel/share/roseus/ros/vpa_robot_interface/msg/WheelsEncoder.l
+vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus: /home/student/snam_robot/devel/share/roseus/ros/vpa_robot_interface/msg/WheelsOmegaInfo.l
 vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus: /home/student/snam_robot/devel/share/roseus/ros/vpa_robot_interface/manifest.l
 
 
@@ -75,14 +76,20 @@ vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus: /home/
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Generating EusLisp code from vpa_robot_interface/WheelsEncoder.msg"
 	cd /home/student/snam_robot/build/vpa_robot_interface && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/geneus/cmake/../../../lib/geneus/gen_eus.py /home/student/snam_robot/src/vpa_robot_interface/msg/WheelsEncoder.msg -Ivpa_robot_interface:/home/student/snam_robot/src/vpa_robot_interface/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p vpa_robot_interface -o /home/student/snam_robot/devel/share/roseus/ros/vpa_robot_interface/msg
 
+/home/student/snam_robot/devel/share/roseus/ros/vpa_robot_interface/msg/WheelsOmegaInfo.l: /opt/ros/noetic/lib/geneus/gen_eus.py
+/home/student/snam_robot/devel/share/roseus/ros/vpa_robot_interface/msg/WheelsOmegaInfo.l: /home/student/snam_robot/src/vpa_robot_interface/msg/WheelsOmegaInfo.msg
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Generating EusLisp code from vpa_robot_interface/WheelsOmegaInfo.msg"
+	cd /home/student/snam_robot/build/vpa_robot_interface && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/geneus/cmake/../../../lib/geneus/gen_eus.py /home/student/snam_robot/src/vpa_robot_interface/msg/WheelsOmegaInfo.msg -Ivpa_robot_interface:/home/student/snam_robot/src/vpa_robot_interface/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p vpa_robot_interface -o /home/student/snam_robot/devel/share/roseus/ros/vpa_robot_interface/msg
+
 /home/student/snam_robot/devel/share/roseus/ros/vpa_robot_interface/manifest.l: /opt/ros/noetic/lib/geneus/gen_eus.py
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Generating EusLisp manifest code for vpa_robot_interface"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold --progress-dir=/home/student/snam_robot/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Generating EusLisp manifest code for vpa_robot_interface"
 	cd /home/student/snam_robot/build/vpa_robot_interface && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/geneus/cmake/../../../lib/geneus/gen_eus.py -m -o /home/student/snam_robot/devel/share/roseus/ros/vpa_robot_interface vpa_robot_interface std_msgs
 
 vpa_robot_interface_generate_messages_eus: vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus
 vpa_robot_interface_generate_messages_eus: /home/student/snam_robot/devel/share/roseus/ros/vpa_robot_interface/msg/LeftWheelT.l
 vpa_robot_interface_generate_messages_eus: /home/student/snam_robot/devel/share/roseus/ros/vpa_robot_interface/msg/WheelsCmd.l
 vpa_robot_interface_generate_messages_eus: /home/student/snam_robot/devel/share/roseus/ros/vpa_robot_interface/msg/WheelsEncoder.l
+vpa_robot_interface_generate_messages_eus: /home/student/snam_robot/devel/share/roseus/ros/vpa_robot_interface/msg/WheelsOmegaInfo.l
 vpa_robot_interface_generate_messages_eus: /home/student/snam_robot/devel/share/roseus/ros/vpa_robot_interface/manifest.l
 vpa_robot_interface_generate_messages_eus: vpa_robot_interface/CMakeFiles/vpa_robot_interface_generate_messages_eus.dir/build.make
 
