@@ -233,7 +233,7 @@ class RobotVision:
         if corss_inter_boundary:
             self.cross_inter_boundary_line_count += 1
             rospy.loginfo(self.cross_inter_boundary_line_count)
-            if self.cross_inter_boundary_line_count >= 3 and not self.cross:
+            if self.cross_inter_boundary_line_count >= 2 and not self.cross:
                 rospy.loginfo(f'{self.robot_name} cross the boundary line between inter{self.curr_route[0]} and inter{self.curr_route[1]}')
                 self.cross = True
         else:
