@@ -143,9 +143,9 @@ class RobotVision:
 
     def image_raw_sub_cb(self, data: Image):
         if self.curr_route == [0, 0]:
+            rospy.loginfo("Not Start Tracking")
             return
-        else: 
-            rospy.loginfo("Start Tracking")
+        else:             
             target_x = self.image_width / 2 
 
         """Step1 CONVERT RAW IMAGE TO HSV IMAGE"""
@@ -187,6 +187,7 @@ class RobotVision:
             buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(buffer_line_mask_img)
             if not buffer_line_x == None:
                 cv2.circle(cv_img, (buffer_line_x, buffer_line_y), 5, (255, 100, 0), 5)
+                self.pub_img(cv_img=cv_img)
                 target_x = buffer_line_x
             else:
                 target_x = self.image_width / 2         
@@ -195,9 +196,7 @@ class RobotVision:
         else: 
             self.current_zone == Zone.INTERSECTION
             # detect lane line
-            pass
-
-        self.pub_img(cv_img=cv_img)
+            pass        
         
         """Step4 FROM TARGET COORDINATE TO TWIST"""
         if self.stop:
