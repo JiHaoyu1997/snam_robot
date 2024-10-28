@@ -79,7 +79,7 @@ class DecisionMaker:
             self.local_inter_id = curr_inter_id
             self.update_inter_sub()
         else:
-            rospy.logerr("Route update sequence mismatch.")
+            rospy.logerr(f"Route update sequence mismatch: {self.curr_route} and {new_route}.")
 
     def update_global_inter_info(self, last_inter_id, curr_inter_id):
         """Update global intersection info by calling the service."""
