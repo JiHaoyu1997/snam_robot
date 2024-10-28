@@ -1,7 +1,8 @@
 image_width: 640
 image_height: 480
-focus_auto: true
-white_balance_temperature_auto: true
+intrinsic_controls:                 
+    focus_auto: true
+    white_balance_temperature_auto: true
 camera_name: head_camera
 camera_matrix:
   rows: 3
