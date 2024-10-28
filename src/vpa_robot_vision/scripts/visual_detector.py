@@ -139,7 +139,7 @@ class RobotVision:
 
     def curr_route_sub_cb(self, route_msg: Int8MultiArray):
         if route_msg:
-            self.curr_route = route_msg.data
+            self.curr_route = [ route for route in route_msg.data ]
 
     def image_raw_sub_cb(self, data: Image):
         rospy.loginfo(f"current route is {self.curr_route}")
