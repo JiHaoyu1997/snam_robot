@@ -3,9 +3,8 @@
     <arg name="height" default="240"/>
     <arg name="fps" default="10"/>
     <arg name="robot_name"/>
-    
     <!-- Add an argument for camera_info_url with a default value -->
-    <arg name="camera_info_url" default="file://$(find vpa_robot_interface)/config/camera_default.yaml"/>
+    <arg name="camera_info_url" default="file://$(find vpa_robot_vision)/config/camera_default.yaml"/>
     
     <node name="robot_cam" pkg="usb_cam" type="usb_cam_node" output="screen">
         <param name="video_device" value="/dev/video0" />
