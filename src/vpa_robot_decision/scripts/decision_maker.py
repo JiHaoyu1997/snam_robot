@@ -40,7 +40,7 @@ class DecisionMaker:
 
         # Initialize route and intersection information
         self.robot_info = RobotInfo(name=self.robot_name)
-        self.curr_route = [0, 0]
+        self.curr_route = [0, 0, 0]
         self.local_inter_id = 0
         self.local_inter_info = InterInfo()
         self.local_inter_info_topic = f'inter_info/{self.local_inter_id}'
@@ -60,41 +60,26 @@ class DecisionMaker:
 
     def curr_route_cb(self, route_msg: Int8MultiArray):
         """Callback for the current route, updates route if conditions are met."""
-        if len(route_msg.data) != 2:
-            rospy.logerr("Route message does not contain two elements.")
+        if len(route_msg.data) != 3:
+            rospy.logerr("Route message does not contain 3 elements.")
             return
         
-        new_route = [route_msg.data[0], route_msg.data[1]]
+        new_route = [route_msg.data[0], route_msg.data[1], route_msg.data[2]]
 
         # 
-        if self.curr_route == [0, 0]:
+        if self.curr_route == [0, 0, 0]:
             self.curr_route = new_route
             return
 
-        # 
-        if self.curr_route == new_route:
-            # rospy.loginfo("Current route unchanged.")
-            pass
-        elif self.curr_route[1] == new_route[0]:  # Valid route update
-            last_inter_id, curr_inter_id = self.curr_route
+        elif self.curr_route[1] == new_route[0] and self.curr_route[2] == new_route[1]:  # Valid route update
+            last_inter_id = new_route[0]
+            curr_inter_id = new_route[1]
             self.update_global_inter_info(last_inter_id, curr_inter_id)
             self.curr_route = new_route
             self.local_inter_id = curr_inter_id
             self.update_inter_sub()
         else:
             rospy.logerr("Route update sequence mismatch.")
-
-    def update_inter_sub(self):
-        if hasattr(self, 'inter_info_sub'):
-            self.inter_info_sub.unregister()
-
-        self.local_inter_info_topic = f'inter_info/{self.local_inter_id}'
-        self.inter_info_sub = rospy.Subscriber(
-            self.local_inter_info_topic,
-            InterInfoMsg,
-            self.inter_info_cb
-        )
-        rospy.loginfo(f"Updated Intersection Subscription to {self.local_inter_info_topic}")
 
     def update_global_inter_info(self, last_inter_id, curr_inter_id):
         """Update global intersection info by calling the service."""
@@ -119,6 +104,18 @@ class DecisionMaker:
                 rospy.logwarn(f'{self.robot_name} - Service response not successful: {resp.message}')
         except rospy.ServiceException as e:
             rospy.logerr(f'{self.robot_name}: Service call failed - {e}')
+
+    def update_inter_sub(self):
+        if hasattr(self, 'inter_info_sub'):
+            self.inter_info_sub.unregister()
+
+        self.local_inter_info_topic = f'inter_info/{self.local_inter_id}'
+        self.inter_info_sub = rospy.Subscriber(
+            self.local_inter_info_topic,
+            InterInfoMsg,
+            self.inter_info_cb
+        )
+        rospy.loginfo(f"Updated Intersection Subscription to {self.local_inter_info_topic}")
 
     def inter_info_cb(self, inter_info_msg: InterInfoMsg):
         """Updates local intersection information based on the message."""

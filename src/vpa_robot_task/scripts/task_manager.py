@@ -27,7 +27,7 @@ class TaskManager:
         # Current task index
         self.curr_task_index = 0
 
-        # Current route (two intersections: current and next)
+        # Current route (three intersections: last, current and next)
         self.curr_route = []
 
         # 
@@ -66,7 +66,7 @@ class TaskManager:
             rospy.loginfo(f"{self.robot_name}: Task List confirmed: {self.task_list}")
             
             # Update the 1st route 
-            self.curr_route = [self.task_list[self.curr_task_index], self.task_list[self.curr_task_index + 1]]
+            self.curr_route = [6, self.task_list[self.curr_task_index], self.task_list[self.curr_task_index + 1]]
 
             # Release local Brake
             self.curr_local_brake_status = False
@@ -96,18 +96,22 @@ class TaskManager:
         """ Update Current Route """
         if cross_msg.cross and not self.update_task_lock:
             # AD
-            if not (self.curr_route[0] == cross_msg.last_inter_id and self.curr_route[1] == cross_msg.local_inter_id):
+            if not (self.curr_route[1] == cross_msg.last_inter_id and self.curr_route[2] == cross_msg.local_inter_id):
                 rospy.logwarn(f"Task Update Func Error")
                 return
             # BD
             if self.curr_task_index >= len(self.task_list) - 2:
                 rospy.logwarn("%s: Task List Index out of bounds!", self.robot_name)
-                self.curr_route = [6, 6]
+                self.curr_route = [2, 6, 6]
                 return
 
             # Update current route
             self.curr_task_index += 1
-            self.curr_route = [self.task_list[self.curr_task_index], self.task_list[self.curr_task_index + 1]]
+            self.curr_route = [
+                self.task_list[self.curr_task_index - 1], 
+                self.task_list[self.curr_task_index], 
+                self.task_list[self.curr_task_index + 1]
+            ]
             rospy.loginfo(f"Updated current route: {self.curr_route}")    
 
             # 

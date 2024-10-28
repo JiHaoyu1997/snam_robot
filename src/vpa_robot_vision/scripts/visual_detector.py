@@ -40,8 +40,8 @@ class RobotVision:
         # Robot name
         self.robot_name = rospy.get_param('~robot_name', 'db19')
 
-        # Current route (two intersections: current and next)
-        self.curr_route = [0, 0]
+        # Current route (three intersections: last, current and next)
+        self.curr_route = [0, 0, 0]
 
         # Current zone (default buffer area)
         self.current_zone = Zone.BUFFER_AREA
@@ -142,7 +142,7 @@ class RobotVision:
             self.curr_route = route_msg.data
 
     def image_raw_sub_cb(self, data: Image):
-        if self.curr_route == [0, 0]:
+        if self.curr_route == [0, 0, 0]:
             rospy.loginfo("Not Start Tracking")
             return
         else:             
@@ -170,35 +170,34 @@ class RobotVision:
 
         """Step3 FROM HSV IMAGE TO TARGET COORDINATE"""
         # BUFFER AREA
-        if self.curr_route == [6, 6]:
-            dis2ready = search_pattern.search_line(cv_hsv_img, self.ready_line_hsv)
-            if dis2ready > 25:
-                self.stop = True
-                return
-            
-        if self.curr_route[0] == 6:
-            # 
+        # INIT TASK ==> FROM BUFFER TO INTERSECTION           
+        if self.curr_route == [6, 6, 2]:
             self.current_zone == Zone.BUFFER_AREA            
-
-            # Buffer Mask Image
             buffer_line_mask_img = self.buffer_line_hsv.apply_mask(cv_hsv_img)            
 
             # buffer line center ==> target coordinate
             buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(buffer_line_mask_img)
             if not buffer_line_x == None:
                 cv2.circle(cv_img, (buffer_line_x, buffer_line_y), 5, (255, 100, 0), 5)
-
                 target_x = buffer_line_x
             else:
                 target_x = self.image_width / 2 
 
-            self.pub_img(cv_img=cv_img)
+        # NO TASK ==> STOP AT READY_LINE 
+        if self.curr_route == [2, 6, 6]:
+            self.current_zone == Zone.BUFFER_AREA 
+            dis2ready = search_pattern.search_line(cv_hsv_img, self.ready_line_hsv)
+            if dis2ready > 25:
+                self.stop = True
+                return
 
         # INTERSECTION AREA
         else: 
             self.current_zone == Zone.INTERSECTION
             # detect lane line
-            pass        
+            pass      
+
+        self.pub_img(cv_img=cv_img)  
         
         """Step4 FROM TARGET COORDINATE TO TWIST"""
         if self.stop:
