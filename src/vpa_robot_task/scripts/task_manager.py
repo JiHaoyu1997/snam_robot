@@ -117,7 +117,7 @@ class TaskManager:
             # 
             self.update_task_lock = True
         
-        elif not cross_msg:
+        elif not cross_msg.cross:
             self.update_task_lock = False
 
     def pub_local_brake_status(self, event):
