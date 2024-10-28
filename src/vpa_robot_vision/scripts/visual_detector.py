@@ -12,6 +12,11 @@ from map import map
 from pid_controller import pid_controller
 
 
+# Dynamic reconfiguration
+from dynamic_reconfigure.server import Server
+from vpa_robot_vision.cfg import color_hsvConfig
+
+
 # Msg
 from std_msgs.msg import Int8MultiArray
 from geometry_msgs.msg import Twist
@@ -69,6 +74,9 @@ class RobotVision:
         # Subscribers
         self.curr_route_sub = rospy.Subscriber('curr_route', Int8MultiArray, self.curr_route_sub_cb)
         self.image_raw_sub = rospy.Subscriber("robot_cam/image_raw", Image, self.image_raw_sub_cb)
+
+        # Servers
+        self.srv_color = Server(color_hsvConfig, self.dynamic_reconfigure_callback_hsv)
 
         # Clients
         self.inter_boundary_line_detect_pub = rospy.Publisher('inter_boundary_line_detect', CrossInfo, queue_size=1) 
@@ -199,7 +207,7 @@ class RobotVision:
         acc_hsv_img = from_cv_to_hsv(acc_img)
         cv_hsv_img = from_cv_to_hsv(cv_img)
 
-        turn_right_line_mask_img = self._right_guide_hsv.apply_mask(cv_hsv_img)
+        turn_right_line_mask_img = self.center_line_hsv.apply_mask(cv_hsv_img)
         self.pub_mask_image(mask_img=turn_right_line_mask_img)
 
         return
@@ -326,6 +334,32 @@ class RobotVision:
         mask_img_msg.header.stamp = rospy.Time.now()
         self.mask_image_pub.publish(mask_img_msg)
 
+    def dynamic_reconfigure_callback_hsv(self, config, level):
+        
+        self.center_line_hsv._h_lower = config.h_lower_1
+        self.center_line_hsv._s_lower = config.s_lower_1
+        self.center_line_hsv._v_lower = config.v_lower_1
+        
+        self.center_line_hsv._h_upper = config.h_upper_1
+        self.center_line_hsv._s_upper = config.s_upper_1
+        self.center_line_hsv._v_upper = config.v_upper_1
+
+        self.side_line_hsv._h_lower = config.h_lower_2
+        self.side_line_hsv._s_lower = config.s_lower_2
+        self.side_line_hsv._v_lower = config.v_lower_2
+
+        self.side_line_hsv._h_upper = config.h_upper_2
+        self.side_line_hsv._s_upper = config.s_upper_2
+        self.side_line_hsv._v_upper = config.v_upper_2
+        
+        self.stop_line_hsv._h_lower = config.h_lower_s
+        self.stop_line_hsv._s_lower = config.s_lower_s
+        self.stop_line_hsv._v_lower = config.v_lower_s
+        self.stop_line_hsv._h_upper = config.h_upper_s
+        self.stop_line_hsv._s_upper = config.s_upper_s
+        self.stop_line_hsv._v_upper = config.v_upper_s  
+        
+        return config
 
 if __name__ == '__main__':
     N = RobotVision()
