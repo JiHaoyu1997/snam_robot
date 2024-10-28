@@ -336,13 +336,28 @@ class RobotVision:
         self.mask_image_pub.publish(mask_img_msg)
 
     def test_mode_func(self, cv_img, cv_hsv_img):
-        cv2.circle(cv_img, (cv_hsv_img.shape[1]/2), cv_hsv_img.shape[0]/2, 5, (0, 0, 255), 1)
-        cv2.line(cv_img,(cv_hsv_img.shape[1]/2-10, cv_hsv_img.shape[0]/2), (cv_hsv_img.shape[1]/2 + 10,cv_hsv_img.shape[0]/2), (0,0,255), 1)
-        cv2.line(cv_img,(cv_hsv_img.shape[1]/2, cv_hsv_img.shape[0]/2-10), (cv_hsv_img.shape[1]/2, cv_hsv_img.shape[0]/2 + 10), (0,0,255), 1)
-        rospy.loginfo("Point HSV Value is %s"%cv_hsv_img[cv_hsv_img.shape[0]/2,cv_hsv_img.shape[1]/2])
+        # Calculate the center coordinates as integers
+        center_x = int(cv_hsv_img.shape[1] / 2)
+        center_y = int(cv_hsv_img.shape[0] / 2)
+
+        # Draw a circle at the center
+        cv2.circle(cv_img, (center_x, center_y), 5, (0, 0, 255), 1)
+
+        # Draw horizontal line
+        cv2.line(cv_img, (center_x - 10, center_y), (center_x + 10, center_y), (0, 0, 255), 1)
+
+        # Draw vertical line
+        cv2.line(cv_img, (center_x, center_y - 10), (center_x, center_y + 10), (0, 0, 255), 1)
+
+        # Log the HSV value at the center point
+        rospy.loginfo("Point HSV Value is %s" % cv_hsv_img[center_y, center_x])
+
+        # Apply the mask and publish the masked image
         turn_right_line_mask_img = self.center_line_hsv.apply_mask(cv_hsv_img)
         self.pub_mask_image(mask_img=turn_right_line_mask_img)
+
         return
+
 
     def dynamic_reconfigure_callback_hsv(self, config, level):
         
