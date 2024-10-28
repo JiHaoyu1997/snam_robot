@@ -261,7 +261,7 @@ class RobotVision:
                 self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
                 rospy.loginfo(f"Next Action is {self.next_action}")
                 line_x = search_pattern.search_inter_guide_line2(self.inter_guide_line[self.next_action], cv_hsv_img, self.next_action)
-                if line_x == None:
+                if not line_x == None:
                     target_x = line_x
                 else:
                     target_x = self.image_width / 2
@@ -301,13 +301,16 @@ class RobotVision:
     def detect_inter_boundary_line(self, cv_hsv_img: Image):
         dis2bound = search_pattern.search_line(cv_hsv_img, self.inter_boundary_line_hsv)
         corss_inter_boundary = dis2bound > 25
+        rospy.loginfo(f"dis2bound: {dis2bound}")
         if corss_inter_boundary:
             self.cross_inter_boundary_line_count += 1
-            rospy.loginfo(self.cross_inter_boundary_line_count)
+            rospy.loginfo(f"dis2bound: {dis2bound}")
+            rospy.loginfo(f"cross_inter_boundary_line_count: {self.cross_inter_boundary_line_count}")
             if self.cross_inter_boundary_line_count >= 2 and not self.cross:
                 rospy.loginfo(f'{self.robot_name} cross the boundary line between inter{self.curr_route[1]} and inter{self.curr_route[2]}')
                 self.cross = True
         else:
+            rospy.loginfo(f"cross_inter_boundary_line_count reset")
             self.cross_inter_boundary_line_count = 0
             self.cross = False
 
