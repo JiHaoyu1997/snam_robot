@@ -70,7 +70,10 @@ class DecisionMaker:
         if self.curr_route == [0, 0, 0]:
             self.curr_route = new_route
             return
-
+        
+        # 
+        if self.curr_route == new_route:
+            return
         elif self.curr_route[1] == new_route[0] and self.curr_route[2] == new_route[1]:  # Valid route update
             last_inter_id = new_route[0]
             curr_inter_id = new_route[1]
