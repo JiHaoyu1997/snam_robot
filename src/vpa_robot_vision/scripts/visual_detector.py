@@ -176,7 +176,6 @@ class RobotVision:
             self.curr_route = [route for route in route_msg.data]
 
     def image_raw_sub_cb(self, data: Image):
-        # rospy.loginfo(f"current route is {self.curr_route}")
         if self.curr_route == [0, 0, 0]:
             rospy.loginfo("Not Start Tracking")
             return
@@ -226,6 +225,7 @@ class RobotVision:
                 return
 
         # --- INTERSECTION AREA ---
+        # DEFAULT FIRST ROUTE [6, 6, 2]
         if self.curr_route[0] == 6 and self.curr_route[1] == 2:
             self.current_zone == Zone.INTERSECTION
             # 
@@ -244,11 +244,15 @@ class RobotVision:
             else: 
                 # 
                 self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
+                rospy.loginfo(f"Next Action is {self.next_action}")
                 line_x = search_pattern.search_inter_guide_line2(self.inter_guide_line[self.next_action], cv_hsv_img, self.next_action)
                 if line_x == None:
                     target_x = line_x
                 else:
-                    target_x = self.image_width / 2   
+                    target_x = self.image_width / 2
+        else:
+            self.current_zone == Zone.INTERSECTION
+            rospy.loginfo(f"current route is {self.curr_route}")
 
         self.pub_img(cv_img=cv_img)  
         
