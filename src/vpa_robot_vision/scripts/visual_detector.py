@@ -50,6 +50,9 @@ class RobotVision:
         # Simple ACC Function: on or off, default on
         self.acc_mode = bool(rospy.get_param('~acc_on', True))
 
+        #
+        self.test_mode = bool(rospy.get_param('~test_mode', True))
+
         # Image Size
         self.image_width = rospy.get_param('~image_width', 320)
         self.image_height = rospy.get_param('~image_height', 240)
@@ -207,10 +210,8 @@ class RobotVision:
         acc_hsv_img = from_cv_to_hsv(acc_img)
         cv_hsv_img = from_cv_to_hsv(cv_img)
 
-        turn_right_line_mask_img = self.center_line_hsv.apply_mask(cv_hsv_img)
-        self.pub_mask_image(mask_img=turn_right_line_mask_img)
-
-        return
+        if self.test_mode:
+            self.test_mode_func(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
         """Step2 BOUNDARY LINE DETECTOR"""
         self.detect_inter_boundary_line(cv_hsv_img=cv_hsv_img) 
@@ -333,6 +334,15 @@ class RobotVision:
         mask_img_msg = self.bridge.cv2_to_imgmsg(mask_img, encoding="passthrough")
         mask_img_msg.header.stamp = rospy.Time.now()
         self.mask_image_pub.publish(mask_img_msg)
+
+    def test_mode_func(self, cv_img, cv_hsv_img):
+        cv2.circle(cv_img, (cv_hsv_img.shape[1]/2), cv_hsv_img.shape[0]/2, 5, (0, 0, 255), 1)
+        cv2.line(cv_img,(cv_hsv_img.shape[1]/2-10, cv_hsv_img.shape[0]/2), (cv_hsv_img.shape[1]/2 + 10,cv_hsv_img.shape[0]/2), (0,0,255), 1)
+        cv2.line(cv_img,(cv_hsv_img.shape[1]/2, cv_hsv_img.shape[0]/2-10), (cv_hsv_img.shape[1]/2, cv_hsv_img.shape[0]/2 + 10), (0,0,255), 1)
+        rospy.loginfo("Point HSV Value is %s"%cv_hsv_img[cv_hsv_img.shape[0]/2,cv_hsv_img.shape[1]/2])
+        turn_right_line_mask_img = self.center_line_hsv.apply_mask(cv_hsv_img)
+        self.pub_mask_image(mask_img=turn_right_line_mask_img)
+        return
 
     def dynamic_reconfigure_callback_hsv(self, config, level):
         
