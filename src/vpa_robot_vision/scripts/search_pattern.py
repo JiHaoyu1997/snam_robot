@@ -21,16 +21,18 @@ else:
     LANE_L          = 80
     LANE_R          = 240
 
-def search_buffer_line(mask) -> list:
+def search_buffer_line(cv_hsv_img, buffer_line_hsv: HSVSpace) -> list:
+    buffer_line_mask_img = buffer_line_hsv.apply_mask(cv_hsv_img)
+
     low_bound   = 15
     upper_bound = 75
 
-    _height_center = int(mask.shape[0]/2)
+    _height_center = int(buffer_line_mask_img.shape[0]/2)
     _line_center   = 0
 
     for i in range(low_bound, upper_bound, 15):
         # search this part of the picture
-        _line = np.nonzero(mask[_height_center + i,:])[0]
+        _line = np.nonzero(buffer_line_mask_img[_height_center + i,:])[0]
         
         if len(_line) > 8 and len(_line) < 50:
             # there are proper amount of points at this part

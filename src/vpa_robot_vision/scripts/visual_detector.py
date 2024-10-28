@@ -8,7 +8,9 @@ from enum import Enum
 
 import search_pattern
 from hsv import HSVSpace, from_cv_to_hsv
+from map import map
 from pid_controller import pid_controller
+
 
 # Msg
 from std_msgs.msg import Int8MultiArray
@@ -40,36 +42,24 @@ class RobotVision:
         # Robot name
         self.robot_name = rospy.get_param('~robot_name', 'db19')
 
-        # Current route (three intersections: last, current and next)
-        self.curr_route = [0, 0, 0]
-
-        # Current zone (default buffer area)
-        self.current_zone = Zone.BUFFER_AREA
-
-        # Intersection boundary line count
-        self.cross_inter_boundary_line_count = 0
-
-        # Boundary crossing flag
-        self.cross = False
-
-        # Default Velocity Setup
-        self.v_set = VelocitySet()
-
-        # Stop Operation
-        self.stop = False
-
         # Simple ACC Function: on or off, default on
         self.acc_mode = bool(rospy.get_param('~acc_on', True))
-
-        # std_msgs img ==> ros img
-        self.bridge = CvBridge()
 
         # Image Size
         self.image_width = rospy.get_param('~image_width', 320)
         self.image_height = rospy.get_param('~image_height', 240)
 
+        # Default Velocity Setup
+        self.v_set = VelocitySet()
+
+        # std_msgs img ==> ros img
+        self.bridge = CvBridge()
+
         # init hsv color spaces for selecting 
         self.color_space_init()
+
+        # 
+        self.status_flag_init()
 
         # Publishers
         self.cv_image_pub = rospy.Publisher("cv_image", Image, queue_size=1)
@@ -86,6 +76,50 @@ class RobotVision:
         rospy.loginfo('Visual Detector is Online')
 
     # Methods
+    def status_flag_init(self):
+        # Current route (three intersections: last, current and next)
+        self.curr_route = [0, 0, 0]
+
+        # Current zone (default buffer area)
+        self.current_zone = Zone.BUFFER_AREA
+
+        # self.lane_direction = LaneDirection.RIGHT_HAND 
+
+        # Intersection Boundary Line count
+        self.cross_inter_boundary_line_count = 0
+
+        # Boundary Crossing flag
+        self.cross = False
+
+        # Enter Conflict Zone flag
+        self.enter_conflict_zone = False
+
+        # Stop Operation
+        self.stop = False
+
+        # Time lock (prohibit unreasonable status change)
+        self.enter_inter_time = 0
+        self.left_inter_time  = 0
+
+        # Task
+        self.find_task_line = False     # did the robot find the task_line already
+        self.task_counter   = 0         # this is to count how many tasks has this specific robot conducted
+        self.task_list      = []        # a list of intersections to travel through
+        self.ask_task_by_period = False # if the robot will check if there is task at certain period
+
+        self.node_pointer   = 2
+        
+        # Action
+        self.next_action = None        # the next action to perfrom 
+        self.inquiry_inter_by_period = False # if teh robot will check if can pass the current intersection
+        self.lock_inter_source = True
+
+        self.action_dic = {
+            0:'go thur',
+            1:'left turn',
+            2:'right turn',
+            3:'stop'
+        }
 
     def color_space_init(self) -> None:
 
@@ -170,14 +204,12 @@ class RobotVision:
         self.detect_inter_boundary_line(cv_hsv_img=cv_hsv_img) 
 
         """Step3 FROM HSV IMAGE TO TARGET COORDINATE"""
-        # BUFFER AREA
+        # --- BUFFER AREA ---
         # INIT TASK ==> FROM BUFFER TO INTERSECTION          
         if self.curr_route == [6, 6, 2]:
-            self.current_zone == Zone.BUFFER_AREA            
-            buffer_line_mask_img = self.buffer_line_hsv.apply_mask(cv_hsv_img)            
-
-            # buffer line center ==> target coordinate
-            buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(buffer_line_mask_img)
+            self.current_zone == Zone.BUFFER_AREA
+            # 
+            buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.buffer_line_hsv)
             if not buffer_line_x == None:
                 cv2.circle(cv_img, (buffer_line_x, buffer_line_y), 5, (255, 100, 0), 5)
                 target_x = buffer_line_x
@@ -186,17 +218,37 @@ class RobotVision:
 
         # NO TASK ==> STOP AT READY_LINE 
         if self.curr_route == [2, 6, 6]:
-            self.current_zone == Zone.BUFFER_AREA 
+            self.current_zone == Zone.BUFFER_AREA
+            # 
             dis2ready = search_pattern.search_line(cv_hsv_img, self.ready_line_hsv)
             if dis2ready > 25:
                 self.stop = True
                 return
 
-        # INTERSECTION AREA
-        else: 
+        # --- INTERSECTION AREA ---
+        if self.curr_route[0] == 6 and self.curr_route[1] == 2:
             self.current_zone == Zone.INTERSECTION
-            # detect lane line
-            pass      
+            # 
+            dis2exit = search_pattern.search_line(cv_hsv_img, self.side_line_hsv)
+            self.enter_conflict_zone = dis2exit > 25
+
+            if not self.enter_conflict_zone:                          
+                #
+                buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.buffer_line_hsv)
+                if not buffer_line_x == None:
+                    cv2.circle(cv_img, (buffer_line_x, buffer_line_y), 5, (255, 100, 0), 5)
+                    target_x = buffer_line_x
+                else:
+                    target_x = self.image_width / 2 
+
+            else: 
+                # 
+                self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
+                line_x = search_pattern.search_inter_guide_line2(self.inter_guide_line[self.next_action], cv_hsv_img, self.next_action)
+                if line_x == None:
+                    target_x = line_x
+                else:
+                    target_x = self.image_width / 2   
 
         self.pub_img(cv_img=cv_img)  
         
@@ -247,7 +299,7 @@ class RobotVision:
         cross_msg.last_inter_id = self.curr_route[1]
         cross_msg.local_inter_id = self.curr_route[2]
         self.inter_boundary_line_detect_pub.publish(cross_msg)
-
+    
     def pub_cmd_vel_from_img(self, v_x, omega_z, v_factor):
         cmd_msg = Twist()
         cmd_msg.linear.x = v_x * v_factor
