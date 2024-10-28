@@ -268,7 +268,7 @@ class RobotVision:
             self.current_zone == Zone.INTERSECTION
             rospy.loginfo(f"current route is {self.curr_route}")
 
-        self.pub_img(cv_img=cv_img)  
+        self.pub_cv_img(cv_img=cv_img)  
         
         """Step4 FROM TARGET COORDINATE TO TWIST"""
         if self.stop:
@@ -324,13 +324,13 @@ class RobotVision:
         cmd_msg.angular.z = omega_z * v_factor
         self.cmd_vel_from_img_pub.publish(cmd_msg)    
 
-    def pub_img(self, cv_img):
+    def pub_cv_img(self, cv_img):
         cv_img_copy = cv_img
         cv_img_copy_msg = self.bridge.cv2_to_imgmsg(cv_img_copy, encoding="bgr8")
         cv_img_copy_msg.header.stamp = rospy.Time.now()
         self.cv_image_pub.publish(cv_img_copy_msg)       
 
-    def pub_mask_image(self, mask_img):
+    def pub_mask_img(self, mask_img):
         mask_img_msg = self.bridge.cv2_to_imgmsg(mask_img, encoding="passthrough")
         mask_img_msg.header.stamp = rospy.Time.now()
         self.mask_image_pub.publish(mask_img_msg)
@@ -351,10 +351,11 @@ class RobotVision:
 
         # Log the HSV value at the center point
         rospy.loginfo("Point HSV Value is %s" % cv_hsv_img[center_y, center_x])
+        self.pub_cv_img(cv_img=cv_img)
 
         # Apply the mask and publish the masked image
         turn_right_line_mask_img = self.center_line_hsv.apply_mask(cv_hsv_img)
-        self.pub_mask_image(mask_img=turn_right_line_mask_img)
+        self.pub_mask_img(mask_img=turn_right_line_mask_img)
 
         return
 
