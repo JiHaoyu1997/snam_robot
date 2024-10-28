@@ -216,7 +216,7 @@ class RobotVision:
                 target_x = self.image_width / 2 
 
         # NO TASK ==> STOP AT READY_LINE 
-        if self.curr_route == [2, 6, 6]:
+        elif self.curr_route == [2, 6, 6]:
             self.current_zone == Zone.BUFFER_AREA
             # 
             dis2ready = search_pattern.search_line(cv_hsv_img, self.ready_line_hsv)
@@ -226,7 +226,7 @@ class RobotVision:
 
         # --- INTERSECTION AREA ---
         # DEFAULT FIRST ROUTE [6, 6, 2]
-        if self.curr_route[0] == 6 and self.curr_route[1] == 2:
+        elif self.curr_route[0] == 6 and self.curr_route[1] == 2:
             self.current_zone == Zone.INTERSECTION
             # 
             dis2exit = search_pattern.search_line(cv_hsv_img, self.side_line_hsv)
