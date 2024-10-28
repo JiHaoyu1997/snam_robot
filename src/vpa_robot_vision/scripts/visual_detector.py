@@ -234,7 +234,7 @@ class RobotVision:
             self.cross_inter_boundary_line_count += 1
             rospy.loginfo(self.cross_inter_boundary_line_count)
             if self.cross_inter_boundary_line_count >= 2 and not self.cross:
-                rospy.loginfo(f'{self.robot_name} cross the boundary line between inter{self.curr_route[0]} and inter{self.curr_route[1]}')
+                rospy.loginfo(f'{self.robot_name} cross the boundary line between inter{self.curr_route[1]} and inter{self.curr_route[2]}')
                 self.cross = True
         else:
             self.cross_inter_boundary_line_count = 0
@@ -244,8 +244,8 @@ class RobotVision:
         cross_msg = CrossInfo()
         cross_msg.cross = self.cross
         cross_msg.robot_name = self.robot_name
-        cross_msg.last_inter_id = self.curr_route[0]
-        cross_msg.local_inter_id = self.curr_route[1]
+        cross_msg.last_inter_id = self.curr_route[1]
+        cross_msg.local_inter_id = self.curr_route[2]
         self.inter_boundary_line_detect_pub.publish(cross_msg)
 
     def pub_cmd_vel_from_img(self, v_x, omega_z, v_factor):
