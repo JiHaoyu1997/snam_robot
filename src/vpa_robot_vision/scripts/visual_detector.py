@@ -199,6 +199,11 @@ class RobotVision:
         acc_hsv_img = from_cv_to_hsv(acc_img)
         cv_hsv_img = from_cv_to_hsv(cv_img)
 
+        turn_right_line_mask_img = self._right_guide_hsv.apply_mask(cv_hsv_img)
+        self.pub_mask_image(mask_img=turn_right_line_mask_img)
+
+        return
+
         """Step2 BOUNDARY LINE DETECTOR"""
         self.detect_inter_boundary_line(cv_hsv_img=cv_hsv_img) 
 
