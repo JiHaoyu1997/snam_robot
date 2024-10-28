@@ -142,6 +142,7 @@ class RobotVision:
             self.curr_route = route_msg.data
 
     def image_raw_sub_cb(self, data: Image):
+        rospy.loginfo(f"current route is {self.curr_route}")
         if self.curr_route == [0, 0, 0]:
             rospy.loginfo("Not Start Tracking")
             return
@@ -170,7 +171,7 @@ class RobotVision:
 
         """Step3 FROM HSV IMAGE TO TARGET COORDINATE"""
         # BUFFER AREA
-        # INIT TASK ==> FROM BUFFER TO INTERSECTION           
+        # INIT TASK ==> FROM BUFFER TO INTERSECTION          
         if self.curr_route == [6, 6, 2]:
             self.current_zone == Zone.BUFFER_AREA            
             buffer_line_mask_img = self.buffer_line_hsv.apply_mask(cv_hsv_img)            
