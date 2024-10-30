@@ -215,7 +215,7 @@ class RobotVision:
         cv_img = cv_img_raw[int(cv_img_raw.shape[0]/4) : cv_img_raw.shape[0], :]
 
         # Image Operation
-        # cv_img = self.adjust_gamma(cv_img=cv_img, gamma=0.4)
+        cv_img = self.adjust_gamma(cv_img=cv_img, gamma=0.4)
 
 
         # lab_image = cv2.cvtColor(cv_img, cv2.COLOR_BGR2LAB)
