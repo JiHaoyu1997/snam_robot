@@ -254,7 +254,6 @@ class RobotVision:
         # GENERAL ROUTE
         else:
             target_x = self.cross_intersection(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
-            self.stop = True
 
         self.target_x = target_x            
         self.pub_cv_img(cv_img=cv_img)
@@ -327,7 +326,6 @@ class RobotVision:
         dis2conflict = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.stop_line_hsv)
         if dis2conflict > 30:
             self.enter_conflict_zone = True
-        return
     
     def get_target_from_buffer_line(self, cv_img, cv_hsv_img):
         buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.buffer_line_hsv)
