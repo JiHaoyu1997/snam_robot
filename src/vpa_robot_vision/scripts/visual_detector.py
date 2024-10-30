@@ -240,7 +240,8 @@ class RobotVision:
             self.current_zone = Zone.INTERSECTION
             # 
             dis2inside = search_pattern.search_line(cv_hsv_img, self.side_line_hsv)
-            if  not dis2inside > 25:
+            if dis2inside > 25:
+                rospy.loginfo("Cross White Line and enter inter2 conflict zone")
                 self.enter_conflict_zone = True
 
             if not self.enter_conflict_zone:                          
