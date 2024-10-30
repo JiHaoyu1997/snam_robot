@@ -120,7 +120,6 @@ class RobotVision:
         self.task_counter   = 0         # this is to count how many tasks has this specific robot conducted
         self.task_list      = []        # a list of intersections to travel through
         self.ask_task_by_period = False # if the robot will check if there is task at certain period
-
         self.node_pointer   = 2
         
         # Action
@@ -188,6 +187,8 @@ class RobotVision:
     def curr_route_sub_cb(self, route_msg: Int8MultiArray):
         if route_msg:
             self.curr_route = [route for route in route_msg.data]
+        else:
+            self.curr_route = [0 , 0, 0]
 
     def image_raw_sub_cb(self, data: Image):
         if self.curr_route == [0, 0, 0]:
@@ -280,6 +281,7 @@ class RobotVision:
             v_factor = 1
         else:
             v_factor = 1
+
         self.pub_cmd_vel_from_img(v_x, omega_z, v_factor)
 
     def detect_inter_boundary_line(self, cv_hsv_img: Image):
