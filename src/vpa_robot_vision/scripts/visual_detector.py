@@ -139,12 +139,12 @@ class RobotVision:
 
         # HSV space for Yellow (center lane line)
         self.center_line_hsv = HSVSpace(
-            h_u=int(rospy.get_param('~h_upper_1', 100)),
-            h_l=int(rospy.get_param('~h_lower_1', 80)),
-            s_u=int(rospy.get_param('~s_upper_1', 255)),
-            s_l=int(rospy.get_param('~s_lower_1', 80)),
+            h_u=int(rospy.get_param('~h_upper_1', 105)),
+            h_l=int(rospy.get_param('~h_lower_1', 65)),
+            s_u=int(rospy.get_param('~s_upper_1', 200)),
+            s_l=int(rospy.get_param('~s_lower_1', 100)),
             v_u=int(rospy.get_param('~v_upper_1', 255)),
-            v_l=int(rospy.get_param('~v_lower_1', 150))
+            v_l=int(rospy.get_param('~v_lower_1', 205))
         ) 
 
         # HSV space for White (side lane line)
@@ -191,6 +191,12 @@ class RobotVision:
         else:
             self.curr_route = [0 , 0, 0]
 
+    def adjust_gamma(self, cv_img, gamma=1.0):
+        invGamma = 1.0 / gamma
+        lookup_table = np.array([ (i /255.0) ** invGamma * 255 for i in range(256)]).astype("uint8")
+        return cv2.LUT(cv_img, lookup_table)
+
+
     def image_raw_sub_cb(self, data: Image):
         if self.curr_route == [0, 0, 0]:
             rospy.loginfo("Not Start Tracking")
@@ -208,6 +214,9 @@ class RobotVision:
 
         # the bottom 3/4 part of image_raw for tracking function
         cv_img = cv_img_raw[int(cv_img_raw.shape[0]/4) : cv_img_raw.shape[0], :]
+
+        # Image Operation
+        cv_img = self.adjust_gamma(cv_img=cv_img, gamma=0.5)
 
         # convert BGR image to HSV image
         acc_hsv_img = from_cv_to_hsv(acc_img)
