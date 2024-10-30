@@ -264,7 +264,9 @@ class RobotVision:
         else:
             target_x = self.cross_intersection(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
-        self.target_x = target_x            
+        self.target_x = target_x       
+        mask_img = self.center_line_hsv.apply_mask(cv_hsv_img)
+        self.pub_mask_img(mask_img=mask_img)    
         self.pub_cv_img(cv_img=cv_img)
         
         """Step4 FROM TARGET COORDINATE TO TWIST"""

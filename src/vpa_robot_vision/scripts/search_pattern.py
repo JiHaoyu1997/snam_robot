@@ -70,9 +70,11 @@ def _search_lane_linecenter(_mask,_upper_bias:int,_lower_bias:int,_height_center
             continue
     return 0 # nothing found in the end
 
-def search_lane_center(space1:HSVSpace,space2:HSVSpace,hsv_image,is_yellow_left:bool) -> int:
-    mask1 = space1.apply_mask(hsv_image)
-    mask2 = space2.apply_mask(hsv_image)
+def search_lane_center(space1:HSVSpace, space2:HSVSpace, hsv_image, is_yellow_left:bool) -> int:
+    hsv_image1 = hsv_image
+    hsv_image2 = hsv_image
+    mask1 = space1.apply_mask(hsv_image1)
+    mask2 = space2.apply_mask(hsv_image2)
     _line_center1 = _search_lane_linecenter(mask1,50,-20,int(hsv_image.shape[0]/2),10,0,int(hsv_image.shape[1]))
 
     if _line_center1 == 0:
