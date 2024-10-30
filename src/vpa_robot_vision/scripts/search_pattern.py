@@ -80,14 +80,15 @@ def search_lane_center(space1:HSVSpace,space2:HSVSpace,hsv_image,is_yellow_left:
         
     # search the while line, but limited area
     if is_yellow_left:
-        _line_center2 = _search_lane_linecenter(mask2,50,-20,int(hsv_image.shape[0]/2),10,_line_center1,int(hsv_image.shape[1]))
+        _line_center2 = _search_lane_linecenter(mask2,50,-20,int(hsv_image.shape[0]/2),10, _line_center1, int(hsv_image.shape[1]))
     else:
         _line_center2 = _search_lane_linecenter(mask2,50,-20,int(hsv_image.shape[0]/2),10,0,_line_center1)
 
     if _line_center2 == 0 and is_yellow_left:
         # miss detections 
         _line_center2 = hsv_image.shape[1]
-
+    
+    print(_line_center1, _line_center2)
     _lane_center = int((_line_center1 + _line_center2)/2)
     return max(min(_lane_center,LANE_R),LANE_L)
 
