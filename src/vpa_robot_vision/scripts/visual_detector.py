@@ -174,7 +174,7 @@ class RobotVision:
         self.ready_line_hsv = HSVSpace(105, 65, 255, 205, 255, 205)
 
         # Intersection Boundary Line HSV - Green
-        self.inter_boundary_line_hsv = HSVSpace( 50,  20, 240, 140, 220, 130)
+        self.inter_boundary_line_hsv = HSVSpace( 50,  20, 255, 200, 155, 125)
 
         # guiding lines inside intersections - no dynamic reconfigure
         self._right_guide_hsv = HSVSpace(140, 100, 180, 140, 220, 180)
