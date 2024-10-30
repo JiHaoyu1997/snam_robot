@@ -127,8 +127,8 @@ class RobotVision:
 
         self.action_dic = {
             0:'go thur',
-            1:'left turn',
-            2:'right turn',
+            1:'turn left',
+            2:'turn right',
             3:'stop'
         }
 
@@ -240,7 +240,8 @@ class RobotVision:
             self.current_zone == Zone.INTERSECTION
             # 
             dis2inside = search_pattern.search_line(cv_hsv_img, self.side_line_hsv)
-            self.enter_conflict_zone = dis2inside > 25
+            if  not dis2inside > 25:
+                self.enter_conflict_zone = True
 
             if not self.enter_conflict_zone:                          
                 #
@@ -312,7 +313,7 @@ class RobotVision:
         # check if conflict zone
         result = self.detect_conflict_boundary_line(cv_hsv_img=cv_hsv_img)
         # lane
-        if not result:
+        if not self.enter_conflict_zone:
             target_x = self.get_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
         # conflict zone
         else:
@@ -324,7 +325,9 @@ class RobotVision:
 
     def detect_conflict_boundary_line(self, cv_hsv_img):
         dis2conflict = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.stop_line_hsv)
-        return dis2conflict > 30
+        if dis2conflict > 30:
+            self.enter_conflict_zone = True
+        return
     
     def get_target_from_buffer_line(self, cv_img, cv_hsv_img):
         buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.buffer_line_hsv)
