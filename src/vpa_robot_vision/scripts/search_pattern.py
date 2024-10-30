@@ -74,6 +74,9 @@ def search_lane_center(space1:HSVSpace,space2:HSVSpace,hsv_image,is_yellow_left:
     mask2 = space2.apply_mask(hsv_image)
     _line_center1 = _search_lane_linecenter(mask1,50,-20,int(hsv_image.shape[0]/2),10,0,int(hsv_image.shape[1]))
 
+    if _line_center1 == 0:
+         _line_center1 = _search_lane_linecenter(mask1,50,-20,int(hsv_image.shape[0]/2),10,0,int(hsv_image.shape[1]))
+
     if _line_center1 == 0 and not is_yellow_left:
         # failed to find the center yellow line
         _line_center1 = hsv_image.shape[1]
