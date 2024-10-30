@@ -265,7 +265,7 @@ class RobotVision:
             target_x = self.cross_intersection(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
         self.target_x = target_x       
-        mask_img = self.center_line_hsv.apply_mask(cv_hsv_img)
+        mask_img = self.stop_line_hsv.apply_mask(cv_hsv_img)
         self.pub_mask_img(mask_img=mask_img)    
         self.pub_cv_img(cv_img=cv_img)
         
@@ -335,7 +335,7 @@ class RobotVision:
 
     def detect_conflict_boundary_line(self, cv_hsv_img):
         dis2conflict = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.stop_line_hsv)
-        # print(dis2conflict)
+        print(dis2conflict)
         if dis2conflict > 30:
             self.enter_conflict_zone = True
     
@@ -350,7 +350,6 @@ class RobotVision:
 
     def get_target_to_cross_lane(self, cv_img, cv_hsv_img):
         target_x = search_pattern.search_lane_center(self.center_line_hsv, self.side_line_hsv, cv_hsv_img, is_yellow_left=True)
-        print(f"target_x: {target_x}adhqlkjdhqdkqjwdl")
         if target_x == None:
             target_x = self.image_width / 2
         cv2.circle(cv_img, (int(target_x), int(cv_hsv_img.shape[0]/2)), 5, (0, 255, 0), 5)
