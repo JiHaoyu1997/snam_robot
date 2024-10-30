@@ -253,9 +253,7 @@ class RobotVision:
         else:
             target_x = self.cross_intersection(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
-        if not target_x == None:
-            self.target_x = target_x
-            
+        self.target_x = target_x            
         self.pub_cv_img(cv_img=cv_img)
         
         """Step4 FROM TARGET COORDINATE TO TWIST"""
@@ -319,9 +317,6 @@ class RobotVision:
         else:
             self.enter_conflict_zone = True
             target_x = self.get_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
-        # AD
-        if target_x == None:
-            target_x = self.image_width / 2
 
         return target_x
 
@@ -331,12 +326,16 @@ class RobotVision:
     
     def get_target_from_buffer_line(self, cv_img, cv_hsv_img):
         buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.buffer_line_hsv)
+        if buffer_line_x == None:
+            buffer_line_x = self.image_width / 2
         cv2.circle(cv_img, (buffer_line_x, buffer_line_y), 5, (255, 100, 0), 5)
         target_x = buffer_line_x
         return target_x
 
     def get_target_to_cross_lane(self, cv_img, cv_hsv_img):
         target_x = search_pattern.search_lane_center(self.center_line_hsv, self.side_line_hsv, cv_hsv_img, is_yellow_left=True)
+        if target_x == None:
+            target_x = self.image_width / 2
         cv2.circle(cv_img, (self.target_x, int(cv_hsv_img.shape[0]/2)), 5, (0, 255, 0), 5)
         return target_x
     
@@ -344,6 +343,8 @@ class RobotVision:
         self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
         rospy.loginfo(f"Next Action is {self.next_action}")
         target_x = search_pattern.search_inter_guide_line2(self.inter_guide_line[self.next_action], cv_hsv_img, self.next_action)
+        if target_x == None:
+            target_x = self.image_width / 2
         cv2.circle(cv_img, (int(target_x), int(cv_hsv_img.shape[0]/2)), 5, (255, 255, 0), 5)
         return target_x
 
