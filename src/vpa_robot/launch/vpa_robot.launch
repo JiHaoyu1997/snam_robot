@@ -8,7 +8,9 @@
         <!-- Pass the robot_name argument to the included launch files -->
 
         <include file="$(find vpa_robot_vision)/launch/robot_vision.launch">
-            <arg name="robot_name" value="$(arg robot_name)" />
+            <arg name="robot_name"  value="$(arg robot_name)" />
+            <arg name="test_mode"   value="$(arg test_mode)"/> 
+            <arg name="acc_on"      value="$(arg acc_on)"/> 
         </include>
 
         <include file="$(find vpa_robot_decision)/launch/robot_decision.launch">
