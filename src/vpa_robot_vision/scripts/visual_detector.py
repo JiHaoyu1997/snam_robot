@@ -221,6 +221,12 @@ class RobotVision:
         acc_hsv_img = from_cv_to_hsv(acc_img)
         cv_hsv_img = from_cv_to_hsv(cv_img)
 
+        self.curr_route = [6, 2, 5]
+        target_x = self.get_target_to_cross_conflict(cv_hsv_img=cv_hsv_img, cv_img=cv_img)
+        self.target_x = target_x            
+        self.pub_cv_img(cv_img=cv_img)
+        return
+
         if self.test_mode:
             self.test_mode_func(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
             return
