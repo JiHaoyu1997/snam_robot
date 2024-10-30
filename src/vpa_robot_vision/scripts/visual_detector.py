@@ -11,11 +11,9 @@ from hsv import HSVSpace, from_cv_to_hsv
 from map import map
 from pid_controller import pid_controller
 
-
 # Dynamic reconfiguration
 from dynamic_reconfigure.server import Server
 from vpa_robot_vision.cfg import color_hsvConfig
-
 
 # Msg
 from std_msgs.msg import Int8MultiArray
@@ -221,13 +219,14 @@ class RobotVision:
 
         """Step3 FROM HSV IMAGE TO TARGET COORDINATE"""
         # --- BUFFER AREA ---
+        
         # NO TASK ==> STOP AT READY_LINE 
         if self.curr_route == [2, 6, 6]:
             self.current_zone == Zone.BUFFER_AREA
             dis2ready = search_pattern.search_line(cv_hsv_img, self.ready_line_hsv)
             if dis2ready > 25:
                 self.stop = True
-                return
+                return            
             
         # INIT TASK ==> FROM BUFFER TO INTERSECTION          
         elif self.curr_route == [6, 6, 2]:
@@ -235,6 +234,7 @@ class RobotVision:
             target_x = self.get_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
         # --- INTERSECTION AREA ---
+
         # DEFAULT FIRST ROUTE [6, 2, X]
         elif self.curr_route[0] == 6 and self.curr_route[1] == 2:
             self.current_zone == Zone.INTERSECTION
@@ -255,6 +255,8 @@ class RobotVision:
 
         if not target_x == None:
             self.target_x = target_x
+            
+        self.pub_cv_img(cv_img=cv_img)
         
         """Step4 FROM TARGET COORDINATE TO TWIST"""
         if self.stop:
