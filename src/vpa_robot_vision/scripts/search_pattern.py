@@ -204,7 +204,7 @@ def search_inter_guide_line2(hsv_space:HSVSpace,hsv_image,action:int):
         # right turn
         for i in range(70,130,15):
             y = i
-            print(f"mask.shape: {mask.shape}")
+            print(f"mask.85: {mask[85, 160:320]}")
             line = np.nonzero(mask[y, 80:])[0]
             print(f"y: {y}, line: {line}")
             seg = _break_segs(line)
