@@ -349,6 +349,7 @@ class RobotVision:
 
     def get_target_to_cross_lane(self, cv_img, cv_hsv_img):
         target_x = search_pattern.search_lane_center(self.center_line_hsv, self.side_line_hsv, cv_hsv_img, is_yellow_left=True)
+        print(target_x)
         if target_x == None:
             target_x = self.image_width / 2
         cv2.circle(cv_img, (int(target_x), int(cv_hsv_img.shape[0]/2)), 5, (0, 255, 0), 5)
