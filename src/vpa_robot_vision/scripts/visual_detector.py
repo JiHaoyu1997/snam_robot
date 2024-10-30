@@ -225,12 +225,6 @@ class RobotVision:
             self.test_mode_func(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
             return
 
-        self.curr_route = [6, 2, 5]
-        target_x = self.get_target_to_cross_conflict(cv_hsv_img=cv_hsv_img, cv_img=cv_img)
-        self.target_x = target_x            
-        self.pub_cv_img(cv_img=cv_img)
-        return
-
         """Step2 BOUNDARY LINE DETECTOR"""
         self.detect_inter_boundary_line(cv_hsv_img=cv_hsv_img) 
 
