@@ -196,7 +196,6 @@ class RobotVision:
         lookup_table = np.array([ (i /255.0) ** invGamma * 255 for i in range(256)]).astype("uint8")
         return cv2.LUT(cv_img, lookup_table)
 
-
     def image_raw_sub_cb(self, data: Image):
         if self.curr_route == [0, 0, 0]:
             rospy.loginfo("Not Start Tracking")
@@ -219,12 +218,12 @@ class RobotVision:
         # cv_img = self.adjust_gamma(cv_img=cv_img, gamma=0.4)
 
 
-        lab_image = cv2.cvtColor(cv_img, cv2.COLOR_BGR2LAB)
-        l_channel, a_channel, b_channel = cv2.split(lab_image)
-        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
-        l_channel = clahe.apply(l_channel)
-        lab_image_clahe = cv2.merge((l_channel, a_channel, b_channel))
-        cv_img = cv2.cvtColor(lab_image_clahe, cv2.COLOR_LAB2BGR)
+        # lab_image = cv2.cvtColor(cv_img, cv2.COLOR_BGR2LAB)
+        # l_channel, a_channel, b_channel = cv2.split(lab_image)
+        # clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+        # l_channel = clahe.apply(l_channel)
+        # lab_image_clahe = cv2.merge((l_channel, a_channel, b_channel))
+        # cv_img = cv2.cvtColor(lab_image_clahe, cv2.COLOR_LAB2BGR)
 
         # convert BGR image to HSV image
         acc_hsv_img = from_cv_to_hsv(acc_img)
