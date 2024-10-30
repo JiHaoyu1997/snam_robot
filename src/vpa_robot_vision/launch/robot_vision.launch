@@ -1,7 +1,7 @@
 <launch>
     <arg name="robot_name"/>
     <arg name="test_mode"/>
-    
+
     <arg name="width"       default="320"/>
     <arg name="height"      default="240"/>
     <arg name="fps"         default="10"/>
@@ -25,5 +25,26 @@
         <param name="image_width"   value="$(arg width)"/>
         <param name="image_height"  value="$(arg height)"/>
         <param name="test_mode"     value="$(arg test_mode)"/>
+        <!-- lane detecting - yellow lane -->
+        <param name="h_upper_1"            value="105"/>
+        <param name="h_lower_1"            value="65"/>
+        <param name="s_upper_1"            value="255"/>
+        <param name="s_lower_1"            value="100"/>
+        <param name="v_upper_1"            value="255"/>
+        <param name="v_lower_1"            value="205"/>
+        <!-- lane detecting - white lane -->
+        <param name="h_upper_2"            value="100"/>
+        <param name="h_lower_2"            value="25"/>
+        <param name="s_upper_2"            value="60"/>
+        <param name="s_lower_2"            value="0"/>
+        <param name="v_upper_2"            value="255"/>
+        <param name="v_lower_2"            value="200"/>
+        <!-- stop line (red)-->
+        <param name="h_upper_s"            value="140"/>
+        <param name="h_lower_s"            value="100"/>
+        <param name="s_upper_s"            value="220"/>
+        <param name="s_lower_s"            value="190"/>
+        <param name="v_upper_s"            value="200"/>
+        <param name="v_lower_s"            value="160"/>
     </node>
 </launch>
