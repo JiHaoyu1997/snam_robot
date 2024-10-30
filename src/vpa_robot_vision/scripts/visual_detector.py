@@ -362,6 +362,7 @@ class RobotVision:
         self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
         rospy.loginfo(f"Next Action is {self.action_dic[self.next_action]}")
         target_x = search_pattern.search_inter_guide_line2(self.inter_guide_line[self.next_action], cv_hsv_img, self.next_action)
+        print(target_x)
         if target_x == None:
             target_x = self.image_width / 2
         cv2.circle(cv_img, (int(target_x), int(cv_hsv_img.shape[0]/2)), 5, (255, 255, 0), 5)
