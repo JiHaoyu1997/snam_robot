@@ -207,7 +207,6 @@ def search_inter_guide_line2(hsv_space:HSVSpace,hsv_image,action:int):
             line = np.nonzero(mask[y, 80:])[0]
             seg = _break_segs(line)
             print(f"seg: {seg}")
-
             if len(seg) == 1:
                 result = min(max(RIGHT_TURN_L,int(np.mean(seg[0]))),RIGHT_TURN_R)
                 print(f"result: {result}")
@@ -246,7 +245,7 @@ def _break_segs(numbers:list,max_gap=5):
     segement_number = 0
     current_segement = []
     
-    for index,i in enumerate(numbers):
+    for index, i in enumerate(numbers):
         
         if not current_segement:
             current_segement.append(i)
