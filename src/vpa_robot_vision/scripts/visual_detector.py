@@ -333,6 +333,7 @@ class RobotVision:
 
     def detect_conflict_boundary_line(self, cv_hsv_img):
         dis2conflict = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.stop_line_hsv)
+        print(dis2conflict)
         if dis2conflict > 30:
             self.enter_conflict_zone = True
     
