@@ -218,10 +218,16 @@ class RobotVision:
         # Image Operation
         # cv_img = self.adjust_gamma(cv_img=cv_img, gamma=0.5)
 
-        cv_img_gray = cv2.cvtColor(cv_img, cv2.COLOR_BGR2GRAY)
-        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
-        clahe_image = clahe.apply(cv_img_gray)
-        cv_img = cv2.cvtColor(clahe_image, cv2.COLOR_GRAY2BGR)
+        gray_image = cv2.cvtColor(cv_img, cv2.COLOR_BGR2GRAY)
+        equalized_image = cv2.equalizeHist(gray_image)
+        cv_img = cv2.cvtColor(equalized_image, cv2.COLOR_GRAY2BGR)
+
+        # cv_img_gray = cv2.cvtColor(cv_img, cv2.COLOR_BGR2GRAY)
+        # clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+        # clahe_image = clahe.apply(cv_img_gray)
+        # cv_img = cv2.cvtColor(clahe_image, cv2.COLOR_GRAY2BGR)
+
+
 
 
         # convert BGR image to HSV image
