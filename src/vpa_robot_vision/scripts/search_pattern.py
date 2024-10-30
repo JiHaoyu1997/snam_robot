@@ -204,7 +204,7 @@ def search_inter_guide_line2(hsv_space:HSVSpace,hsv_image,action:int):
         # right turn
         for i in range(80, 130, 15):
             y = i
-            line = np.nonzero(mask[y, 80:])[0]
+            line = np.nonzero(mask[y, :])[0]
             seg = _break_segs(line)
             if len(seg) == 1:
                 result = min(max(RIGHT_TURN_L,int(np.mean(seg[0]))),RIGHT_TURN_R)
