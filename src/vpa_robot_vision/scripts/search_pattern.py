@@ -153,7 +153,7 @@ def search_inter_guide_line2(hsv_space:HSVSpace,hsv_image,action:int):
     # handle the crossing (X) patterns on the guide lines
     height = int(hsv_image.shape[0])
     x_list = []
-    
+
     if action == 1:
         # left turn
         res = None
@@ -204,7 +204,7 @@ def search_inter_guide_line2(hsv_space:HSVSpace,hsv_image,action:int):
         # right turn
         for i in range(70,130,15):
             y = i
-            line = np.nonzero(mask[y,:])[0]
+            line = np.nonzero(mask[y,80:])[0]
             seg = _break_segs(line)
             if len(seg) == 1:
                 return min(max(RIGHT_TURN_L,int(np.mean(seg[0]))),RIGHT_TURN_R)
