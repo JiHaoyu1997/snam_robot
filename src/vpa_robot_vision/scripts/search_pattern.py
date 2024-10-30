@@ -205,9 +205,8 @@ def search_inter_guide_line2(hsv_space:HSVSpace,hsv_image,action:int):
         for i in range(70,130,15):
             y = i
             line = np.nonzero(mask[y, 80:])[0]
+            print(f"y: {y}, line: {line}")
             seg = _break_segs(line)
-            print(f"y: {y}")
-            print(f"seg: {seg}")
             if len(seg) == 1:
                 result = min(max(RIGHT_TURN_L,int(np.mean(seg[0]))),RIGHT_TURN_R)
                 print(f"result: {result}")
