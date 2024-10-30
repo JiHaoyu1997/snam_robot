@@ -195,6 +195,15 @@ class RobotVision:
         invGamma = 1.0 / gamma
         lookup_table = np.array([ (i /255.0) ** invGamma * 255 for i in range(256)]).astype("uint8")
         return cv2.LUT(cv_img, lookup_table)
+    
+    def cv_show(self, name, img):
+        # 检查图像是否为空
+        if img is None:
+            print(f"Error: Unable to display {name}, image not loaded.")
+            return
+        cv2.imshow(name, img)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
 
     def image_raw_sub_cb(self, data: Image):
         if self.curr_route == [0, 0, 0]:
@@ -212,18 +221,14 @@ class RobotVision:
         acc_img = cv_img_raw[0 : int(cv_img_raw.shape[0]/3), :]
 
         # the bottom 3/4 part of image_raw for tracking function
-        cv_img = cv_img_raw[int(cv_img_raw.shape[0]/4) : cv_img_raw.shape[0], :]
+        cv_img_raw2 = cv_img_raw[int(cv_img_raw.shape[0]/4) : cv_img_raw.shape[0], :]
 
         # Image Operation
-        cv_img = self.adjust_gamma(cv_img=cv_img, gamma=0.4)
+        cv_img = self.adjust_gamma(cv_img=cv_img_raw2, gamma=0.5)
+        combined_img = np.hstack((cv_img_raw2, cv_img))
+        self.cv_show('Image', combined_img)
+        return
 
-
-        # lab_image = cv2.cvtColor(cv_img, cv2.COLOR_BGR2LAB)
-        # l_channel, a_channel, b_channel = cv2.split(lab_image)
-        # clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
-        # l_channel = clahe.apply(l_channel)
-        # lab_image_clahe = cv2.merge((l_channel, a_channel, b_channel))
-        # cv_img = cv2.cvtColor(lab_image_clahe, cv2.COLOR_LAB2BGR)
 
         # convert BGR image to HSV image
         acc_hsv_img = from_cv_to_hsv(acc_img)
