@@ -61,7 +61,6 @@ def search_line(hsv_image, hsv_space: HSVSpace) -> Union[int, float]:
 
 def _search_lane_linecenter(_mask,_upper_bias:int,_lower_bias:int,_height_center:int,_interval:int,_width_range_left:int,_width_range_right:int) -> int:
     for i in range(_lower_bias,_upper_bias,_interval):
-        print(_mask[_height_center+i,_width_range_left:_width_range_right])
         point = np.nonzero(_mask[_height_center+i,_width_range_left:_width_range_right])[0] + _width_range_left
         if len(point) > 8 and len(point) < 45:
             _line_center = int(np.mean(point))
@@ -77,9 +76,6 @@ def search_lane_center(space1:HSVSpace, space2:HSVSpace, hsv_image, is_yellow_le
     mask2 = space2.apply_mask(hsv_image2)
     _line_center1 = _search_lane_linecenter(mask1,50,-20,int(hsv_image.shape[0]/2),10,0,int(hsv_image.shape[1]))
 
-    if _line_center1 == 0:
-         _line_center1 = _search_lane_linecenter(mask1,50,-20,int(hsv_image.shape[0]/2),10,0,int(hsv_image.shape[1]))
-
     if _line_center1 == 0 and not is_yellow_left:
         # failed to find the center yellow line
         _line_center1 = hsv_image.shape[1]
@@ -93,8 +89,7 @@ def search_lane_center(space1:HSVSpace, space2:HSVSpace, hsv_image, is_yellow_le
     if _line_center2 == 0 and is_yellow_left:
         # miss detections 
         _line_center2 = hsv_image.shape[1]
-    
-    print(_line_center1, _line_center2)
+
     _lane_center = int((_line_center1 + _line_center2)/2)
     return max(min(_lane_center,LANE_R),LANE_L)
 
