@@ -47,7 +47,7 @@ def search_line(hsv_image, hsv_space: HSVSpace) -> Union[int, float]:
     upper_bound = 2 * lower_bound
     width_center = int(hsv_image.shape[1]/2)
 
-    point = np.nonzero(mask[lower_bound : upper_bound, width_center - 50])
+    # point = np.nonzero(mask[lower_bound : upper_bound, width_center - 50])
     # return len(point[0])
 
     for i in range(-50, 100, 50):
@@ -204,6 +204,7 @@ def search_inter_guide_line2(hsv_space:HSVSpace,hsv_image,action:int):
         # right turn
         for i in range(70,130,15):
             y = i
+            print(f"mask.shape: {mask.shape}")
             line = np.nonzero(mask[y, 80:])[0]
             print(f"y: {y}, line: {line}")
             seg = _break_segs(line)
