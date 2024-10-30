@@ -216,7 +216,7 @@ class RobotVision:
         cv_img = cv_img_raw[int(cv_img_raw.shape[0]/4) : cv_img_raw.shape[0], :]
 
         # Image Operation
-        cv_img = self.adjust_gamma(cv_img=cv_img, gamma=0.5)
+        # cv_img = self.adjust_gamma(cv_img=cv_img, gamma=0.5)
 
         # convert BGR image to HSV image
         acc_hsv_img = from_cv_to_hsv(acc_img)
