@@ -141,7 +141,7 @@ class RobotVision:
         self.center_line_hsv = HSVSpace(
             h_u=int(rospy.get_param('~h_upper_1', 105)),
             h_l=int(rospy.get_param('~h_lower_1', 65)),
-            s_u=int(rospy.get_param('~s_upper_1', 200)),
+            s_u=int(rospy.get_param('~s_upper_1', 255)),
             s_l=int(rospy.get_param('~s_lower_1', 100)),
             v_u=int(rospy.get_param('~v_upper_1', 255)),
             v_l=int(rospy.get_param('~v_lower_1', 205))
@@ -168,17 +168,17 @@ class RobotVision:
         )
 
         # Buffer Line HSV - Pink
-        self.buffer_line_hsv = HSVSpace(160, 125, 140, 10, 240, 200)
+        self.buffer_line_hsv = HSVSpace(160, 120, 180, 140, 220, 180)
 
         # Ready Line HSV - Yellow
-        self.ready_line_hsv = HSVSpace(100, 80, 255, 80, 255, 150)
+        self.ready_line_hsv = HSVSpace(105, 65, 255, 205, 255, 205)
 
         # Intersection Boundary Line HSV - Green
         self.inter_boundary_line_hsv = HSVSpace( 50,  20, 240, 140, 220, 130)
 
         # guiding lines inside intersections - no dynamic reconfigure
-        self._right_guide_hsv = HSVSpace(135, 95, 130,   90, 240, 210)
-        self._left_guide_hsv  = HSVSpace(160, 140, 180,  80, 230, 160)
+        self._right_guide_hsv = HSVSpace(140, 100, 180, 140, 220, 180)
+        self._left_guide_hsv  = HSVSpace(160, 120, 210, 170, 170, 135)
         self._thur_guide_hsv  = HSVSpace( 30,   0, 250, 170, 230, 130)  
         self.inter_guide_line = [self._thur_guide_hsv, self._left_guide_hsv, self._right_guide_hsv]
 
