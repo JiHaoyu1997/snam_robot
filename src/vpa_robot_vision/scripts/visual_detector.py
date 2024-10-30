@@ -161,7 +161,7 @@ class RobotVision:
         self.stop_line_hsv = HSVSpace(
             h_u=int(rospy.get_param('~h_upper_s', 140)),
             h_l=int(rospy.get_param('~h_lower_s', 100)),
-            s_u=int(rospy.get_param('~s_upper_s', 210)),
+            s_u=int(rospy.get_param('~s_upper_s', 220)),
             s_l=int(rospy.get_param('~s_lower_s', 190)),
             v_u=int(rospy.get_param('~v_upper_s', 200)),            
             v_l=int(rospy.get_param('~v_lower_s', 160))
@@ -334,6 +334,7 @@ class RobotVision:
     def detect_conflict_boundary_line(self, cv_hsv_img):
         dis2conflict = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.stop_line_hsv)
         print(dis2conflict)
+        print(1)
         if dis2conflict > 30:
             self.enter_conflict_zone = True
     
