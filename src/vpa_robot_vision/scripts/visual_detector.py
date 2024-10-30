@@ -216,11 +216,15 @@ class RobotVision:
         cv_img = cv_img_raw[int(cv_img_raw.shape[0]/4) : cv_img_raw.shape[0], :]
 
         # Image Operation
-        # cv_img = self.adjust_gamma(cv_img=cv_img, gamma=0.5)
+        # cv_img = self.adjust_gamma(cv_img=cv_img, gamma=0.4)
 
-        hsv_image = cv2.cvtColor(cv_img, cv2.COLOR_BGR2HSV)
-        hsv_image[:, :, 2] = np.clip(hsv_image[:, :, 2] - 50, 0, 255)
-        cv_img = cv2.cvtColor(hsv_image, cv2.COLOR_HSV2BGR)
+
+        lab_image = cv2.cvtColor(cv_img, cv2.COLOR_BGR2LAB)
+        l_channel, a_channel, b_channel = cv2.split(lab_image)
+        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
+        l_channel = clahe.apply(l_channel)
+        lab_image_clahe = cv2.merge((l_channel, a_channel, b_channel))
+        cv_img = cv2.cvtColor(lab_image_clahe, cv2.COLOR_LAB2BGR)
 
         # convert BGR image to HSV image
         acc_hsv_img = from_cv_to_hsv(acc_img)
