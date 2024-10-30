@@ -174,7 +174,7 @@ class RobotVision:
         self.inter_boundary_line_hsv = HSVSpace( 50,  20, 240, 140, 220, 130)
 
         # guiding lines inside intersections - no dynamic reconfigure
-        self._right_guide_hsv = HSVSpace(135, 95, 130,  90, 240, 210)
+        self._right_guide_hsv = HSVSpace(135, 95, 130,   90, 240, 210)
         self._left_guide_hsv  = HSVSpace(160, 140, 180,  80, 230, 160)
         self._thur_guide_hsv  = HSVSpace( 30,   0, 250, 170, 230, 130)  
         self.inter_guide_line = [self._thur_guide_hsv, self._left_guide_hsv, self._right_guide_hsv]
@@ -252,6 +252,7 @@ class RobotVision:
         # GENERAL ROUTE
         else:
             target_x = self.cross_intersection(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+            self.stop = True
 
         self.target_x = target_x            
         self.pub_cv_img(cv_img=cv_img)
@@ -315,6 +316,7 @@ class RobotVision:
             target_x = self.get_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
         # conflict zone
         else:
+            rospy.loginfo(f"Enter Conflict Zone")
             self.enter_conflict_zone = True
             target_x = self.get_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
@@ -342,7 +344,7 @@ class RobotVision:
     
     def get_target_to_cross_conflict(self, cv_img, cv_hsv_img):
         self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
-        rospy.loginfo(f"Next Action is {self.next_action}")
+        rospy.loginfo(f"Next Action is {self.action_dic[self.next_action]}")
         target_x = search_pattern.search_inter_guide_line2(self.inter_guide_line[self.next_action], cv_hsv_img, self.next_action)
         if target_x == None:
             target_x = self.image_width / 2

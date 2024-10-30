@@ -65,8 +65,8 @@ class DecisionMaker:
             return
         
         new_route = [route_msg.data[0], route_msg.data[1], route_msg.data[2]]
-        rospy.loginfo(f"decision maker curr_route: {self.curr_route}")
-        rospy.loginfo(f"decision maker new_route: {new_route}")
+        # rospy.loginfo(f"decision maker curr_route: {self.curr_route}")
+        # rospy.loginfo(f"decision maker new_route: {new_route}")
 
         # 
         if self.curr_route == [0, 0, 0]:
