@@ -222,7 +222,7 @@ class RobotVision:
         
         # NO TASK ==> STOP AT READY_LINE 
         if self.curr_route == [2, 6, 6]:
-            self.current_zone == Zone.BUFFER_AREA
+            self.current_zone = Zone.BUFFER_AREA
             dis2ready = search_pattern.search_line(cv_hsv_img, self.ready_line_hsv)
             if dis2ready > 25:
                 self.stop = True
@@ -230,14 +230,14 @@ class RobotVision:
             
         # INIT TASK ==> FROM BUFFER TO INTERSECTION          
         elif self.curr_route == [6, 6, 2]:
-            self.current_zone == Zone.BUFFER_AREA
+            self.current_zone = Zone.BUFFER_AREA
             target_x = self.get_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
         # --- INTERSECTION AREA ---
 
         # DEFAULT FIRST ROUTE [6, 2, X]
         elif self.curr_route[0] == 6 and self.curr_route[1] == 2:
-            self.current_zone == Zone.INTERSECTION
+            self.current_zone = Zone.INTERSECTION
             # 
             dis2inside = search_pattern.search_line(cv_hsv_img, self.side_line_hsv)
             if  not dis2inside > 25:
@@ -308,17 +308,16 @@ class RobotVision:
         self.inter_boundary_line_detect_pub.publish(cross_msg)
     
     def cross_intersection(self, cv_img, cv_hsv_img):
-        self.current_zone == Zone.INTERSECTION
+        self.current_zone = Zone.INTERSECTION
         rospy.loginfo(f"current route is {self.curr_route}")
         # check if conflict zone
-        result = self.detect_conflict_boundary_line(cv_hsv_img=cv_hsv_img)
+        self.detect_conflict_boundary_line(cv_hsv_img=cv_hsv_img)
         # lane
         if not self.enter_conflict_zone:
             target_x = self.get_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
         # conflict zone
         else:
             rospy.loginfo(f"Enter Conflict Zone")
-            self.enter_conflict_zone = True
             target_x = self.get_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
         return target_x
