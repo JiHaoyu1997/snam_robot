@@ -22,7 +22,7 @@ def bufffer_pi_control(ref, sig, vf=0.3, vs=0.3):
 
     last_time_called_b = rospy.get_time()
 
-    kp = 4
+    kp = 5
     ki = 0
 
     err = (ref - sig)/ref
