@@ -361,10 +361,7 @@ class RobotVision:
     def get_target_to_cross_conflict(self, cv_img, cv_hsv_img):
         self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
         rospy.loginfo(f"Next Action is {self.action_dic[self.next_action]}")
-        mask_img = self.inter_guide_line[self.next_action].apply_mask(cv_hsv_img)
-        self.pub_mask_img(mask_img=mask_img[0:80, :])
         target_x = search_pattern.search_inter_guide_line2(self.inter_guide_line[self.next_action], cv_hsv_img, self.next_action)
-        print(target_x)
         if target_x == None:
             target_x = self.image_width / 2
         cv2.circle(cv_img, (int(target_x), int(cv_hsv_img.shape[0]/2)), 5, (255, 255, 0), 5)
