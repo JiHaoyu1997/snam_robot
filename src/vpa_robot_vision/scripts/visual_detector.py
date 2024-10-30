@@ -133,6 +133,9 @@ class RobotVision:
         }
 
     def color_space_init(self) -> None:
+        # 
+        self.center_x = rospy.get_param('~center_x', 160)
+        self.center_y = rospy.get_param('~center_y', 90)
 
         # HSV space for Yellow (center lane line)
         self.center_line_hsv = HSVSpace(
@@ -238,10 +241,8 @@ class RobotVision:
         # DEFAULT FIRST ROUTE [6, 2, X]
         elif self.curr_route[0] == 6 and self.curr_route[1] == 2:
             self.current_zone = Zone.INTERSECTION
-            # 
             dis2inside = search_pattern.search_line(cv_hsv_img, self.side_line_hsv)
             if dis2inside > 25:
-                rospy.loginfo("Cross White Line and enter inter2 conflict zone")
                 self.enter_conflict_zone = True
 
             if not self.enter_conflict_zone:                          
@@ -360,8 +361,10 @@ class RobotVision:
     
     def test_mode_func(self, cv_img, cv_hsv_img):
         # Calculate the center coordinates as integers
-        center_x = int(cv_hsv_img.shape[1] / 2)
-        center_y = int(cv_hsv_img.shape[0] / 2)
+        # center_x = int(cv_hsv_img.shape[1] / 2)
+        # center_y = int(cv_hsv_img.shape[0] / 2)
+        center_x = self.center_x
+        center_y = self.center_y
 
         # Draw a circle at the center
         cv2.circle(cv_img, (center_x, center_y), 5, (0, 0, 255), 1)
@@ -416,7 +419,10 @@ class RobotVision:
         self.stop_line_hsv._v_lower = config.v_lower_s
         self.stop_line_hsv._h_upper = config.h_upper_s
         self.stop_line_hsv._s_upper = config.s_upper_s
-        self.stop_line_hsv._v_upper = config.v_upper_s  
+        self.stop_line_hsv._v_upper = config.v_upper_s
+
+        self.center_x = config.center_x
+        self.center_y = config.center_y
         
         return config
 
