@@ -391,7 +391,7 @@ class RobotVision:
         self.pub_cv_img(cv_img=cv_img)
 
         # Apply the mask and publish the masked image
-        turn_right_line_mask_img = self.center_line_hsv.apply_mask(cv_hsv_img)
+        turn_right_line_mask_img = self.stop_line_hsv.apply_mask(cv_hsv_img)
         self.pub_mask_img(mask_img=turn_right_line_mask_img)
 
         return   
