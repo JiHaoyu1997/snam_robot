@@ -328,7 +328,7 @@ class RobotVision:
         buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.buffer_line_hsv)
         if buffer_line_x == None:
             buffer_line_x = self.image_width / 2
-        cv2.circle(cv_img, (buffer_line_x, buffer_line_y), 5, (255, 100, 0), 5)
+        cv2.circle(cv_img, (int(buffer_line_x), int(buffer_line_y)), 5, (255, 100, 0), 5)
         target_x = buffer_line_x
         return target_x
 
@@ -336,7 +336,7 @@ class RobotVision:
         target_x = search_pattern.search_lane_center(self.center_line_hsv, self.side_line_hsv, cv_hsv_img, is_yellow_left=True)
         if target_x == None:
             target_x = self.image_width / 2
-        cv2.circle(cv_img, (self.target_x, int(cv_hsv_img.shape[0]/2)), 5, (0, 255, 0), 5)
+        cv2.circle(cv_img, (int(target_x), int(cv_hsv_img.shape[0]/2)), 5, (0, 255, 0), 5)
         return target_x
     
     def get_target_to_cross_conflict(self, cv_img, cv_hsv_img):
