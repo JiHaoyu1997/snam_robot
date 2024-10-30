@@ -77,7 +77,10 @@ class TaskManager:
         rospy.loginfo("%s: Waiting for Task Assign Server", self.robot_name)
         rospy.wait_for_service("/assgin_task_srv")
         try:
-            resp: AssignTaskResponse = self.assign_task_client.call(self.robot_name)
+            req = AssignTaskRequest()
+            req.robot_name = self.robot_name
+
+            resp: AssignTaskResponse = self.assign_task_client.call(req)
             if self.validate_task_list(resp.task_list):
                 self.task_list = resp.task_list
                 return True
@@ -129,5 +132,5 @@ class TaskManager:
         self.curr_route_pub.publish(route_msg)
 
 if __name__ == '__main__':
-    TaskManager()
+    N = TaskManager()
     rospy.spin()

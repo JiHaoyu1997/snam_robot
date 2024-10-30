@@ -88,6 +88,9 @@ class RobotVision:
 
     # Methods
     def status_flag_init(self):
+        #  Target to follow
+        self.target_x = self.image_width / 2 
+
         # Current route (three intersections: last, current and next)
         self.curr_route = [0, 0, 0]
 
@@ -134,7 +137,7 @@ class RobotVision:
 
     def color_space_init(self) -> None:
 
-        # HSV space for yellow (center lane line)
+        # HSV space for Yellow (center lane line)
         self.center_line_hsv = HSVSpace(
             h_u=int(rospy.get_param('~h_upper_1', 100)),
             h_l=int(rospy.get_param('~h_lower_1', 80)),
@@ -144,7 +147,7 @@ class RobotVision:
             v_l=int(rospy.get_param('~v_lower_1', 150))
         ) 
 
-        # HSV space for white (side lane line)
+        # HSV space for White (side lane line)
         self.side_line_hsv = HSVSpace(
             h_u=int(rospy.get_param('~h_upper_2', 100)),
             h_l=int(rospy.get_param('~h_lower_2', 25)),
@@ -154,7 +157,7 @@ class RobotVision:
             v_l=int(rospy.get_param('~v_lower_2', 200))
         ) 
 
-        # HSV space for red (stop line)
+        # HSV space for Red (stop line)
         self.stop_line_hsv = HSVSpace(
             h_u=int(rospy.get_param('~h_upper_s', 145)),
             h_l=int(rospy.get_param('~h_lower_s', 110)),
@@ -190,8 +193,6 @@ class RobotVision:
         if self.curr_route == [0, 0, 0]:
             rospy.loginfo("Not Start Tracking")
             return
-        else:             
-            target_x = self.image_width / 2 
 
         """Step1 CONVERT RAW IMAGE TO HSV IMAGE"""
         # the function is supposed to be called at about 10Hz based on fps settins  
@@ -219,57 +220,40 @@ class RobotVision:
 
         """Step3 FROM HSV IMAGE TO TARGET COORDINATE"""
         # --- BUFFER AREA ---
-        # INIT TASK ==> FROM BUFFER TO INTERSECTION          
-        if self.curr_route == [6, 6, 2]:
-            self.current_zone == Zone.BUFFER_AREA
-            # 
-            buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.buffer_line_hsv)
-            if not buffer_line_x == None:
-                cv2.circle(cv_img, (buffer_line_x, buffer_line_y), 5, (255, 100, 0), 5)
-                target_x = buffer_line_x
-            else:
-                target_x = self.image_width / 2 
-
         # NO TASK ==> STOP AT READY_LINE 
-        elif self.curr_route == [2, 6, 6]:
+        if self.curr_route == [2, 6, 6]:
             self.current_zone == Zone.BUFFER_AREA
-            # 
             dis2ready = search_pattern.search_line(cv_hsv_img, self.ready_line_hsv)
             if dis2ready > 25:
                 self.stop = True
                 return
+            
+        # INIT TASK ==> FROM BUFFER TO INTERSECTION          
+        elif self.curr_route == [6, 6, 2]:
+            self.current_zone == Zone.BUFFER_AREA
+            target_x = self.get_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
         # --- INTERSECTION AREA ---
-        # DEFAULT FIRST ROUTE [6, 6, 2]
+        # DEFAULT FIRST ROUTE [6, 2, X]
         elif self.curr_route[0] == 6 and self.curr_route[1] == 2:
             self.current_zone == Zone.INTERSECTION
             # 
-            dis2exit = search_pattern.search_line(cv_hsv_img, self.side_line_hsv)
-            self.enter_conflict_zone = dis2exit > 25
+            dis2inside = search_pattern.search_line(cv_hsv_img, self.side_line_hsv)
+            self.enter_conflict_zone = dis2inside > 25
 
             if not self.enter_conflict_zone:                          
                 #
-                buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.buffer_line_hsv)
-                if not buffer_line_x == None:
-                    cv2.circle(cv_img, (buffer_line_x, buffer_line_y), 5, (255, 100, 0), 5)
-                    target_x = buffer_line_x
-                else:
-                    target_x = self.image_width / 2 
-
+                target_x = self.get_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
             else: 
                 # 
-                self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
-                rospy.loginfo(f"Next Action is {self.next_action}")
-                line_x = search_pattern.search_inter_guide_line2(self.inter_guide_line[self.next_action], cv_hsv_img, self.next_action)
-                if not line_x == None:
-                    target_x = line_x
-                else:
-                    target_x = self.image_width / 2
-        else:
-            self.current_zone == Zone.INTERSECTION
-            rospy.loginfo(f"current route is {self.curr_route}")
+                target_x = self.get_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
-        self.pub_cv_img(cv_img=cv_img)  
+        # GENERAL ROUTE
+        else:
+            target_x = self.cross_intersection(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+
+        if not target_x == None:
+            self.target_x = target_x
         
         """Step4 FROM TARGET COORDINATE TO TWIST"""
         if self.stop:
@@ -279,14 +263,14 @@ class RobotVision:
         elif self.current_zone == Zone.BUFFER_AREA:
             v_x, omega_z = pid_controller.bufffer_pi_control(
                 int(cv_hsv_img.shape[1]/2), 
-                target_x, 
+                self.target_x, 
                 self.v_set.v_f_buffer, 
                 self.v_set.v_s_buffer)            
 
         elif self.current_zone == Zone.INTERSECTION:
             v_x, omega_z = pid_controller.inter_pi_control(
                 int(cv_hsv_img.shape[1]/2), 
-                target_x, 
+                self.target_x, 
                 self.v_set.v_f_inter, 
                 self.v_set.v_s_inter)            
 
@@ -306,6 +290,7 @@ class RobotVision:
             if self.cross_inter_boundary_line_count >= 2 and not self.cross:
                 rospy.loginfo(f'{self.robot_name} cross the boundary line between inter{self.curr_route[1]} and inter{self.curr_route[2]}')
                 self.cross = True
+                self.enter_conflict_zone = False
         else:
             self.cross_inter_boundary_line_count = 0
             self.cross = False
@@ -318,23 +303,52 @@ class RobotVision:
         cross_msg.local_inter_id = self.curr_route[2]
         self.inter_boundary_line_detect_pub.publish(cross_msg)
     
+    def cross_intersection(self, cv_img, cv_hsv_img):
+        self.current_zone == Zone.INTERSECTION
+        rospy.loginfo(f"current route is {self.curr_route}")
+        # check if conflict zone
+        result = self.detect_conflict_boundary_line(cv_hsv_img=cv_hsv_img)
+        # lane
+        if not result:
+            target_x = self.get_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+        # conflict zone
+        else:
+            self.enter_conflict_zone = True
+            target_x = self.get_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+        # AD
+        if target_x == None:
+            target_x = self.image_width / 2
+
+        return target_x
+
+    def detect_conflict_boundary_line(self, cv_hsv_img):
+        dis2conflict = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.stop_line_hsv)
+        return dis2conflict > 30
+    
+    def get_target_from_buffer_line(self, cv_img, cv_hsv_img):
+        buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.buffer_line_hsv)
+        cv2.circle(cv_img, (buffer_line_x, buffer_line_y), 5, (255, 100, 0), 5)
+        target_x = buffer_line_x
+        return target_x
+
+    def get_target_to_cross_lane(self, cv_img, cv_hsv_img):
+        target_x = search_pattern.search_lane_center(self.center_line_hsv, self.side_line_hsv, cv_hsv_img, is_yellow_left=True)
+        cv2.circle(cv_img, (self.target_x, int(cv_hsv_img.shape[0]/2)), 5, (0, 255, 0), 5)
+        return target_x
+    
+    def get_target_to_cross_conflict(self, cv_img, cv_hsv_img):
+        self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
+        rospy.loginfo(f"Next Action is {self.next_action}")
+        target_x = search_pattern.search_inter_guide_line2(self.inter_guide_line[self.next_action], cv_hsv_img, self.next_action)
+        cv2.circle(cv_img, (int(target_x), int(cv_hsv_img.shape[0]/2)), 5, (255, 255, 0), 5)
+        return target_x
+
     def pub_cmd_vel_from_img(self, v_x, omega_z, v_factor):
         cmd_msg = Twist()
         cmd_msg.linear.x = v_x * v_factor
         cmd_msg.angular.z = omega_z * v_factor
-        self.cmd_vel_from_img_pub.publish(cmd_msg)    
-
-    def pub_cv_img(self, cv_img):
-        cv_img_copy = cv_img
-        cv_img_copy_msg = self.bridge.cv2_to_imgmsg(cv_img_copy, encoding="bgr8")
-        cv_img_copy_msg.header.stamp = rospy.Time.now()
-        self.cv_image_pub.publish(cv_img_copy_msg)       
-
-    def pub_mask_img(self, mask_img):
-        mask_img_msg = self.bridge.cv2_to_imgmsg(mask_img, encoding="passthrough")
-        mask_img_msg.header.stamp = rospy.Time.now()
-        self.mask_image_pub.publish(mask_img_msg)
-
+        self.cmd_vel_from_img_pub.publish(cmd_msg)
+    
     def test_mode_func(self, cv_img, cv_hsv_img):
         # Calculate the center coordinates as integers
         center_x = int(cv_hsv_img.shape[1] / 2)
@@ -357,15 +371,26 @@ class RobotVision:
         turn_right_line_mask_img = self.center_line_hsv.apply_mask(cv_hsv_img)
         self.pub_mask_img(mask_img=turn_right_line_mask_img)
 
-        return
+        return   
 
+    def pub_cv_img(self, cv_img):
+        cv_img_copy = cv_img
+        cv_img_copy_msg = self.bridge.cv2_to_imgmsg(cv_img_copy, encoding="bgr8")
+        cv_img_copy_msg.header.stamp = rospy.Time.now()
+        self.cv_image_pub.publish(cv_img_copy_msg)
+        return       
+
+    def pub_mask_img(self, mask_img):
+        mask_img_msg = self.bridge.cv2_to_imgmsg(mask_img, encoding="passthrough")
+        mask_img_msg.header.stamp = rospy.Time.now()
+        self.mask_image_pub.publish(mask_img_msg)
+        return
 
     def dynamic_reconfigure_callback_hsv(self, config, level):
         
         self.center_line_hsv._h_lower = config.h_lower_1
         self.center_line_hsv._s_lower = config.s_lower_1
-        self.center_line_hsv._v_lower = config.v_lower_1
-        
+        self.center_line_hsv._v_lower = config.v_lower_1      
         self.center_line_hsv._h_upper = config.h_upper_1
         self.center_line_hsv._s_upper = config.s_upper_1
         self.center_line_hsv._v_upper = config.v_upper_1
@@ -373,7 +398,6 @@ class RobotVision:
         self.side_line_hsv._h_lower = config.h_lower_2
         self.side_line_hsv._s_lower = config.s_lower_2
         self.side_line_hsv._v_lower = config.v_lower_2
-
         self.side_line_hsv._h_upper = config.h_upper_2
         self.side_line_hsv._s_upper = config.s_upper_2
         self.side_line_hsv._v_upper = config.v_upper_2
