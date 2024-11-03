@@ -300,7 +300,7 @@ class RobotVision:
         self.pub_cmd_vel_from_img(v_x, omega_z, v_factor)
 
     def detect_inter_boundary_line(self, cv_hsv_img: Image):
-        dis2bound = search_pattern.search_line(cv_hsv_img, self.inter_boundary_line_hsv)
+        dis2bound = search_pattern.search_line(cv_hsv_img, self.inter_boundary_line_hsv, top_line=0)
         corss_inter_boundary = dis2bound > 25
         if corss_inter_boundary:
             self.cross_inter_boundary_line_count += 1

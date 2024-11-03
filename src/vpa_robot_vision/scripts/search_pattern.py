@@ -41,7 +41,7 @@ def search_buffer_line(cv_hsv_img, buffer_line_hsv: HSVSpace) -> list:
     
     return None, None
     
-def search_line(hsv_image, hsv_space: HSVSpace) -> Union[int, float]:
+def search_line(hsv_image, hsv_space: HSVSpace, top_line = 100) -> Union[int, float]:
     mask = hsv_space.apply_mask(hsv_image)
     lower_bound = int(hsv_image.shape[0]/2)
     upper_bound = 2 * lower_bound
@@ -50,7 +50,7 @@ def search_line(hsv_image, hsv_space: HSVSpace) -> Union[int, float]:
     # point = np.nonzero(mask[lower_bound : upper_bound, width_center - 50])
     # return len(point[0])
 
-    for i in range(-50, 100, 50):
+    for i in range(-50, top_line, 50):
         point = np.nonzero(mask[lower_bound : upper_bound, width_center + i])
         # print(len(point[0]))
         if len(point[0]) > 5:
