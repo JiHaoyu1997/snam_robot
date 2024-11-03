@@ -174,7 +174,7 @@ class RobotVision:
         self.ready_line_hsv = HSVSpace(105, 65, 255, 205, 255, 205)
 
         # Intersection Boundary Line HSV - Green
-        self.inter_boundary_line_hsv = HSVSpace( 50,  20, 255, 200, 170, 120)
+        self.inter_boundary_line_hsv = HSVSpace( 50,  20, 255, 200, 170, 100)
 
         # guiding lines inside intersections - no dynamic reconfigure
         self._right_guide_hsv = HSVSpace(140, 100, 180, 140, 220, 180)
@@ -391,7 +391,7 @@ class RobotVision:
         self.pub_cv_img(cv_img=cv_img)
 
         # Apply the mask and publish the masked image
-        turn_right_line_mask_img = self.stop_line_hsv.apply_mask(cv_hsv_img)
+        turn_right_line_mask_img = self.center_line_hsv.apply_mask(cv_hsv_img)
         self.pub_mask_img(mask_img=turn_right_line_mask_img)
 
         return   
