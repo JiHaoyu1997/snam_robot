@@ -166,6 +166,7 @@ def search_inter_guide_line2(hsv_space:HSVSpace,hsv_image,action:int):
             # print(y,line)
             seg1 = _break_segs(line1)
             seg2 = _break_segs(line2)
+
             if len(seg2) == 0:
                 # the further line missing
                 if len(seg1) == 0:
@@ -238,7 +239,7 @@ def search_inter_guide_line2(hsv_space:HSVSpace,hsv_image,action:int):
                     return max(min(int(np.mean(seg[0])),THUR_R),THUR_L)
         return None      
 
-def _break_segs(numbers:list,max_gap=5):
+def _break_segs(numbers: list,max_gap=5):
     
     segements = {}
     
