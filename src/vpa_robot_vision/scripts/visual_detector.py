@@ -168,7 +168,7 @@ class RobotVision:
         )
 
         # Buffer Line HSV - Pink
-        self.buffer_line_hsv = HSVSpace(160, 120, 180, 140, 220, 180)
+        self.buffer_line_hsv = HSVSpace(160, 120, 160, 120, 220, 180)
 
         # Ready Line HSV - Yellow
         self.ready_line_hsv = HSVSpace(105, 65, 255, 205, 255, 205)
@@ -178,7 +178,7 @@ class RobotVision:
 
         # guiding lines inside intersections - no dynamic reconfigure
         self._right_guide_hsv = HSVSpace(140, 100, 180, 140, 220, 180)
-        self._left_guide_hsv  = HSVSpace(160, 125, 210, 170, 160, 135)
+        self._left_guide_hsv  = HSVSpace(160, 130, 200, 140, 200, 160)
         self._thur_guide_hsv  = HSVSpace( 30,   0, 250, 200, 160, 110)  
         self.inter_guide_line = [self._thur_guide_hsv, self._left_guide_hsv, self._right_guide_hsv]
 
