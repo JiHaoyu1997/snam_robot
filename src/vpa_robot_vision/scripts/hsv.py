@@ -3,6 +3,7 @@ import numpy as np
 
 from sensor_msgs.msg import Image
 
+
 class HSVSpace:
     
     def __init__(self, h_u, h_l, s_u, s_l, v_u, v_l) -> None:

@@ -139,47 +139,48 @@ class RobotVision:
 
         # HSV space for Yellow (center lane line)
         self.center_line_hsv = HSVSpace(
-            h_u=int(rospy.get_param('~h_upper_1', 105)),
-            h_l=int(rospy.get_param('~h_lower_1', 65)),
-            s_u=int(rospy.get_param('~s_upper_1', 255)),
-            s_l=int(rospy.get_param('~s_lower_1', 100)),
-            v_u=int(rospy.get_param('~v_upper_1', 255)),
-            v_l=int(rospy.get_param('~v_lower_1', 205))
+            h_u=int(rospy.get_param('~h_upper_1', 0)),
+            h_l=int(rospy.get_param('~h_lower_1', 0)),
+            s_u=int(rospy.get_param('~s_upper_1', 0)),
+            s_l=int(rospy.get_param('~s_lower_1', 0)),
+            v_u=int(rospy.get_param('~v_upper_1', 0)),
+            v_l=int(rospy.get_param('~v_lower_1', 0))
         ) 
 
         # HSV space for White (side lane line)
         self.side_line_hsv = HSVSpace(
-            h_u=int(rospy.get_param('~h_upper_2', 100)),
-            h_l=int(rospy.get_param('~h_lower_2', 25)),
-            s_u=int(rospy.get_param('~s_upper_2', 60)),
+            h_u=int(rospy.get_param('~h_upper_2', 0)),
+            h_l=int(rospy.get_param('~h_lower_2', 0)),
+            s_u=int(rospy.get_param('~s_upper_2', 0)),
             s_l=int(rospy.get_param('~s_lower_2', 0)),
-            v_u=int(rospy.get_param('~v_upper_2', 255)),
-            v_l=int(rospy.get_param('~v_lower_2', 200))
+            v_u=int(rospy.get_param('~v_upper_2', 0)),
+            v_l=int(rospy.get_param('~v_lower_2', 0))
         ) 
 
         # HSV space for Red (stop line)
         self.stop_line_hsv = HSVSpace(
-            h_u=int(rospy.get_param('~h_upper_s', 140)),
-            h_l=int(rospy.get_param('~h_lower_s', 100)),
-            s_u=int(rospy.get_param('~s_upper_s', 220)),
-            s_l=int(rospy.get_param('~s_lower_s', 190)),
-            v_u=int(rospy.get_param('~v_upper_s', 200)),            
-            v_l=int(rospy.get_param('~v_lower_s', 160))
+            h_u=int(rospy.get_param('~h_upper_s', 0)),
+            h_l=int(rospy.get_param('~h_lower_s', 0)),
+            s_u=int(rospy.get_param('~s_upper_s', 0)),
+            s_l=int(rospy.get_param('~s_lower_s', 0)),
+            v_u=int(rospy.get_param('~v_upper_s', 0)),            
+            v_l=int(rospy.get_param('~v_lower_s', 0))
         )
 
         # Buffer Line HSV - Pink
-        self.buffer_line_hsv = HSVSpace(160, 120, 160, 60, 220, 180)
+        self.buffer_line_hsv = HSVSpace(h_u=190, h_l=150, s_u=150, s_l=110, v_u=255, v_l=185)
+        self.overexposed_buffer_line_hsv = HSVSpace(h_u=20, h_l=0, s_u=55, s_l=45, v_u=255, v_l=205)
 
         # Ready Line HSV - Yellow
-        self.ready_line_hsv = HSVSpace(105, 65, 255, 205, 255, 205)
+        self.ready_line_hsv = self.side_line_hsv
 
         # Intersection Boundary Line HSV - Green
-        self.inter_boundary_line_hsv = HSVSpace( 50,  20, 255, 200, 170, 100)
+        self.inter_boundary_line_hsv = HSVSpace(h_u=95, h_l=65, s_u=255, s_l=150, v_u=200, v_l=70)
 
         # guiding lines inside intersections - no dynamic reconfigure
-        self.right_guide_hsv = HSVSpace(140, 100, 180, 140, 220, 180)
-        self.left_guide_hsv  = HSVSpace(160, 130, 200, 140, 200, 100)
-        self.thur_guide_hsv  = HSVSpace( 30,   0, 250, 200, 160, 110)  
+        self.right_guide_hsv = HSVSpace(h_u=25, h_l=8, s_u= 255, s_l=100, v_u=255, v_l=150)
+        self.left_guide_hsv = HSVSpace(h_u=175, h_l=145, s_u= 200, s_l=50, v_u=255, v_l=100)
+        self.thur_guide_hsv = HSVSpace(h_u=125, h_l=95, s_u=255, s_l=180, v_u=255, v_l=120)  
         self.inter_guide_line = [self.thur_guide_hsv, self.left_guide_hsv, self.right_guide_hsv]
 
         # 
@@ -343,10 +344,13 @@ class RobotVision:
     
     def get_target_from_buffer_line(self, cv_img, cv_hsv_img):
         buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.buffer_line_hsv)
+        if buffer_line_x == None:
+            buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.overexposed_buffer_line_hsv)
+        
         if not buffer_line_x == None:
             cv2.circle(cv_img, (buffer_line_x, buffer_line_y), 5, (255, 100, 0), 5)
         else:
-            buffer_line_x = self.image_width / 2
+            buffer_line_x = self.image_width * 2 / 5
         target_x = buffer_line_x
         return target_x
 
