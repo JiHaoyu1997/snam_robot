@@ -400,6 +400,8 @@ class RobotVision:
         turn_right_line_mask_img = self.center_line_hsv.apply_mask(cv_hsv_img)
         self.pub_mask_img(mask_img=turn_right_line_mask_img)
 
+        self.get_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+
         return   
 
     def pub_cv_img(self, cv_img):
