@@ -168,7 +168,7 @@ class RobotVision:
         )
 
         # Buffer Line HSV - Pink
-        self.buffer_line_hsv = HSVSpace(h_u=190, h_l=150, s_u=150, s_l=110, v_u=255, v_l=185)
+        self.buffer_line_hsv = HSVSpace(h_u=190, h_l=150, s_u=150, s_l=60, v_u=255, v_l=185)
         self.overexposed_buffer_line_hsv = HSVSpace(h_u=20, h_l=0, s_u=55, s_l=45, v_u=255, v_l=205)
 
         # Ready Line HSV - Yellow
@@ -268,8 +268,8 @@ class RobotVision:
             target_x = self.cross_intersection(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
         self.target_x = target_x       
-        mask_img = self.left_guide_hsv.apply_mask(cv_hsv_img)
-        self.pub_mask_img(mask_img=mask_img)    
+        # mask_img = self.left_guide_hsv.apply_mask(cv_hsv_img)
+        # self.pub_mask_img(mask_img=mask_img)    
         self.pub_cv_img(cv_img=cv_img)
         
         """Step4 FROM TARGET COORDINATE TO TWIST"""
