@@ -178,7 +178,7 @@ class RobotVision:
         self.inter_boundary_line_hsv = HSVSpace(h_u=95, h_l=65, s_u=255, s_l=150, v_u=200, v_l=70)
 
         # guiding lines inside intersections - no dynamic reconfigure
-        self.right_guide_hsv = HSVSpace(h_u=25, h_l=8, s_u= 255, s_l=100, v_u=255, v_l=150)
+        self.right_guide_hsv = HSVSpace(h_u=25, h_l=4, s_u= 255, s_l=100, v_u=255, v_l=150)
         self.left_guide_hsv = HSVSpace(h_u=175, h_l=145, s_u= 200, s_l=50, v_u=255, v_l=100)
         self.thur_guide_hsv = HSVSpace(h_u=125, h_l=95, s_u=255, s_l=180, v_u=255, v_l=120)  
         self.inter_guide_line = [self.thur_guide_hsv, self.left_guide_hsv, self.right_guide_hsv]
