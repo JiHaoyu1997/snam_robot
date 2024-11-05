@@ -413,13 +413,13 @@ class RobotVision:
 
     def pub_cv_img(self, cv_img):
         cv_img_copy = cv_img
-        cv_img_copy_msg = self.bridge.cv2_to_imgmsg(cv_img_copy, encoding="bgr8")
+        cv_img_copy_msg = self.cv_bridge.cv2_to_imgmsg(cv_img_copy, encoding="bgr8")
         cv_img_copy_msg.header.stamp = rospy.Time.now()
         self.cv_image_pub.publish(cv_img_copy_msg)
         return       
 
     def pub_mask_img(self, mask_img):
-        mask_img_msg = self.bridge.cv2_to_imgmsg(mask_img, encoding="passthrough")
+        mask_img_msg = self.cv_bridge.cv2_to_imgmsg(mask_img, encoding="passthrough")
         mask_img_msg.header.stamp = rospy.Time.now()
         self.mask_image_pub.publish(mask_img_msg)
         return
