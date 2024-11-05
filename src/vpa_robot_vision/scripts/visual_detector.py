@@ -6,8 +6,8 @@ import cv2
 from cv_bridge import CvBridge, CvBridgeError
 from enum import Enum
 
-import search_pattern
-from hsv import HSVSpace, from_cv_to_hsv
+import vpa_robot_vision.scripts.hsv.search_pattern as search_pattern
+from hsv import hsv, search_pattern
 from map import map
 from pid_controller import pid_controller
 
@@ -49,7 +49,7 @@ class RobotVision:
         self.acc_mode = bool(rospy.get_param('~acc_on', True))
 
         #
-        self.test_mode = bool(rospy.get_param('~test_mode', True))
+        self.test_mode = rospy.get_param('~test_mode', 'default')
 
         # Image Size
         self.image_width = rospy.get_param('~image_width', 320)
@@ -59,7 +59,7 @@ class RobotVision:
         self.v_set = VelocitySet()
 
         # std_msgs img ==> ros img
-        self.bridge = CvBridge()
+        self.cv_bridge = CvBridge()
 
         # init hsv color spaces for selecting 
         self.color_space_init()
@@ -86,9 +86,6 @@ class RobotVision:
 
     # Methods
     def status_flag_init(self):
-        #  Target to follow
-        self.target_x = self.image_width / 2 
-
         # Current route (three intersections: last, current and next)
         self.curr_route = [0, 0, 0]
 
@@ -138,7 +135,7 @@ class RobotVision:
         self.center_y = rospy.get_param('~center_y', 90)
 
         # HSV space for Yellow (center lane line)
-        self.center_line_hsv = HSVSpace(
+        self.center_line_hsv = hsv.HSVSpace(
             h_u=int(rospy.get_param('~h_upper_1', 0)),
             h_l=int(rospy.get_param('~h_lower_1', 0)),
             s_u=int(rospy.get_param('~s_upper_1', 0)),
@@ -148,7 +145,7 @@ class RobotVision:
         ) 
 
         # HSV space for White (side lane line)
-        self.side_line_hsv = HSVSpace(
+        self.side_line_hsv = hsv.HSVSpace(
             h_u=int(rospy.get_param('~h_upper_2', 0)),
             h_l=int(rospy.get_param('~h_lower_2', 0)),
             s_u=int(rospy.get_param('~s_upper_2', 0)),
@@ -158,7 +155,7 @@ class RobotVision:
         ) 
 
         # HSV space for Red (stop line)
-        self.stop_line_hsv = HSVSpace(
+        self.stop_line_hsv = hsv.HSVSpace(
             h_u=int(rospy.get_param('~h_upper_s', 0)),
             h_l=int(rospy.get_param('~h_lower_s', 0)),
             s_u=int(rospy.get_param('~s_upper_s', 0)),
@@ -168,23 +165,23 @@ class RobotVision:
         )
 
         # Buffer Line HSV - Pink
-        self.buffer_line_hsv = HSVSpace(h_u=190, h_l=150, s_u=255, s_l=60, v_u=255, v_l=185)
-        self.overexposed_buffer_line_hsv = HSVSpace(h_u=20, h_l=0, s_u=55, s_l=45, v_u=255, v_l=205)
+        self.buffer_line_hsv = hsv.HSVSpace(h_u=190, h_l=150, s_u=255, s_l=60, v_u=255, v_l=185)
+        self.overexposed_buffer_line_hsv = hsv.HSVSpace(h_u=20, h_l=0, s_u=55, s_l=45, v_u=255, v_l=205)
 
         # Ready Line HSV - Yellow
         self.ready_line_hsv = self.side_line_hsv
 
         # Intersection Boundary Line HSV - Green
-        self.inter_boundary_line_hsv = HSVSpace(h_u=95, h_l=65, s_u=255, s_l=150, v_u=200, v_l=70)
+        self.inter_boundary_line_hsv = hsv.HSVSpace(h_u=95, h_l=65, s_u=255, s_l=150, v_u=200, v_l=70)
 
         # guiding lines inside intersections - no dynamic reconfigure
-        self.right_guide_hsv = HSVSpace(h_u=25, h_l=4, s_u= 255, s_l=100, v_u=255, v_l=150)
-        self.left_guide_hsv = HSVSpace(h_u=175, h_l=145, s_u= 200, s_l=50, v_u=255, v_l=100)
-        self.thur_guide_hsv = HSVSpace(h_u=125, h_l=95, s_u=255, s_l=180, v_u=255, v_l=120)  
+        self.right_guide_hsv = hsv.HSVSpace(h_u=25, h_l=4, s_u= 255, s_l=100, v_u=255, v_l=150)
+        self.left_guide_hsv = hsv.HSVSpace(h_u=175, h_l=145, s_u= 200, s_l=50, v_u=255, v_l=100)
+        self.thur_guide_hsv = hsv.HSVSpace(h_u=125, h_l=95, s_u=255, s_l=180, v_u=255, v_l=120)  
         self.inter_guide_line = [self.thur_guide_hsv, self.left_guide_hsv, self.right_guide_hsv]
 
         # 
-        self._acc_aux_hsv     = HSVSpace(150, 110, 180, 100, 255, 120)       
+        self._acc_aux_hsv = hsv.HSVSpace(150, 110, 180, 100, 255, 120)       
 
     def curr_route_sub_cb(self, route_msg: Int8MultiArray):
         if route_msg:
@@ -192,113 +189,34 @@ class RobotVision:
         else:
             self.curr_route = [0 , 0, 0]
 
-    def adjust_gamma(self, cv_img, gamma=1.0):
-        invGamma = 1.0 / gamma
-        lookup_table = np.array([ (i /255.0) ** invGamma * 255 for i in range(256)]).astype("uint8")
-        return cv2.LUT(cv_img, lookup_table)
-
     def image_raw_sub_cb(self, data: Image):
+        """Step0 Init"""
         if self.curr_route == [0, 0, 0]:
             rospy.loginfo("Not Start Tracking")
             return
 
         """Step1 CONVERT RAW IMAGE TO HSV IMAGE"""
-        # the function is supposed to be called at about 10Hz based on fps settins  
-        try:
-            cv_img_raw = self.bridge.imgmsg_to_cv2(data, "bgr8")
-        except CvBridgeError as e:
-            print(e)        
+        cv_img, cv_hsv_img, acc_hsv_img = hsv.convert_raw_img_to_hsv_img(data=data, cv_bridge=self.cv_bridge)
 
-        # the top 1/3 part of image_raw for acc function
-        acc_img = cv_img_raw[0 : int(cv_img_raw.shape[0]/3), :]
-
-        # the bottom 3/4 part of image_raw for tracking function
-        cv_img_raw2 = cv_img_raw[int(cv_img_raw.shape[0]/4) : cv_img_raw.shape[0], :]
-
-        # Image Operation
-        cv_img = self.adjust_gamma(cv_img=cv_img_raw2, gamma=0.5)
-
-        # convert BGR image to HSV image
-        acc_hsv_img = from_cv_to_hsv(acc_img)
-        cv_hsv_img = from_cv_to_hsv(cv_img)
-
+        """Step2 Test Mode"""
         if self.test_mode:
             self.test_mode_func(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
             return
 
-        """Step2 BOUNDARY LINE DETECTOR"""
+        """Step3 BOUNDARY LINE DETECTOR"""
         self.detect_inter_boundary_line(cv_hsv_img=cv_hsv_img) 
 
-        """Step3 FROM HSV IMAGE TO TARGET COORDINATE"""
-        # --- BUFFER AREA ---
-        
-        # NO TASK ==> STOP AT READY_LINE 
-        if self.curr_route == [2, 6, 6]:
-            self.current_zone = Zone.BUFFER_AREA
-            dis2ready = search_pattern.search_line(cv_hsv_img, self.ready_line_hsv)
-            if dis2ready > 25:
-                self.stop = True
-                return
-            else:
-                target_x = self.get_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)         
-            
-        # INIT TASK ==> FROM BUFFER TO INTERSECTION          
-        elif self.curr_route == [6, 6, 2]:
-            self.current_zone = Zone.BUFFER_AREA
-            target_x = self.get_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
-
-        # --- INTERSECTION AREA ---
-
-        # DEFAULT FIRST ROUTE [6, 2, X]
-        elif self.curr_route[0] == 6 and self.curr_route[1] == 2:
-            self.current_zone = Zone.INTERSECTION
-            dis2inside = search_pattern.search_line(cv_hsv_img, self.side_line_hsv)
-            if dis2inside > 25:
-                self.enter_conflict_zone = True
-
-            if not self.enter_conflict_zone:                          
-                #
-                target_x = self.get_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
-            else: 
-                # 
-                target_x = self.get_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
-
-        # GENERAL ROUTE
-        else:
-            target_x = self.cross_intersection(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
-
-        self.target_x = target_x       
-        # mask_img = self.left_guide_hsv.apply_mask(cv_hsv_img)
-        # self.pub_mask_img(mask_img=mask_img)    
-        self.pub_cv_img(cv_img=cv_img)
-        
-        """Step4 FROM TARGET COORDINATE TO TWIST"""
-        if self.stop:
-            v_x = 0
-            omega_z = 0
-
-        elif self.current_zone == Zone.BUFFER_AREA:
-            v_x, omega_z = pid_controller.bufffer_pi_control(
-                int(cv_hsv_img.shape[1]/2), 
-                self.target_x, 
-                self.v_set.v_f_buffer, 
-                self.v_set.v_s_buffer)            
-
-        elif self.current_zone == Zone.INTERSECTION:
-            v_x, omega_z = pid_controller.inter_pi_control(
-                int(cv_hsv_img.shape[1]/2), 
-                self.target_x, 
-                self.v_set.v_f_inter, 
-                self.v_set.v_s_inter)            
-
-        """Step5 PUB TWIST TO DECISION MAKER"""
+        """Step4 FROM HSV IMAGE TO TARGET COORDINATE"""
+        target_x, result_cv_img = self.find_and_draw_target(cv_img=cv_img, cv_hsv_img=cv_hsv_img)  
+                
+        """Step5 FROM TARGET COORDINATE TO TWIST"""
+        v_x, omega_z = self.calculate_velocity(target_x=target_x)
+           
+        """Step6 PUB TWIST TO DECISION MAKER"""
         # since the cmd_vel is sending on a higher frequency than ACC msg, we estimate the distance to further avoid collsions
-        if self.acc_mode:
-            v_factor = 1
-        else:
-            v_factor = 1
+        self.pub_cmd_vel_from_img(v_x, omega_z)
 
-        self.pub_cmd_vel_from_img(v_x, omega_z, v_factor)
+        return self.pub_cv_img(cv_img=result_cv_img)
 
     def detect_inter_boundary_line(self, cv_hsv_img: Image):
         dis2bound = search_pattern.search_line(cv_hsv_img, self.inter_boundary_line_hsv, top_line=0)
@@ -320,6 +238,46 @@ class RobotVision:
         cross_msg.last_inter_id = self.curr_route[1]
         cross_msg.local_inter_id = self.curr_route[2]
         self.inter_boundary_line_detect_pub.publish(cross_msg)
+
+    def find_and_draw_target(self, cv_img, cv_hsv_img):
+        # --- BUFFER AREA ---
+        
+        # NO TASK ==> STOP AT READY_LINE 
+        if self.curr_route == [2, 6, 6]:
+            self.current_zone = Zone.BUFFER_AREA
+            dis2ready = search_pattern.search_line(cv_hsv_img, self.ready_line_hsv)
+            if dis2ready > 25:
+                self.stop = True
+                return
+            else:
+                target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)         
+            
+        # INIT TASK ==> FROM BUFFER TO INTERSECTION          
+        elif self.curr_route == [6, 6, 2]:
+            self.current_zone = Zone.BUFFER_AREA
+            target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+
+        # --- INTERSECTION AREA ---
+
+        # DEFAULT FIRST ROUTE [6, 2, X]
+        elif self.curr_route[0] == 6 and self.curr_route[1] == 2:
+            self.current_zone = Zone.INTERSECTION
+            dis2inside = search_pattern.search_line(cv_hsv_img, self.side_line_hsv)
+            if dis2inside > 25:
+                self.enter_conflict_zone = True
+
+            if not self.enter_conflict_zone:                          
+                #
+                target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+            else: 
+                # 
+                target_x, cv_img = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+
+        # GENERAL ROUTE
+        else:
+            target_x, cv_img = self.cross_intersection(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+        
+        return target_x, cv_img
     
     def cross_intersection(self, cv_img, cv_hsv_img):
         self.current_zone = Zone.INTERSECTION
@@ -328,13 +286,13 @@ class RobotVision:
         self.detect_conflict_boundary_line(cv_hsv_img=cv_hsv_img)
         # lane
         if not self.enter_conflict_zone:
-            target_x = self.get_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+            target_x, cv_img = self.find_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
         # conflict zone
         else:
             rospy.loginfo(f"Enter Conflict Zone")
-            target_x = self.get_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+            target_x, cv_img = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
-        return target_x
+        return target_x, cv_img
 
     def detect_conflict_boundary_line(self, cv_hsv_img):
         dis2conflict = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.stop_line_hsv)
@@ -342,7 +300,7 @@ class RobotVision:
         if dis2conflict > 30:
             self.enter_conflict_zone = True
     
-    def get_target_from_buffer_line(self, cv_img, cv_hsv_img):
+    def find_target_from_buffer_line(self, cv_img, cv_hsv_img):
         buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.buffer_line_hsv)
         if buffer_line_x == None:
             buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.overexposed_buffer_line_hsv)
@@ -352,34 +310,78 @@ class RobotVision:
         else:
             buffer_line_x = self.image_width * 2 / 5
         target_x = buffer_line_x
-        return target_x
+        return target_x, cv_img
 
-    def get_target_to_cross_lane(self, cv_img, cv_hsv_img):
+    def find_target_to_cross_lane(self, cv_img, cv_hsv_img):
         target_x = search_pattern.search_lane_center(self.center_line_hsv, self.side_line_hsv, cv_hsv_img, is_yellow_left=True)
         if target_x == None:
             target_x = self.image_width / 2
         cv2.circle(cv_img, (int(target_x), int(cv_hsv_img.shape[0]/2)), 5, (0, 255, 0), 5)
-        return target_x
+        return target_x, cv_img
     
-    def get_target_to_cross_conflict(self, cv_img, cv_hsv_img):
+    def find_target_to_cross_conflict(self, cv_img, cv_hsv_img):
         self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
         rospy.loginfo(f"Next Action is {self.action_dic[self.next_action]}")
         target_x = search_pattern.search_inter_guide_line2(self.inter_guide_line[self.next_action], cv_hsv_img, self.next_action)
         if target_x == None:
             target_x = self.image_width / 2
         cv2.circle(cv_img, (int(target_x), int(cv_hsv_img.shape[0]/2)), 5, (255, 255, 0), 5)
-        return target_x
+        return target_x, cv_img
+    
+    def calculate_velocity(self, target_x):
+        if self.stop:
+            v_x = 0
+            omega_z = 0
+        
+        elif self.current_zone == Zone.BUFFER_AREA:
+            v_x, omega_z = pid_controller.bufffer_pi_control(
+                int(self.image_height * 3 / 8), 
+                target_x, 
+                self.v_set.v_f_buffer, 
+                self.v_set.v_s_buffer) 
+               
+        elif self.current_zone == Zone.INTERSECTION:
+            v_x, omega_z = pid_controller.inter_pi_control(
+                int(self.image_height * 3 / 8), 
+                target_x, 
+                self.v_set.v_f_inter, 
+                self.v_set.v_s_inter)
+            
+        return v_x, omega_z
 
-    def pub_cmd_vel_from_img(self, v_x, omega_z, v_factor):
+    def pub_cmd_vel_from_img(self, v_x, omega_z):
+        if self.acc_mode:
+            v_factor = 1
+        else:
+            v_factor = 1
+
         cmd_msg = Twist()
         cmd_msg.linear.x = v_x * v_factor
         cmd_msg.angular.z = omega_z * v_factor
         self.cmd_vel_from_img_pub.publish(cmd_msg)
-    
+
+        return
+
     def test_mode_func(self, cv_img, cv_hsv_img):
+        if self.test_mode == 'default':
+            self.find_hsv(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+
+        elif self.test_mode == 'lane':
+            self.go_thur_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+            
+        elif self.test_mode == 'left':
+            pass
+
+        elif self.test_mode == 'right':
+            pass
+
+        elif self.test_mode == 'thur':
+            pass
+
+        return
+    
+    def find_hsv(self, cv_img, cv_hsv_img):
         # Calculate the center coordinates as integers
-        # center_x = int(cv_hsv_img.shape[1] / 2)
-        # center_y = int(cv_hsv_img.shape[0] / 2)
         center_x = self.center_x
         center_y = self.center_y
 
@@ -400,9 +402,15 @@ class RobotVision:
         turn_right_line_mask_img = self.center_line_hsv.apply_mask(cv_hsv_img)
         self.pub_mask_img(mask_img=turn_right_line_mask_img)
 
-        self.get_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+        self.find_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
-        return   
+        return
+    
+    def go_thur_lane(self, cv_img, cv_hsv_img):
+        target_x, cv_img = self.find_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+        v_x, omega_z = self.calculate_velocity(target_x=target_x)
+        self.pub_cmd_vel_from_img(v_x, omega_z)    
+        return self.pub_cv_img(cv_img=cv_img)
 
     def pub_cv_img(self, cv_img):
         cv_img_copy = cv_img

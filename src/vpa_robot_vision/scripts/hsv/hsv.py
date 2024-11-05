@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from cv_bridge import CvBridge, CvBridgeError
 
 from sensor_msgs.msg import Image
 
@@ -25,7 +26,32 @@ class HSVSpace:
         _kernel = np.ones((9,9), np.uint8)
         _mask   = cv2.morphologyEx(_mask,cv2.MORPH_CLOSE, _kernel)
         return _mask
-    
+
+def convert_raw_img_to_hsv_img(data: Image, cv_bridge: CvBridge):
+    try:
+        cv_img_raw = cv_bridge.imgmsg_to_cv2(data, "bgr8")
+    except CvBridgeError as e:
+        print(e)        
+
+    # the top 1/3 part of image_raw for acc function
+    acc_img = cv_img_raw[0 : int(cv_img_raw.shape[0]/3), :]
+
+    # the bottom 3/4 part of image_raw for tracking function
+    cv_img_raw2 = cv_img_raw[int(cv_img_raw.shape[0]/4) : cv_img_raw.shape[0], :]
+
+    # Image Operation
+    cv_img = adjust_gamma(cv_img=cv_img_raw2, gamma=0.5)
+
+    # convert BGR image to HSV image
+    acc_hsv_img = from_cv_to_hsv(acc_img)
+    cv_hsv_img = from_cv_to_hsv(cv_img)
+
+    return cv_img, cv_hsv_img, acc_hsv_img
+
+def adjust_gamma(cv_img, gamma=1.0):
+    invGamma = 1.0 / gamma
+    lookup_table = np.array([ (i /255.0) ** invGamma * 255 for i in range(256)]).astype("uint8")
+    return cv2.LUT(cv_img, lookup_table)
 
 def from_cv_to_hsv(in_image):
     return cv2.cvtColor(in_image, cv2.COLOR_BGR2HSV)

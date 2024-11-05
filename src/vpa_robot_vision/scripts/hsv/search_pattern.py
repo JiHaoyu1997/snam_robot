@@ -1,6 +1,7 @@
 import os
 import numpy as np
 from typing import Union
+
 from hsv import HSVSpace
 
 

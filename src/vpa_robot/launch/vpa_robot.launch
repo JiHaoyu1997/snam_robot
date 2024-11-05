@@ -1,12 +1,10 @@
 <launch>
-    <arg name="robot_name" value="$(env robot_name)"/>
-    <arg name="test_mode" default="false"/> 
-    <arg name="acc_on" default="false"/>
-    <arg name="publish_mask" default="false"/>
+    <arg name="robot_name"      value="$(env robot_name)"/>
+    <arg name="test_mode"       default="default"/> 
+    <arg name="acc_on"          default="false"/>
+    <arg name="publish_mask"    default="false"/>
     
     <group ns="$(arg robot_name)">
-        <!-- Pass the robot_name argument to the included launch files -->
-
         <include file="$(find vpa_robot_vision)/launch/robot_vision.launch">
             <arg name="robot_name"  value="$(arg robot_name)" />
             <arg name="test_mode"   value="$(arg test_mode)"/> 
