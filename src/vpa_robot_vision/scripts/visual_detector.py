@@ -440,7 +440,8 @@ class RobotVision:
         if dis2green > 30:
             self.stop = True
             rospy.loginfo("STOP")         
-        
+
+        print(hsv_space._h_upper)        
         target_x, _ = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, hsv_space=hsv_space, action=action)
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
         self.pub_cmd_vel_from_img(v_x, omega_z)  
