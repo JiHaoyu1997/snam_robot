@@ -160,7 +160,7 @@ def search_inter_guide_line(hsv_space:HSVSpace,hsv_image,action:int):
                     return max(min(int(np.mean(seg[0])),THUR_R),THUR_L)
         return None
 
-def search_inter_guide_line2(hsv_space:HSVSpace,hsv_image,action:int):
+def search_inter_guide_line2(hsv_space:HSVSpace, hsv_image, action:int):
     mask = hsv_space.apply_mask(hsv_image)
     # handle the crossing (X) patterns on the guide lines
     height = int(hsv_image.shape[0])
@@ -222,7 +222,7 @@ def search_inter_guide_line2(hsv_space:HSVSpace,hsv_image,action:int):
             if len(seg) == 1:
                 result = min(max(RIGHT_TURN_L,int(np.mean(seg[0]))),RIGHT_TURN_R)
                 return result
-        return None
+        return int(hsv_image[1] * 3 / 5)
     
     else: 
         # thur
