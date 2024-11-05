@@ -457,7 +457,6 @@ class RobotVision:
     
     def go_thur_right_circle(self, cv_img, cv_hsv_img):
         action = 2
-        in_lane = True
 
         dis2red = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.stop_line_hsv)
         if dis2red > 30:
@@ -479,8 +478,7 @@ class RobotVision:
             mask2 = self.side_line_hsv.apply_mask(hsv_image2)
             mask_img = mask1 + mask2
 
-        else:
-        
+        else:           
             target_x, cv_img = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, hsv_space=self.right_guide_hsv, action=action)
             v_x, omega_z = self.calculate_velocity(target_x=target_x)
             mask_img = self.right_guide_hsv.apply_mask(cv_hsv_img)
