@@ -410,6 +410,12 @@ class RobotVision:
         if dis2red > 30:
             self.stop = True
             rospy.loginfo("STOP")
+
+        dis2green = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.inter_boundary_line_hsv)
+        if dis2green > 30:
+            self.stop = False
+            rospy.loginfo("Start")
+
         target_x, _ = self.find_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
         self.pub_cmd_vel_from_img(v_x, omega_z)  
