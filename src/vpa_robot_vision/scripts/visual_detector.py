@@ -269,8 +269,12 @@ class RobotVision:
             if dis2inside > 25:
                 self.enter_conflict_zone = True
 
-            if not self.enter_conflict_zone:                          
-                target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+            if not self.enter_conflict_zone:         
+                try:                 
+                    target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+                except Exception as e:
+                    print(e)
+                    print("current route is {self.curr_route}")
 
             else:
                 self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
