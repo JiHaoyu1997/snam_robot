@@ -243,6 +243,7 @@ class RobotVision:
         self.inter_boundary_line_detect_pub.publish(cross_msg)
 
     def find_and_draw_target(self, cv_img, cv_hsv_img):
+        target_x = 0
         # --- BUFFER AREA ---
         
         # NO TASK ==> STOP AT READY_LINE 
@@ -274,7 +275,7 @@ class RobotVision:
                     target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
                 except Exception as e:
                     print(e)
-                    print("current route is {self.curr_route}")
+                    print(f"current route is {self.curr_route}")
 
             else:
                 self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
