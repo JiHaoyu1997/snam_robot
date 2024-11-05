@@ -174,9 +174,9 @@ class RobotVision:
         self.inter_boundary_line_hsv = hsv.HSVSpace(h_u=95, h_l=65, s_u=255, s_l=150, v_u=200, v_l=70)
 
         # guiding lines inside intersections - no dynamic reconfigure
-        self.right_guide_hsv = hsv.HSVSpace(h_u=25, h_l=4, s_u= 255, s_l=100, v_u=255, v_l=150)
-        self.left_guide_hsv = hsv.HSVSpace(h_u=175, h_l=145, s_u= 200, s_l=50, v_u=255, v_l=100)
         self.thur_guide_hsv = hsv.HSVSpace(h_u=125, h_l=95, s_u=255, s_l=180, v_u=255, v_l=120)  
+        self.left_guide_hsv = hsv.HSVSpace(h_u=175, h_l=145, s_u= 200, s_l=50, v_u=255, v_l=100)
+        self.right_guide_hsv = hsv.HSVSpace(h_u=25, h_l=4, s_u= 255, s_l=100, v_u=255, v_l=150)
         self.inter_guide_line = [self.thur_guide_hsv, self.left_guide_hsv, self.right_guide_hsv]
 
         # 
@@ -371,7 +371,7 @@ class RobotVision:
             self.go_thur_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
             
         else:
-            self.cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+            self.go_thur_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
         return
     
@@ -427,9 +427,9 @@ class RobotVision:
         
         return 
     
-    def cross_conflict(self, cv_img, cv_hsv_img):
+    def go_thur_conflict(self, cv_img, cv_hsv_img):
         action = {'left': 1, 'right': 2, 'thur': 0}.get(self.test_mode, None)
-        hsv_space = self.inter_guide_line[action]
+        hsv_space: hsv.HSVSpace = self.inter_guide_line[action]
 
         dis2red = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.stop_line_hsv)
         if dis2red > 30:
@@ -444,7 +444,7 @@ class RobotVision:
         target_x, _ = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, hsv_space=hsv_space, action=action)
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
         self.pub_cmd_vel_from_img(v_x, omega_z)  
-        mask_img = self.left_guide_hsv.apply_mask(cv_hsv_img)
+        mask_img = hsv_space.apply_mask(cv_hsv_img)
         
         self.pub_cv_img(cv_img=cv_img)
         self.pub_mask_img(mask_img=mask_img)     
