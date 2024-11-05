@@ -371,7 +371,7 @@ class RobotVision:
             self.go_thur_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
         elif self.test_mode == 'rightcircle':
-            self.test_mode_handler.handle_test_mode(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+            self.go_thur_right_circle(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
         else:
             self.go_thur_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
