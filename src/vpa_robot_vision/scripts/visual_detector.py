@@ -328,6 +328,7 @@ class RobotVision:
         return target_x, cv_img
     
     def calculate_velocity(self, target_x):
+        print(int(self.image_height * 3 / 8))
         if self.stop:
             v_x = 0
             omega_z = 0
@@ -412,6 +413,7 @@ class RobotVision:
 
         target_x, _ = self.find_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
+        print(v_x, omega_z)
         self.pub_cmd_vel_from_img(v_x, omega_z)  
 
         hsv_image1 = cv_hsv_img
