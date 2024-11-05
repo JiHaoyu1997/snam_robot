@@ -188,6 +188,7 @@ class RobotVision:
     def curr_route_sub_cb(self, route_msg: Int8MultiArray):
         if route_msg:
             self.curr_route = [route for route in route_msg.data]
+            rospy.loginfo(f"current route is {self.curr_route}")
         else:
             self.curr_route = [0 , 0, 0]
 
@@ -267,8 +268,10 @@ class RobotVision:
             dis2inside = search_pattern.search_line(cv_hsv_img, self.side_line_hsv)
             if dis2inside > 25:
                 self.enter_conflict_zone = True
+
             if not self.enter_conflict_zone:                          
                 target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+
             else:
                 self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
                 rospy.loginfo(f"Next Action is {self.action_dic[self.next_action]}")               
@@ -282,7 +285,6 @@ class RobotVision:
     
     def cross_intersection(self, cv_img, cv_hsv_img):
         self.current_zone = Zone.INTERSECTION
-        rospy.loginfo(f"current route is {self.curr_route}")
         # check if conflict zone
         self.detect_conflict_boundary_line(cv_hsv_img=cv_hsv_img)
         # lane
