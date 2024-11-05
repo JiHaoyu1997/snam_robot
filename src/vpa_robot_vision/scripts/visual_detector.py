@@ -189,11 +189,6 @@ class RobotVision:
             self.curr_route = [0 , 0, 0]
 
     def image_raw_sub_cb(self, data: Image):
-        """Step0 Init"""
-        if self.curr_route == [0, 0, 0]:
-            rospy.loginfo("Not Start Tracking")
-            return
-
         """Step1 CONVERT RAW IMAGE TO HSV IMAGE"""
         cv_img, cv_hsv_img, acc_hsv_img = hsv.convert_raw_img_to_hsv_img(data=data, cv_bridge=self.cv_bridge)
 
@@ -201,17 +196,22 @@ class RobotVision:
         if self.test_mode != 'default':
             self.test_mode_func(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
             return
+        
+        """Step3 Init"""
+        if self.curr_route == [0, 0, 0]:
+            rospy.loginfo("Not Start Tracking")
+            return
 
-        """Step3 BOUNDARY LINE DETECTOR"""
+        """Step4 BOUNDARY LINE DETECTOR"""
         self.detect_inter_boundary_line(cv_hsv_img=cv_hsv_img) 
 
-        """Step4 FROM HSV IMAGE TO TARGET COORDINATE"""
+        """Step5 FROM HSV IMAGE TO TARGET COORDINATE"""
         target_x, result_cv_img = self.find_and_draw_target(cv_img=cv_img, cv_hsv_img=cv_hsv_img)  
                 
-        """Step5 FROM TARGET COORDINATE TO TWIST"""
+        """Step6 FROM TARGET COORDINATE TO TWIST"""
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
            
-        """Step6 PUB TWIST TO DECISION MAKER"""
+        """Step7 PUB TWIST TO DECISION MAKER"""
         # since the cmd_vel is sending on a higher frequency than ACC msg, we estimate the distance to further avoid collsions
         self.pub_cmd_vel_from_img(v_x, omega_z)
 
