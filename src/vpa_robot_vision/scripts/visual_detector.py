@@ -406,10 +406,24 @@ class RobotVision:
         return
     
     def go_thur_lane(self, cv_img, cv_hsv_img):
-        target_x, cv_img = self.find_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+        dis2red = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.stop_line_hsv)
+        if dis2red > 30:
+            self.stop = True
+
+        target_x = self.find_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
-        self.pub_cmd_vel_from_img(v_x, omega_z)    
-        return self.pub_cv_img(cv_img=cv_img)
+        self.pub_cmd_vel_from_img(v_x, omega_z)  
+
+        hsv_image1 = cv_hsv_img
+        hsv_image2 = cv_hsv_img
+        mask1 = self.center_line_hsv.apply_mask(hsv_image1)
+        mask2 = self.side_line_hsv.apply_mask(hsv_image2)
+        mask_img = mask1 + mask2
+        
+        self.pub_cv_img(cv_img=cv_img)
+        self.pub_mask_img(mask_img=mask_img)
+        
+        return 
 
     def pub_cv_img(self, cv_img):
         cv_img_copy = cv_img
