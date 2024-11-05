@@ -6,8 +6,9 @@ import cv2
 from cv_bridge import CvBridge
 from enum import Enum
 
-from hsv import hsv, search_pattern
 from map import map
+from test_mode.test_mode import TestMode
+from hsv import hsv, search_pattern
 from pid_controller import pid_controller
 
 # Dynamic reconfiguration
@@ -59,6 +60,9 @@ class RobotVision:
 
         # std_msgs img ==> ros img
         self.cv_bridge = CvBridge()
+
+        # 
+        self.test_mode_handler = TestMode(self)
 
         # init hsv color spaces for selecting 
         self.color_space_init()
@@ -369,6 +373,9 @@ class RobotVision:
 
         elif self.test_mode == 'lane':
             self.go_thur_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+
+        elif self.test_mode == 'rightcircle':
+            self.test_mode_handler.handle_test_mode(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
             
         else:
             self.go_thur_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
@@ -451,7 +458,7 @@ class RobotVision:
         self.pub_mask_img(mask_img=mask_img)     
 
         return
-
+    
     def pub_cv_img(self, cv_img):
         cv_img_copy = cv_img
         cv_img_copy_msg = self.cv_bridge.cv2_to_imgmsg(cv_img_copy, encoding="bgr8")

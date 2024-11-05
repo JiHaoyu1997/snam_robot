@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import cv2
 import numpy as np
 from cv_bridge import CvBridge, CvBridgeError
@@ -35,7 +37,7 @@ HSV_RANGES = {
     'blue':     HSVSpace(h_u=140, h_l=100, s_u=255, s_l=100, v_u=255, v_l=50),
     'white':    HSVSpace(h_u=180, h_l=0,   s_u=80,  s_l=0,   v_u=255, v_l=180),
     'purple':   HSVSpace(h_u=160, h_l=130, s_u=255, s_l=100, v_u=255, v_l=50),
-    'orange':   HSVSpace(h_u=25,  h_l=10,  s_u=255, s_l=100, v_u=255, v_l=150),
+    'orange':   HSVSpace(h_u=25,  h_l=4,  s_u=255, s_l=100, v_u=255, v_l=150),
 }
 
 def convert_raw_img_to_hsv_img(data: Image, cv_bridge: CvBridge):
