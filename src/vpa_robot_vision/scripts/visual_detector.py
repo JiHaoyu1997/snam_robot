@@ -3,10 +3,9 @@
 import rospy
 import numpy as np
 import cv2
-from cv_bridge import CvBridge, CvBridgeError
+from cv_bridge import CvBridge
 from enum import Enum
 
-import vpa_robot_vision.scripts.hsv.search_pattern as search_pattern
 from hsv import hsv, search_pattern
 from map import map
 from pid_controller import pid_controller
