@@ -410,7 +410,7 @@ class RobotVision:
         if dis2red > 30:
             self.stop = True
 
-        target_x = self.find_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+        target_x, _ = self.find_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
         self.pub_cmd_vel_from_img(v_x, omega_z)  
 
