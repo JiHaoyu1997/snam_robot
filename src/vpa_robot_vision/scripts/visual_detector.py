@@ -289,7 +289,10 @@ class RobotVision:
         # conflict zone
         else:
             rospy.loginfo(f"Enter Conflict Zone")
-            target_x, cv_img = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+            self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
+            rospy.loginfo(f"Next Action is {self.action_dic[self.next_action]}")
+            hsv_space = self.inter_guide_line[self.next_action]
+            target_x, cv_img = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, hsv_space=hsv_space, action=self.next_action)
 
         return target_x, cv_img
 
@@ -301,14 +304,15 @@ class RobotVision:
     
     def find_target_from_buffer_line(self, cv_img, cv_hsv_img):
         buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.buffer_line_hsv)
+
         if buffer_line_x == None:
             buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.overexposed_buffer_line_hsv)
         
-        if not buffer_line_x == None:
-            cv2.circle(cv_img, (buffer_line_x, buffer_line_y), 5, (255, 100, 0), 5)
-        else:
+        if buffer_line_x == None:
             buffer_line_x = self.image_width * 2 / 5
-        target_x = buffer_line_x
+        
+        target_x = buffer_line_x         
+        cv2.circle(cv_img, (buffer_line_x, buffer_line_y), 5, (255, 100, 0), 5)       
         return target_x, cv_img
 
     def find_target_to_cross_lane(self, cv_img, cv_hsv_img):
@@ -318,10 +322,8 @@ class RobotVision:
         cv2.circle(cv_img, (int(target_x), int(cv_hsv_img.shape[0]/2)), 5, (0, 255, 0), 5)
         return target_x, cv_img
     
-    def find_target_to_cross_conflict(self, cv_img, cv_hsv_img):
-        self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
-        rospy.loginfo(f"Next Action is {self.action_dic[self.next_action]}")
-        target_x = search_pattern.search_inter_guide_line2(self.inter_guide_line[self.next_action], cv_hsv_img, self.next_action)
+    def find_target_to_cross_conflict(self, cv_img, cv_hsv_img, hsv_space, action):
+        target_x = search_pattern.search_inter_guide_line2(hsv_space, cv_hsv_img, action)
         if target_x == None:
             target_x = self.image_width / 2
         cv2.circle(cv_img, (int(target_x), int(cv_hsv_img.shape[0]/2)), 5, (255, 255, 0), 5)
@@ -368,14 +370,8 @@ class RobotVision:
         elif self.test_mode == 'lane':
             self.go_thur_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
             
-        elif self.test_mode == 'left':
-            pass
-
-        elif self.test_mode == 'right':
-            pass
-
-        elif self.test_mode == 'thur':
-            pass
+        else:
+            self.cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
         return
     
@@ -430,6 +426,30 @@ class RobotVision:
         self.pub_mask_img(mask_img=mask_img)
         
         return 
+    
+    def cross_conflict(self, cv_img, cv_hsv_img):
+        action = {'left': 1, 'right': 2, 'thur': 0}.get(self.test_mode, None)
+        hsv_space = self.inter_guide_line[action]
+
+        dis2red = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.stop_line_hsv)
+        if dis2red > 30:
+            self.stop = False
+            rospy.loginfo("Start")
+
+        dis2green = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.inter_boundary_line_hsv)
+        if dis2green > 30:
+            self.stop = True
+            rospy.loginfo("STOP")         
+        
+        target_x, _ = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, hsv_space=hsv_space, action=action)
+        v_x, omega_z = self.calculate_velocity(target_x=target_x)
+        self.pub_cmd_vel_from_img(v_x, omega_z)  
+        mask_img = self.left_guide_hsv.apply_mask(cv_hsv_img)
+        
+        self.pub_cv_img(cv_img=cv_img)
+        self.pub_mask_img(mask_img=mask_img)     
+
+        return
 
     def pub_cv_img(self, cv_img):
         cv_img_copy = cv_img
