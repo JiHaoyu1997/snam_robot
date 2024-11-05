@@ -6,7 +6,7 @@ import rospy
 
 from hsv.hsv import HSVSpace, HSV_RANGES
 from hsv import search_pattern
-from .visual_detector import RobotVision
+from visual_detector import RobotVision
 
 class TestMode:
     def __init__(self, robot_vision: RobotVision) -> None:

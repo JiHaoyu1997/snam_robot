@@ -7,7 +7,6 @@ from cv_bridge import CvBridge
 from enum import Enum
 
 from map import map
-from test_mode.test_mode import TestMode
 from hsv import hsv, search_pattern
 from pid_controller import pid_controller
 
@@ -60,9 +59,6 @@ class RobotVision:
 
         # std_msgs img ==> ros img
         self.cv_bridge = CvBridge()
-
-        # 
-        self.test_mode_handler = TestMode(self)
 
         # init hsv color spaces for selecting 
         self.color_space_init()
@@ -376,7 +372,7 @@ class RobotVision:
 
         elif self.test_mode == 'rightcircle':
             self.test_mode_handler.handle_test_mode(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
-            
+
         else:
             self.go_thur_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
@@ -454,6 +450,42 @@ class RobotVision:
         self.pub_cmd_vel_from_img(v_x, omega_z)  
         mask_img = hsv_space.apply_mask(cv_hsv_img)
         
+        self.pub_cv_img(cv_img=cv_img)
+        self.pub_mask_img(mask_img=mask_img)     
+
+        return
+    
+    def go_thur_right_circle(self, cv_img, cv_hsv_img):
+        action = 2
+        in_lane = True
+
+        dis2red = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.stop_line_hsv)
+        if dis2red > 30:
+            in_lane = False
+            rospy.loginfo("Conflict Zone")
+
+        dis2green = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.inter_boundary_line_hsv)
+        if dis2green > 30:
+            in_lane = True
+            rospy.loginfo("Lane Zone")      
+
+        if in_lane:
+            target_x, cv_img = self.find_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+            v_x, omega_z = self.calculate_velocity(target_x=target_x)
+
+            hsv_image1 = cv_hsv_img
+            hsv_image2 = cv_hsv_img
+            mask1 = self.center_line_hsv.apply_mask(hsv_image1)
+            mask2 = self.side_line_hsv.apply_mask(hsv_image2)
+            mask_img = mask1 + mask2
+
+        else:
+        
+            target_x, cv_img = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, hsv_space=self.right_guide_hsv, action=action)
+            v_x, omega_z = self.calculate_velocity(target_x=target_x)
+            mask_img = self.right_guide_hsv.apply_mask(cv_hsv_img)
+
+        self.pub_cmd_vel_from_img(v_x, omega_z)             
         self.pub_cv_img(cv_img=cv_img)
         self.pub_mask_img(mask_img=mask_img)     
 
