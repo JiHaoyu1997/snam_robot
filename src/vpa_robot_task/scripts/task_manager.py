@@ -49,7 +49,7 @@ class TaskManager:
         # Init Log
         rospy.loginfo('Task Manager is Online')
 
-        rospy.sleep(10)
+        rospy.sleep(6)
 
         # Start the task manager
         self.status_init()

@@ -198,7 +198,7 @@ class RobotVision:
         cv_img, cv_hsv_img, acc_hsv_img = hsv.convert_raw_img_to_hsv_img(data=data, cv_bridge=self.cv_bridge)
 
         """Step2 Test Mode"""
-        if self.test_mode:
+        if self.test_mode != 'default':
             self.test_mode_func(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
             return
 
@@ -328,21 +328,20 @@ class RobotVision:
         return target_x, cv_img
     
     def calculate_velocity(self, target_x):
-        print(int(self.image_height * 3 / 8))
         if self.stop:
             v_x = 0
             omega_z = 0
         
         elif self.current_zone == Zone.BUFFER_AREA:
             v_x, omega_z = pid_controller.bufffer_pi_control(
-                int(self.image_height * 3 / 8), 
+                int(self.image_width / 2), 
                 target_x, 
                 self.v_set.v_f_buffer, 
                 self.v_set.v_s_buffer) 
                
         elif self.current_zone == Zone.INTERSECTION:
             v_x, omega_z = pid_controller.inter_pi_control(
-                int(self.image_height * 3 / 8), 
+                int(self.image_width / 2), 
                 target_x, 
                 self.v_set.v_f_inter, 
                 self.v_set.v_s_inter)
@@ -363,7 +362,7 @@ class RobotVision:
         return
 
     def test_mode_func(self, cv_img, cv_hsv_img):
-        if self.test_mode == 'default':
+        if self.test_mode == 'hsv':
             self.find_hsv(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
         elif self.test_mode == 'lane':
@@ -410,10 +409,9 @@ class RobotVision:
         dis2red = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.stop_line_hsv)
         if dis2red > 30:
             self.stop = True
-
+            rospy.loginfo("STOP")
         target_x, _ = self.find_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
-        print(v_x, omega_z)
         self.pub_cmd_vel_from_img(v_x, omega_z)  
 
         hsv_image1 = cv_hsv_img

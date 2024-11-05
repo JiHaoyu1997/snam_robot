@@ -60,7 +60,15 @@ def search_line(hsv_image, hsv_space: HSVSpace, top_line = 100) -> Union[int, fl
             continue # no valid result found
     return 0
 
-def _search_lane_linecenter(_mask,_upper_bias:int,_lower_bias:int,_height_center:int,_interval:int,_width_range_left:int,_width_range_right:int) -> int:
+def _search_lane_linecenter(_mask, 
+                            _upper_bias: int,
+                            _lower_bias: int,
+                            _height_center: int,
+                            _interval: int,
+                            _width_range_left: int,
+                            _width_range_right: int
+                        ) -> int:
+    
     for i in range(_lower_bias,_upper_bias,_interval):
         point = np.nonzero(_mask[_height_center+i,_width_range_left:_width_range_right])[0] + _width_range_left
         if len(point) > 8 and len(point) < 45:
