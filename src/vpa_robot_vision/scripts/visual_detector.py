@@ -242,10 +242,6 @@ class RobotVision:
         self.inter_boundary_line_detect_pub.publish(cross_msg)
 
     def find_and_draw_target(self, cv_img, cv_hsv_img):
-        # 
-        self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
-        rospy.loginfo(f"Next Action is {self.action_dic[self.next_action]}")
-
         # --- BUFFER AREA ---
         
         # NO TASK ==> STOP AT READY_LINE 
@@ -273,7 +269,9 @@ class RobotVision:
                 self.enter_conflict_zone = True
             if not self.enter_conflict_zone:                          
                 target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
-            else:               
+            else:
+                self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
+                rospy.loginfo(f"Next Action is {self.action_dic[self.next_action]}")               
                 target_x, cv_img = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=self.next_action)
 
         # GENERAL ROUTE
@@ -293,6 +291,8 @@ class RobotVision:
         # conflict zone
         else:
             rospy.loginfo(f"Enter Conflict Zone")
+            self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
+            rospy.loginfo(f"Next Action is {self.action_dic[self.next_action]}") 
             target_x, cv_img = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=self.next_action)
 
         return target_x, cv_img
