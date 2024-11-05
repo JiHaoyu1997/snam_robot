@@ -242,6 +242,10 @@ class RobotVision:
         self.inter_boundary_line_detect_pub.publish(cross_msg)
 
     def find_and_draw_target(self, cv_img, cv_hsv_img):
+        # 
+        self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
+        rospy.loginfo(f"Next Action is {self.action_dic[self.next_action]}")
+
         # --- BUFFER AREA ---
         
         # NO TASK ==> STOP AT READY_LINE 
@@ -267,13 +271,10 @@ class RobotVision:
             dis2inside = search_pattern.search_line(cv_hsv_img, self.side_line_hsv)
             if dis2inside > 25:
                 self.enter_conflict_zone = True
-
             if not self.enter_conflict_zone:                          
-                #
                 target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
-            else: 
-                # 
-                target_x, cv_img = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+            else:               
+                target_x, cv_img = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=self.next_action)
 
         # GENERAL ROUTE
         else:
@@ -292,10 +293,7 @@ class RobotVision:
         # conflict zone
         else:
             rospy.loginfo(f"Enter Conflict Zone")
-            self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
-            rospy.loginfo(f"Next Action is {self.action_dic[self.next_action]}")
-            hsv_space = self.inter_guide_line[self.next_action]
-            target_x, cv_img = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, hsv_space=hsv_space, action=self.next_action)
+            target_x, cv_img = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=self.next_action)
 
         return target_x, cv_img
 
@@ -325,7 +323,8 @@ class RobotVision:
         cv2.circle(cv_img, (int(target_x), int(cv_hsv_img.shape[0]/2)), 5, (0, 255, 0), 5)
         return target_x, cv_img
     
-    def find_target_to_cross_conflict(self, cv_img, cv_hsv_img, hsv_space, action):
+    def find_target_to_cross_conflict(self, cv_img, cv_hsv_img, action):
+        hsv_space = self.inter_guide_line[action]
         target_x = search_pattern.search_inter_guide_line2(hsv_space, cv_hsv_img, action)
         if target_x == None:
             target_x = self.image_width / 2
@@ -447,7 +446,7 @@ class RobotVision:
             self.stop = True
             rospy.loginfo("STOP")         
        
-        target_x, _ = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, hsv_space=hsv_space, action=action)
+        target_x, _ = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=action)
         print(target_x)
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
         self.pub_cmd_vel_from_img(v_x, omega_z)  
@@ -482,7 +481,7 @@ class RobotVision:
             mask_img = mask1 + mask2
 
         else:           
-            target_x, cv_img = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, hsv_space=self.right_guide_hsv, action=action)
+            target_x, cv_img = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=action)
             v_x, omega_z = self.calculate_velocity(target_x=target_x)
             mask_img = self.right_guide_hsv.apply_mask(cv_hsv_img)
 
