@@ -315,7 +315,7 @@ class RobotVision:
             buffer_line_x = self.image_width * 2 / 5
         
         target_x = buffer_line_x         
-        cv2.circle(cv_img, (buffer_line_x, buffer_line_y), 5, (255, 100, 0), 5)       
+        cv2.circle(cv_img, (int(buffer_line_x), buffer_line_y), 5, (255, 100, 0), 5)       
         return target_x, cv_img
 
     def find_target_to_cross_lane(self, cv_img, cv_hsv_img):
