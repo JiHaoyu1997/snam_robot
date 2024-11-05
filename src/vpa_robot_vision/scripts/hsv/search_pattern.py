@@ -2,7 +2,7 @@ import os
 import numpy as np
 from typing import Union
 
-from hsv import HSVSpace
+from hsv.hsv import HSVSpace
 
 
 script_dir  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
