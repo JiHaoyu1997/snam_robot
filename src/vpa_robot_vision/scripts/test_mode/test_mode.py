@@ -1,15 +1,20 @@
 #!/usr/bin/env python3
 
 import os
+import sys
 import rospy
 
 from hsv.hsv import HSVSpace, HSV_RANGES
 from hsv import search_pattern
 
 script_dir  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-filepath    = os.path.join(script_dir,'scripts')
-if os.path.exists(filepath):
+if script_dir not in sys.path:
+    sys.path.append(script_dir)
+
+try:
     from visual_detector import RobotVision
+except ImportError as e:
+    print(e)
 
 class TestMode:
     def __init__(self, robot_vision: RobotVision) -> None:
