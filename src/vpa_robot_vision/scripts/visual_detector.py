@@ -283,7 +283,7 @@ class RobotVision:
     
     def cross_intersection(self, cv_img, cv_hsv_img):
         self.current_zone = Zone.INTERSECTION
-        # rospy.loginfo(f"current route is {self.curr_route}")
+        rospy.loginfo(f"current route is {self.curr_route}")
         # check if conflict zone
         self.detect_conflict_boundary_line(cv_hsv_img=cv_hsv_img)
         # lane
