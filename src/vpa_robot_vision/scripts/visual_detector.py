@@ -190,7 +190,7 @@ class RobotVision:
             self.curr_route = [route for route in route_msg.data]
             rospy.loginfo(f"current route is {self.curr_route}")
         else:
-            self.curr_route = [0 , 0, 0]
+            self.curr_route = [0, 0, 0]
 
     def image_raw_sub_cb(self, data: Image):
         """Step1 CONVERT RAW IMAGE TO HSV IMAGE"""
@@ -266,8 +266,8 @@ class RobotVision:
         # DEFAULT FIRST ROUTE [6, 2, X]
         elif self.curr_route[0] == 6 and self.curr_route[1] == 2:
             self.current_zone = Zone.INTERSECTION
-            dis2inside = search_pattern.search_line(cv_hsv_img, self.side_line_hsv)
-            if dis2inside > 25:
+            dis2red = search_pattern.search_line(cv_hsv_img, self.stop_line_hsv)
+            if dis2red > 25:
                 self.enter_conflict_zone = True
 
             if not self.enter_conflict_zone:         
@@ -278,6 +278,7 @@ class RobotVision:
                     print(f"current route is {self.curr_route}")
 
             else:
+                rospy.loginfo(f"Enter Conflict Zone")
                 self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
                 rospy.loginfo(f"Next Action is {self.action_dic[self.next_action]}")               
                 target_x, cv_img = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=self.next_action)
@@ -317,10 +318,10 @@ class RobotVision:
             buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.overexposed_buffer_line_hsv)
         
         if buffer_line_x == None:
-            buffer_line_x = self.image_width * 2 / 5
+            buffer_line_x = int(self.image_width * 2 / 5)
         
         target_x = buffer_line_x         
-        cv2.circle(cv_img, (int(buffer_line_x), buffer_line_y), 5, (255, 100, 0), 5)       
+        cv2.circle(cv_img, (buffer_line_x, buffer_line_y), 5, (255, 100, 0), 5)       
         return target_x, cv_img
 
     def find_target_to_cross_lane(self, cv_img, cv_hsv_img):
