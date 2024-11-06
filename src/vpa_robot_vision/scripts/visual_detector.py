@@ -267,6 +267,7 @@ class RobotVision:
         elif self.curr_route[0] == 6 and self.curr_route[1] == 2:
             self.current_zone = Zone.INTERSECTION
             dis2red = search_pattern.search_line(cv_hsv_img, self.stop_line_hsv)
+            print(dis2red)
             if dis2red > 25:
                 self.enter_conflict_zone = True
 
