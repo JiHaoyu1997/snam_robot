@@ -507,18 +507,15 @@ class RobotVision:
         return
     
     def go_sturn(self, cv_img, cv_hsv_img):
-        action = 0
         conflict = 0
         
-
         dis2red = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.stop_line_hsv)
         if dis2red > 30:
             self.in_lane = False
-            conflict += 1
-            if conflict == 3:
+            self.next_action +=1
+            if self.next_action == 3:
                 self.stop = True
                 return
-            action +=1
             rospy.loginfo("Conflict Zone")
 
         dis2green = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.inter_boundary_line_hsv)
@@ -537,7 +534,7 @@ class RobotVision:
             mask_img = mask1 + mask2
 
         else:           
-            target_x, cv_img = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=action)
+            target_x, cv_img = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=self.next_action)
             v_x, omega_z = self.calculate_velocity(target_x=target_x)
             mask_img = self.right_guide_hsv.apply_mask(cv_hsv_img)
 
