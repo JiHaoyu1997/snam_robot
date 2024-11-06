@@ -120,7 +120,7 @@ class RobotVision:
         self.node_pointer   = 2
         
         # Action
-        self.next_action = None        # the next action to perfrom 
+        self.next_action = 0        # the next action to perfrom 
         self.inquiry_inter_by_period = False # if teh robot will check if can pass the current intersection
         self.lock_inter_source = True
 
@@ -188,7 +188,7 @@ class RobotVision:
     def curr_route_sub_cb(self, route_msg: Int8MultiArray):
         if route_msg:
             self.curr_route = [route for route in route_msg.data]
-            rospy.loginfo(f"current route is {self.curr_route}")
+            # rospy.loginfo(f"current route is {self.curr_route}")
         else:
             self.curr_route = [0, 0, 0]
 
@@ -243,6 +243,7 @@ class RobotVision:
         self.inter_boundary_line_detect_pub.publish(cross_msg)
 
     def find_and_draw_target(self, cv_img, cv_hsv_img):
+        rospy.loginfo(f"current route is {self.curr_route}")
         target_x = 0
         # --- BUFFER AREA ---
         
@@ -267,7 +268,6 @@ class RobotVision:
         elif self.curr_route[0] == 6 and self.curr_route[1] == 2:
             self.current_zone = Zone.INTERSECTION
             dis2red = search_pattern.search_line(cv_hsv_img, self.stop_line_hsv)
-            print(dis2red)
             if dis2red > 25:
                 self.enter_conflict_zone = True
 
@@ -462,7 +462,6 @@ class RobotVision:
             rospy.loginfo("STOP")         
        
         target_x, _ = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=action)
-        print(target_x)
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
         self.pub_cmd_vel_from_img(v_x, omega_z)  
         mask_img = hsv_space.apply_mask(cv_hsv_img)
@@ -511,17 +510,18 @@ class RobotVision:
         dis2red = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.stop_line_hsv)
         if dis2red > 30:
             self.in_lane = False
+            rospy.loginfo("Conflict Zone")
 
             # 仅当 action 尚未更新时增加
             if not hasattr(self, 'action_updated') or not self.action_updated:
                 self.next_action += 1
                 self.action_updated = True  # 设置标志位，防止重复增加
 
-                if self.next_action == 3:
-                    self.stop = True
-                    return
-                
-                rospy.loginfo("Conflict Zone")
+        # 
+        if self.next_action == 3:
+            self.stop = True
+            self.pub_cmd_vel_from_img(0, 0)
+            return
 
         # 检测绿色区域
         dis2green = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.inter_boundary_line_hsv)
@@ -543,7 +543,7 @@ class RobotVision:
         else:           
             target_x, cv_img = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=self.next_action)
             v_x, omega_z = self.calculate_velocity(target_x=target_x)
-            mask_img = self.right_guide_hsv.apply_mask(cv_hsv_img)
+            mask_img = self.inter_guide_line[self.next_action].apply_mask(cv_hsv_img)
 
         # 发布速度和图像
         self.pub_cmd_vel_from_img(v_x, omega_z)             

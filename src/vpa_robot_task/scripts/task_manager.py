@@ -8,6 +8,7 @@ from std_srvs.srv import Trigger, TriggerResponse
 from vpa_robot_vision.msg import CrossInfo
 
 from vpa_robot_task.srv import AssignTask, AssignTaskRequest, AssignTaskResponse
+from vpa_robot_task.srv import ReadySignal, ReadySignalRequest, ReadySignalResponse
 
 class TaskManager:
     # Properties
@@ -42,14 +43,13 @@ class TaskManager:
         self.inter_boundary_line_detect_sub = rospy.Subscriber('inter_boundary_line_detect', CrossInfo, self.inter_boundary_line_detect_cb)
 
         # Servers
+        # self.node_ready_handle_server = rospy.Service('ready', ReadySignal, self.ready_cb)
 
         # Clients
         self.assign_task_client = rospy.ServiceProxy('/assgin_task_srv', AssignTask)
 
         # Init Log
         rospy.loginfo('Task Manager is Online')
-
-        rospy.sleep(6)
 
         # Start the task manager
         self.status_init()
