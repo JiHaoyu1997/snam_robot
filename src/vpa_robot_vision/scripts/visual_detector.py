@@ -316,9 +316,12 @@ class RobotVision:
 
         if buffer_line_x == None:
             buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.overexposed_buffer_line_hsv)
-        
+    
         if buffer_line_x == None:
             buffer_line_x = int(self.image_width * 2 / 5)
+
+        if buffer_line_y == None:
+            buffer_line_y = int(self.image_height / 2)
         
         target_x = buffer_line_x         
         cv2.circle(cv_img, (buffer_line_x, buffer_line_y), 5, (255, 100, 0), 5)       
