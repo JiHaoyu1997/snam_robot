@@ -387,6 +387,9 @@ class RobotVision:
         elif self.test_mode == 'rightcircle':
             self.go_thur_right_circle(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
+        elif self.test_mode == 'sturn':
+            self.go_sturn(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+
         else:
             self.go_thur_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
@@ -502,6 +505,47 @@ class RobotVision:
         self.pub_mask_img(mask_img=mask_img)     
 
         return
+    
+    def go_sturn(self, cv_img, cv_hsv_img):
+        action = 0
+        conflict = 0
+        
+
+        dis2red = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.stop_line_hsv)
+        if dis2red > 30:
+            self.in_lane = False
+            conflict += 1
+            if conflict == 3:
+                self.stop = True
+                return
+            action +=1
+            rospy.loginfo("Conflict Zone")
+
+        dis2green = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.inter_boundary_line_hsv)
+        if dis2green > 30:
+            self.in_lane = True
+            rospy.loginfo("Lane Zone")      
+
+        if self.in_lane:
+            target_x, cv_img = self.find_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+            v_x, omega_z = self.calculate_velocity(target_x=target_x)
+
+            hsv_image1 = cv_hsv_img
+            hsv_image2 = cv_hsv_img
+            mask1 = self.center_line_hsv.apply_mask(hsv_image1)
+            mask2 = self.side_line_hsv.apply_mask(hsv_image2)
+            mask_img = mask1 + mask2
+
+        else:           
+            target_x, cv_img = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=action)
+            v_x, omega_z = self.calculate_velocity(target_x=target_x)
+            mask_img = self.right_guide_hsv.apply_mask(cv_hsv_img)
+
+        self.pub_cmd_vel_from_img(v_x, omega_z)             
+        self.pub_cv_img(cv_img=cv_img)
+        self.pub_mask_img(mask_img=mask_img)     
+
+        return        
     
     def pub_cv_img(self, cv_img):
         cv_img_copy = cv_img
