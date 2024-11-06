@@ -58,7 +58,7 @@ class TaskManager:
         self.timer = rospy.Timer(rospy.Duration(1), self.pub_local_brake_status)
 
         # Publish initial route
-        self.timer = rospy.Timer(rospy.Duration(1), self.pub_curr_route)
+        self.timer = rospy.Timer(rospy.Duration(1 / 10), self.pub_curr_route)
 
     # Methods
     def status_init(self):
