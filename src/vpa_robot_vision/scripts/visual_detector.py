@@ -167,7 +167,7 @@ class RobotVision:
         )
 
         # Buffer Line HSV - Pink
-        self.buffer_line_hsv = hsv.HSVSpace(h_u=190, h_l=150, s_u=255, s_l=60, v_u=255, v_l=185)
+        self.buffer_line_hsv = hsv.HSVSpace(h_u=190, h_l=140, s_u=255, s_l=70, v_u=255, v_l=130)
         self.overexposed_buffer_line_hsv = hsv.HSVSpace(h_u=20, h_l=0, s_u=55, s_l=45, v_u=255, v_l=205)
 
         # Ready Line HSV - Yellow

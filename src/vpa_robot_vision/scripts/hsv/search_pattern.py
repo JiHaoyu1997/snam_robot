@@ -66,14 +66,34 @@ def _search_lane_linecenter(_mask,
                             _height_center: int,
                             _interval: int,
                             _width_range_left: int,
-                            _width_range_right: int
+                            _width_range_right: int,
+                            _isYellow: bool = True,
                         ) -> int:
     
     for i in range(_lower_bias,_upper_bias,_interval):
-        point = np.nonzero(_mask[_height_center+i,_width_range_left:_width_range_right])[0] + _width_range_left
+        point = np.nonzero(_mask[_height_center + i, _width_range_left : _width_range_right])[0] + _width_range_left
         if len(point) > 8 and len(point) < 45:
-            _line_center = int(np.mean(point))
-            return _line_center
+            if _isYellow:         
+                return int(np.mean(point))
+            else:
+                segs =_break_segs(point)
+                if len(segs) <= 1:
+                    return int(np.mean(point))
+                else:
+                    valid_segments = {
+                        key: seg for key, seg in segs.items()
+                        if len(seg) > 8 and len(seg) < 45
+                    }
+
+                    averages = { key: sum(seg) / len(seg) for key ,seg in valid_segments.items }
+
+                    result = None
+
+                    for key, avg in sorted(averages.items(), key=lambda x: -len(valid_segments[x[0]])):
+                        if avg > 160:
+                            result = avg
+                            break
+                    return result if result is not None else 0
         else:
             continue
     return 0 # nothing found in the end
@@ -83,7 +103,7 @@ def search_lane_center(space1:HSVSpace, space2:HSVSpace, hsv_image, is_yellow_le
     hsv_image2 = hsv_image
     mask1 = space1.apply_mask(hsv_image1)
     mask2 = space2.apply_mask(hsv_image2)
-    _line_center1 = _search_lane_linecenter(mask1,50,-20,int(hsv_image.shape[0]/2),10,0,int(hsv_image.shape[1]))
+    _line_center1 = _search_lane_linecenter(mask1, 50, -20, int(hsv_image.shape[0]/2), 10, 0, int(hsv_image.shape[1]))
 
     if _line_center1 == 0 and not is_yellow_left:
         # failed to find the center yellow line
@@ -91,9 +111,9 @@ def search_lane_center(space1:HSVSpace, space2:HSVSpace, hsv_image, is_yellow_le
         
     # search the while line, but limited area
     if is_yellow_left:
-        _line_center2 = _search_lane_linecenter(mask2,50,-20,int(hsv_image.shape[0]/2),10, _line_center1, int(hsv_image.shape[1]))
+        _line_center2 = _search_lane_linecenter(mask2, 50, -20, int(hsv_image.shape[0]/2), 10, _line_center1, int(hsv_image.shape[1]))
     else:
-        _line_center2 = _search_lane_linecenter(mask2,50,-20,int(hsv_image.shape[0]/2),10,0,_line_center1)
+        _line_center2 = _search_lane_linecenter(mask2, 50, -20, int(hsv_image.shape[0]/2), 10, 0 ,_line_center1)
 
     if _line_center2 == 0 and is_yellow_left:
         # miss detections 
