@@ -462,6 +462,7 @@ class RobotVision:
             rospy.loginfo("STOP")         
        
         target_x, _ = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=action)
+        # print(target_x)
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
         self.pub_cmd_vel_from_img(v_x, omega_z)  
         mask_img = hsv_space.apply_mask(cv_hsv_img)
@@ -542,6 +543,8 @@ class RobotVision:
             mask_img = mask1 + mask2
         else:           
             target_x, cv_img = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=self.next_action)
+            if self. next_action == 2:
+                print(target_x)
             v_x, omega_z = self.calculate_velocity(target_x=target_x)
             mask_img = self.inter_guide_line[self.next_action].apply_mask(cv_hsv_img)
 

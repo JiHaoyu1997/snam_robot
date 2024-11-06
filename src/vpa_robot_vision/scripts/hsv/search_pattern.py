@@ -14,8 +14,8 @@ if os.path.exists(filepath):
 else:
     # default values
     LEFT_TURN_R     = 240 
-    LEFT_TURN_L     = 100
-    RIGHT_TURN_R    = 250
+    LEFT_TURN_L     = 80
+    RIGHT_TURN_R    = 260
     RIGHT_TURN_L    = 170
     THUR_L          = 100
     THUR_R          = 220
