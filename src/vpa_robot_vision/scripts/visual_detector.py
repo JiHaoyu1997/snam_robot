@@ -170,8 +170,9 @@ class RobotVision:
         self.buffer_line_hsv = hsv.HSVSpace(h_u=190, h_l=140, s_u=255, s_l=70, v_u=255, v_l=130)
         self.overexposed_buffer_line_hsv = hsv.HSVSpace(h_u=20, h_l=0, s_u=55, s_l=45, v_u=255, v_l=205)
 
-        # Ready Line HSV - Yellow
-        self.ready_line_hsv = self.side_line_hsv
+        # Ready Line HSV - Blue
+        self.ready_line_hsv = hsv.HSV_RANGES['blue']
+        print(self.ready_line_hsv._h_upper)
 
         # Intersection Boundary Line HSV - Green
         self.inter_boundary_line_hsv = hsv.HSVSpace(h_u=95, h_l=65, s_u=255, s_l=150, v_u=200, v_l=70)
