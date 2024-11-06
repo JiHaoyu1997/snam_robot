@@ -507,22 +507,30 @@ class RobotVision:
         return
     
     def go_sturn(self, cv_img, cv_hsv_img):
-        conflict = 0
-        
+        # 检测红色区域
         dis2red = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.stop_line_hsv)
         if dis2red > 30:
             self.in_lane = False
-            self.next_action +=1
-            if self.next_action == 3:
-                self.stop = True
-                return
-            rospy.loginfo("Conflict Zone")
 
+            # 仅当 action 尚未更新时增加
+            if not hasattr(self, 'action_updated') or not self.action_updated:
+                self.next_action += 1
+                self.action_updated = True  # 设置标志位，防止重复增加
+
+                if self.next_action == 3:
+                    self.stop = True
+                    return
+                
+                rospy.loginfo("Conflict Zone")
+
+        # 检测绿色区域
         dis2green = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.inter_boundary_line_hsv)
         if dis2green > 30:
             self.in_lane = True
-            rospy.loginfo("Lane Zone")      
+            self.action_updated = False  # 重置标志位，允许在检测到下一个冲突区域时再增加 action
+            rospy.loginfo("Lane Zone")
 
+        # 根据位置选择不同的目标处理方式
         if self.in_lane:
             target_x, cv_img = self.find_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
             v_x, omega_z = self.calculate_velocity(target_x=target_x)
@@ -532,17 +540,18 @@ class RobotVision:
             mask1 = self.center_line_hsv.apply_mask(hsv_image1)
             mask2 = self.side_line_hsv.apply_mask(hsv_image2)
             mask_img = mask1 + mask2
-
         else:           
             target_x, cv_img = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=self.next_action)
             v_x, omega_z = self.calculate_velocity(target_x=target_x)
             mask_img = self.right_guide_hsv.apply_mask(cv_hsv_img)
 
+        # 发布速度和图像
         self.pub_cmd_vel_from_img(v_x, omega_z)             
         self.pub_cv_img(cv_img=cv_img)
         self.pub_mask_img(mask_img=mask_img)     
 
-        return        
+        return
+       
     
     def pub_cv_img(self, cv_img):
         cv_img_copy = cv_img
