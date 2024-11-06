@@ -2,6 +2,8 @@
 
 import rospy
 
+import time
+
 from std_msgs.msg import Bool, Int8MultiArray
 from std_srvs.srv import Trigger, TriggerResponse
 
@@ -18,6 +20,14 @@ class TaskManager:
 
         # get the robot name, by default it will be the hostname of the robot
         self.robot_name = rospy.get_param('~robot_name', 'db19')
+
+        # 
+        self.node_status = {
+            'robot_vision': False,
+            'robot_decision': False,
+            'traction_wheels': False,
+            'traction_encdors': False,
+        }
 
         # 
         self.curr_local_brake_status = True
@@ -43,7 +53,7 @@ class TaskManager:
         self.inter_boundary_line_detect_sub = rospy.Subscriber('inter_boundary_line_detect', CrossInfo, self.inter_boundary_line_detect_cb)
 
         # Servers
-        # self.node_ready_handle_server = rospy.Service('ready', ReadySignal, self.ready_cb)
+        self.node_ready_handle_server = rospy.Service('ready_signal', ReadySignal, self.ready_signal_cb)
 
         # Clients
         self.assign_task_client = rospy.ServiceProxy('/assgin_task_srv', AssignTask)
@@ -61,7 +71,21 @@ class TaskManager:
         self.timer = rospy.Timer(rospy.Duration(1 / 10), self.pub_curr_route)
 
     # Methods
+    def ready_signal_cb(self, req: ReadySignalRequest):
+        NODE_NAME = req.node_name 
+        if NODE_NAME in self.node_status:
+            self.node_status[NODE_NAME] = True    
+            return ReadySignalResponse(success=True)
+        else:
+            rospy.logwarn("Node not recognized")
+            return ReadySignalResponse(success=False)
+
     def status_init(self):
+        while not all(self.node_status.values()):
+            rospy.loginfo("Waiting for all nodes to ready")
+            time.sleep(1)
+
+        rospy.loginfo("All nodes are ready!")
         if self.request_task():
             rospy.loginfo(f"{self.robot_name}: Task List confirmed: {self.task_list}")
             

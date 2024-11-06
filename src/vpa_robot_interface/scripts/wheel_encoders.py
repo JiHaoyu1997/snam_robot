@@ -1,13 +1,19 @@
 #!/usr/bin/env python3
 
 import rospy
+
+import socket
+import RPi.GPIO as GPIO
+from math import pi
 from enum import IntEnum
 
-import RPi.GPIO as GPIO
-import socket
-from vpa_robot_interface.msg import WheelsCmd,WheelsEncoder
-from math import pi
 from std_msgs.msg import Bool
+
+from vpa_robot_interface.msg import WheelsCmd,WheelsEncoder
+
+from vpa_robot_task.srv import ReadySignal, ReadySignalResponse
+
+
 class WheelDirection(IntEnum):
     FORWARD = 1
     REVERSE = -1
@@ -52,6 +58,7 @@ class WheelEncodersNode:
 
     def __init__(self) -> None:
         self.veh_name           = socket.gethostname()
+        self.node_name          = 'traction_encdors'
         
         self.seq = 0
         self._publish_frequency = 20
@@ -86,8 +93,19 @@ class WheelEncodersNode:
         self._timer       = rospy.Timer(rospy.Duration(1.0 / self._publish_frequency), self._cb_publish)
         self._timer_omega = rospy.Timer(rospy.Duration(1/20),self._omega_reduce_cb)
 
-        rospy.loginfo("%s: wheel encoders ready",self.veh_name)
         rospy.Subscriber("robot_interface_shutdown", Bool, self.signal_shut)
+    
+        self.send_ready_signal()
+
+    def send_ready_signal(self):
+        rospy.wait_for_service('ready_signal')
+        try:
+            ready_signal_client = rospy.ServiceProxy('ready_signal', ReadySignal)
+            response: ReadySignalResponse = ready_signal_client.call(self.node_name)
+            if response.success:
+                rospy.loginfo("%s: wheel encoders ready",self.veh_name)
+        except rospy.ServiceException as e:
+            rospy.logerr(f"service call failed: {e}")
 
     def signal_shut(self,msg:Bool):
         if msg.data:

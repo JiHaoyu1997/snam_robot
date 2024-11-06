@@ -31,10 +31,13 @@ class InterInfo:
         self.robot_id_list = []  # List of robot names or IDs
         self.robot_info = []  # List of RobotInfo instances
 
-class DecisionMaker:
+class RobotDecision:
     def __init__(self) -> None:
         # Initialize ROS node
         rospy.init_node('decision_maker')
+        
+        #
+        self.node_name = 'robot_decision' 
 
         # Robot name
         self.robot_name = rospy.get_param('~robot_name', 'db19')
@@ -57,7 +60,17 @@ class DecisionMaker:
         # Service client
         self.inter_mng_client = rospy.ServiceProxy('/inter_mng_srv', InterMng)
 
-        rospy.loginfo('Decision Maker is Online')
+        self.send_ready_signal()
+    
+    def send_ready_signal(self):
+        rospy.wait_for_service('ready_signal')
+        try:
+            ready_signal_client = rospy.ServiceProxy('ready_signal', ReadySignal)
+            response: ReadySignalResponse = ready_signal_client.call(self.node_name)
+            if response.success:
+                rospy.loginfo(f"{self.robot_name}: Decision Maker is Online")
+        except rospy.ServiceException as e:
+            rospy.logerr(f"service call failed: {e}")
 
     def curr_route_cb(self, route_msg: Int8MultiArray):
         """Callback for the current route, updates route if conditions are met."""
@@ -154,5 +167,5 @@ class DecisionMaker:
         return twist_from_img
 
 if __name__ == '__main__':
-    N = DecisionMaker()
+    N = RobotDecision()
     rospy.spin()

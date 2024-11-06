@@ -21,6 +21,8 @@ from sensor_msgs.msg import Image
 
 from vpa_robot_vision.msg import CrossInfo
 
+from vpa_robot_task.srv import ReadySignal, ReadySignalResponse
+
 class Zone(Enum):
     BUFFER_AREA     = 0 # this is queuing area outside the intersections 
     INTERSECTION    = 1
@@ -40,6 +42,9 @@ class RobotVision:
 
         # Initialize the ROS node
         rospy.init_node('visual_detector')
+
+        #
+        self.node_name = 'robot_vision'
 
         # Robot name
         self.robot_name = rospy.get_param('~robot_name', 'db19')
@@ -81,7 +86,17 @@ class RobotVision:
         # Clients
         self.inter_boundary_line_detect_pub = rospy.Publisher('inter_boundary_line_detect', CrossInfo, queue_size=1) 
 
-        rospy.loginfo('Visual Detector is Online')
+        self.send_ready_signal()
+    
+    def send_ready_signal(self):
+        rospy.wait_for_service('ready_signal')
+        try:
+            ready_signal_client = rospy.ServiceProxy('ready_signal', ReadySignal)
+            response: ReadySignalResponse = ready_signal_client.call(self.node_name)
+            if response.success:
+                rospy.loginfo(f"{self.robot_name}: Visual Detector is Online")
+        except rospy.ServiceException as e:
+            rospy.logerr(f"service call failed: {e}")
 
     # Methods
     def status_flag_init(self):

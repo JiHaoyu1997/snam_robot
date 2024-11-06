@@ -14,6 +14,8 @@ from pid_controller.pi_format import PIController
 from geometry_msgs.msg import Twist
 from std_msgs.msg import Bool
 
+from vpa_robot_task.srv import ReadySignal, ReadySignalResponse
+
 from dynamic_reconfigure.server import Server
 
 class WheelDriver:
@@ -111,6 +113,8 @@ class WheelDriverNode:
         # self.veh_name         = rospy.get_namespace().strip("/")
         # if len(self.veh_name) == 0:
         #     self.veh_name = 'db19'
+        self.node_name      = 'traction_wheels'
+
         self.veh_name       = socket.gethostname()
             
         self.direct_mode    = rospy.get_param('~direct_mode',False)
@@ -186,7 +190,17 @@ class WheelDriverNode:
         # Servers        
         self.srv = Server(omegaConfig,self.dynamic_reconfigure_callback)
 
-        rospy.loginfo("%s: wheel drivers ready", self.veh_name)
+        self.send_ready_signal()
+
+    def send_ready_signal(self):
+        rospy.wait_for_service('ready_signal')
+        try:
+            ready_signal_client = rospy.ServiceProxy('ready_signal', ReadySignal)
+            response: ReadySignalResponse = ready_signal_client.call(self.node_name)
+            if response.success:
+                rospy.loginfo("%s: wheel drivers ready", self.veh_name)
+        except rospy.ServiceException as e:
+            rospy.logerr(f"service call failed: {e}")
 
     def car_cmd_cb(self,msg_car_cmd:Twist) -> None:
         msg_car_cmd.linear.x    = max(min(msg_car_cmd.linear.x,self._v_max),-self._v_max)
