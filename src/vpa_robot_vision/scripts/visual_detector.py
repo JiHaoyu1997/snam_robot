@@ -197,7 +197,7 @@ class RobotVision:
 
         # guiding lines inside intersections - no dynamic reconfigure
         self.thur_guide_hsv = hsv.HSVSpace(h_u=125, h_l=95, s_u=255, s_l=180, v_u=255, v_l=120)  
-        self.left_guide_hsv = hsv.HSVSpace(h_u=170, h_l=140, s_u= 255, s_l=150, v_u=255, v_l=120)
+        self.left_guide_hsv = hsv.HSVSpace(h_u=170, h_l=140, s_u= 255, s_l=130, v_u=255, v_l=120)
         self.right_guide_hsv = hsv.HSVSpace(h_u=25, h_l=4, s_u= 255, s_l=100, v_u=255, v_l=150)
         self.inter_guide_line = [self.thur_guide_hsv, self.left_guide_hsv, self.right_guide_hsv]
 
@@ -355,8 +355,7 @@ class RobotVision:
         return target_x, cv_img
     
     def find_target_to_cross_conflict(self, cv_img, cv_hsv_img, action):
-        hsv_space = self.inter_guide_line[action]
-        # print(hsv_space._s_lower)
+        hsv_space: hsv.HSVSpace = self.inter_guide_line[action]
         target_x = search_pattern.search_inter_guide_line2(hsv_space, cv_hsv_img, action)
         if target_x == None:
             target_x = self.image_width / 2
@@ -482,7 +481,7 @@ class RobotVision:
             rospy.loginfo("STOP")         
        
         target_x, _ = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=action)
-        # print(target_x)
+        print(target_x)
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
         self.pub_cmd_vel_from_img(v_x, omega_z)  
         mask_img = hsv_space.apply_mask(cv_hsv_img)
@@ -492,6 +491,12 @@ class RobotVision:
         color = (0, 0, 255)
         thickness = 1
         cv2.line(cv_img, start_point, end_point, color, thickness)
+
+        start_point2 = (0, 120)
+        end_point2 = (cv_img.shape[1] - 1, 120)
+        color2 = (0, 255, 0)
+        thickness2 = 1
+        cv2.line(cv_img, start_point2, end_point2, color2, thickness2)
         
         self.pub_cv_img(cv_img=cv_img)
         self.pub_mask_img(mask_img=mask_img)     

@@ -14,7 +14,7 @@ if os.path.exists(filepath):
 else:
     # default values
     LEFT_TURN_R     = 240 
-    LEFT_TURN_L     = 80
+    LEFT_TURN_L     = 60
     RIGHT_TURN_R    = 260
     RIGHT_TURN_L    = 170
     THUR_L          = 100
@@ -180,21 +180,23 @@ def search_inter_guide_line(hsv_space:HSVSpace,hsv_image,action:int):
                     return max(min(int(np.mean(seg[0])),THUR_R),THUR_L)
         return None
 
-def search_inter_guide_line2(hsv_space:HSVSpace, hsv_image, action:int):
-    mask = hsv_space.apply_mask(hsv_image)
+def search_inter_guide_line2(hsv_space: HSVSpace, hsv_image, action: int, recursion_depth=0):
     # handle the crossing (X) patterns on the guide lines
+    # x_list = []
+    mask = hsv_space.apply_mask(hsv_image)
     width  = int(hsv_image.shape[1])
     height = int(hsv_image.shape[0])
-    x_list = []
+
+    if recursion_depth > 1:
+        return None
 
     if action == 1:
         # left turn
         res = None
         for i in range(60,170,20):
             y = height - i
-            line1 = np.nonzero(mask[y, : int(width / 2)])[0]
-            line2 = np.nonzero(mask[y-20, : int(width / 2)])[0]
-            # print(y,line)
+            line1 = np.nonzero(mask[y, : ])[0]
+            line2 = np.nonzero(mask[y-20, : ])[0]
             seg1 = _break_segs(line1)
             seg2 = _break_segs(line2)
 
@@ -205,16 +207,29 @@ def search_inter_guide_line2(hsv_space:HSVSpace, hsv_image, action:int):
                 else:
                     res = int(np.mean(seg1[0]))
             
-            if len(seg2) == 1:
+            elif len(seg2) == 1:
                 # one line in front
                 if len(seg1) == 1:
                     res = int(np.mean(seg1[0]))
                 if len(seg1) > 1:
                     res = int(np.mean(seg2[0]))
                 
-            if len(seg2) == 2:
+            elif len(seg2) == 2:
                 if len(seg1) == 1:
-                    res = int(np.mean(seg2[1]))
+                    mean0 = np.mean(seg2[0])
+                    mean1 = np.mean(seg2[1])
+                    if 40 < mean0 < 280 and 40 < mean1 < 280:
+                        dist0 = abs(mean0 - width// 2)
+                        dist1 = abs(mean1 - width// 2)
+                        if dist0 < dist1:
+                            res = int(np.mean(seg2[0]))
+                        else:
+                            res = int(np.mean(seg2[1]))
+                    elif 40 < mean0 < 280:
+                        res = int(np.mean(seg2[0]))
+                    elif 40 < mean1 < 280:
+                        res = int(np.mean(seg2[1]))                 
+
                 elif len(seg1) == 2:
                     n1 = abs(np.mean(seg1[0]) - np.mean(seg1[1]))
                     n2 = abs(np.mean(seg2[0]) - np.mean(seg2[1]))
@@ -225,18 +240,44 @@ def search_inter_guide_line2(hsv_space:HSVSpace, hsv_image, action:int):
                         res = int(np.mean(seg1[0]))
                 else:
                     res = int(np.mean(seg2[0]))
-
-            # print(y, len(seg2), res)
-            # print(seg2)
             
-            if res == None:
-                return res
-            else:
-                if res > 250:
-                    return None
-                temp =  max(min(res,LEFT_TURN_R), LEFT_TURN_L)
-                return temp
+            elif len(seg2) > 2:
+                new_seg2 = { k: v for k, v in seg2.items()if 40 < np.mean(v) < 280 }
 
+                if len(new_seg2) == 0:
+                    res = None
+                
+                elif len(new_seg2) == 1:
+                    res = int() 
+
+                avg_positions = [np.mean(segment) for segment in seg2.values() if 40 < np.mean(segment) < 280]
+                avg_pos = int(np.mean(avg_positions))
+                print(avg_pos, recursion_depth)
+                if avg_pos < width // 2:
+                    cropped_hsv_image = hsv_image[ : , : width // 2]
+                    print('Left Half', recursion_depth)
+                    res = search_inter_guide_line2(hsv_space=hsv_space, hsv_image=cropped_hsv_image, action=action, recursion_depth=recursion_depth+1)
+                else:
+                    cropped_hsv_image = hsv_image[ : , width //2 :]
+                    print('Right Half', recursion_depth)
+                    res = search_inter_guide_line2(hsv_space=hsv_space, hsv_image=cropped_hsv_image, action=action, recursion_depth=recursion_depth+1)
+                    if res is not None:
+                        res += width // 2
+
+            print(y, len(seg1), len(seg2), res, recursion_depth)
+            
+            if res is None:
+                return res
+            
+            if res > 250:
+                return None
+            
+            if recursion_depth == 0:
+                print(seg2)
+                res = max(min(res, LEFT_TURN_R), LEFT_TURN_L)
+            
+            return res    
+          
     elif action == 2:
         # right turn
         for i in range(90, 130, 10):
