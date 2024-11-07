@@ -485,6 +485,12 @@ class RobotVision:
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
         self.pub_cmd_vel_from_img(v_x, omega_z)  
         mask_img = hsv_space.apply_mask(cv_hsv_img)
+
+        start_point = (0, 100)
+        end_point = (cv_img.shape[1] - 1, 100)
+        color = (0, 0, 255)
+        thickness = 1
+        cv2.line(cv_img, start_point, end_point, color, thickness)
         
         self.pub_cv_img(cv_img=cv_img)
         self.pub_mask_img(mask_img=mask_img)     
