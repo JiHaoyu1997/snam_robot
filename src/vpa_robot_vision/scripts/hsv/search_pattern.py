@@ -192,8 +192,8 @@ def search_inter_guide_line2(hsv_space:HSVSpace, hsv_image, action:int):
         res = None
         for i in range(60,170,20):
             y = height - i
-            line1 = np.nonzero(mask[y, : width])[0]
-            line2 = np.nonzero(mask[y-20, : width])[0]
+            line1 = np.nonzero(mask[y, : width / 2])[0]
+            line2 = np.nonzero(mask[y-20, : width / 2])[0]
             # print(y,line)
             seg1 = _break_segs(line1)
             seg2 = _break_segs(line2)
@@ -226,6 +226,7 @@ def search_inter_guide_line2(hsv_space:HSVSpace, hsv_image, action:int):
                 else:
                     res = int(np.mean(seg2[0]))
 
+            print(y, len(seg2), res)
             print(seg2)
             
             if res == None:
