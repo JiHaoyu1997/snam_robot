@@ -1,10 +1,14 @@
 #! /usr/bin/env python3
 
 import rospy
+
+import time
 import numpy as np
+from enum import Enum
+
+
 import cv2
 from cv_bridge import CvBridge
-from enum import Enum
 
 from map import map
 from hsv import hsv, search_pattern
@@ -471,10 +475,10 @@ class RobotVision:
             self.stop = False
             rospy.loginfo("Start")
 
-        dis2green = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.inter_boundary_line_hsv)
-        if dis2green > 30:
-            self.stop = True
-            rospy.loginfo("STOP")         
+        # dis2green = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.inter_boundary_line_hsv)
+        # if dis2green > 30:
+        #     self.stop = True
+        #     rospy.loginfo("STOP")         
        
         target_x, _ = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=action)
         # print(target_x)
