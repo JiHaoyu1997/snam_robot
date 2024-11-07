@@ -356,7 +356,7 @@ class RobotVision:
     
     def find_target_to_cross_conflict(self, cv_img, cv_hsv_img, action):
         hsv_space = self.inter_guide_line[action]
-        print(hsv_space._s_lower)
+        # print(hsv_space._s_lower)
         target_x = search_pattern.search_inter_guide_line2(hsv_space, cv_hsv_img, action)
         if target_x == None:
             target_x = self.image_width / 2
