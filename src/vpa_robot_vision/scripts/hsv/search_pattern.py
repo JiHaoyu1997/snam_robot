@@ -183,6 +183,7 @@ def search_inter_guide_line(hsv_space:HSVSpace,hsv_image,action:int):
 def search_inter_guide_line2(hsv_space:HSVSpace, hsv_image, action:int):
     mask = hsv_space.apply_mask(hsv_image)
     # handle the crossing (X) patterns on the guide lines
+    width  = int(hsv_image.shape[1])
     height = int(hsv_image.shape[0])
     x_list = []
 
@@ -191,8 +192,8 @@ def search_inter_guide_line2(hsv_space:HSVSpace, hsv_image, action:int):
         res = None
         for i in range(60,170,20):
             y = height - i
-            line1 = np.nonzero(mask[y,:])[0]
-            line2 = np.nonzero(mask[y-20,:])[0]
+            line1 = np.nonzero(mask[y, : width])[0]
+            line2 = np.nonzero(mask[y-20, :])[0]
             # print(y,line)
             seg1 = _break_segs(line1)
             seg2 = _break_segs(line2)

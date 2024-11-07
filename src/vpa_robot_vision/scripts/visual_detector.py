@@ -197,7 +197,7 @@ class RobotVision:
 
         # guiding lines inside intersections - no dynamic reconfigure
         self.thur_guide_hsv = hsv.HSVSpace(h_u=125, h_l=95, s_u=255, s_l=180, v_u=255, v_l=120)  
-        self.left_guide_hsv = hsv.HSVSpace(h_u=175, h_l=145, s_u= 200, s_l=50, v_u=255, v_l=100)
+        self.left_guide_hsv = hsv.HSVSpace(h_u=170, h_l=140, s_u= 255, s_l=150, v_u=255, v_l=120)
         self.right_guide_hsv = hsv.HSVSpace(h_u=25, h_l=4, s_u= 255, s_l=100, v_u=255, v_l=150)
         self.inter_guide_line = [self.thur_guide_hsv, self.left_guide_hsv, self.right_guide_hsv]
 
@@ -475,10 +475,10 @@ class RobotVision:
             self.stop = False
             rospy.loginfo("Start")
 
-        # dis2green = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.inter_boundary_line_hsv)
-        # if dis2green > 30:
-        #     self.stop = True
-        #     rospy.loginfo("STOP")         
+        dis2green = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.inter_boundary_line_hsv)
+        if dis2green > 30:
+            self.stop = True
+            rospy.loginfo("STOP")         
        
         target_x, _ = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=action)
         # print(target_x)
