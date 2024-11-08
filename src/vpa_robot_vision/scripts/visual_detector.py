@@ -125,6 +125,9 @@ class RobotVision:
         self.stop = False
 
         # 
+        self.stop_timer = None
+
+        # 
         self.in_lane = True
 
         # Time lock (prohibit unreasonable status change)
@@ -476,9 +479,8 @@ class RobotVision:
             rospy.loginfo("Start")
 
         dis2green = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.inter_boundary_line_hsv)
-        if dis2green > 30:
-            self.stop = True
-            rospy.loginfo("STOP")         
+        if dis2green > 30 and self.stop_timer is None:
+            self.stop_timer = rospy.Timer(rospy.Duration(1), self.stop_cb, oneshot=True)
        
         target_x, _ = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=action)
         print(target_x)
@@ -486,17 +488,23 @@ class RobotVision:
         self.pub_cmd_vel_from_img(v_x, omega_z)  
         mask_img = hsv_space.apply_mask(cv_hsv_img)
 
-        start_point = (0, 100)
-        end_point = (cv_img.shape[1] - 1, 100)
+        start_point = (0, 110)
+        end_point = (cv_img.shape[1] - 1, 110)
         color = (0, 0, 255)
         thickness = 1
         cv2.line(cv_img, start_point, end_point, color, thickness)
 
-        start_point2 = (0, 120)
-        end_point2 = (cv_img.shape[1] - 1, 120)
+        start_point2 = (0, 130)
+        end_point2 = (cv_img.shape[1] - 1, 130)
         color2 = (0, 255, 0)
         thickness2 = 1
         cv2.line(cv_img, start_point2, end_point2, color2, thickness2)
+
+        start_point = (40, 1)
+        end_point = (280, 178)
+        color = (255, 0, 255)
+        thickness = 1
+        cv2.rectangle(cv_img, start_point, end_point, color, thickness)
         
         self.pub_cv_img(cv_img=cv_img)
         self.pub_mask_img(mask_img=mask_img)     
@@ -585,8 +593,13 @@ class RobotVision:
         self.pub_mask_img(mask_img=mask_img)     
 
         return
-       
     
+    def stop_cb(self, event):
+        self.stop = True
+        rospy.loginfo("STOP")
+        self.stop_timer = None
+        return
+
     def pub_cv_img(self, cv_img):
         cv_img_copy = cv_img
         cv_img_copy_msg = self.cv_bridge.cv2_to_imgmsg(cv_img_copy, encoding="bgr8")
