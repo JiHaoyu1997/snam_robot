@@ -13,10 +13,10 @@ if os.path.exists(filepath):
     print('Loading customize robot settings')
 else:
     # default values
-    LEFT_TURN_R     = 240 
+    LEFT_TURN_R     = 200 
     LEFT_TURN_L     = 60
     RIGHT_TURN_R    = 260
-    RIGHT_TURN_L    = 170
+    RIGHT_TURN_L    = 120
     THUR_L          = 100
     THUR_R          = 220
     LANE_L          = 80
@@ -118,7 +118,10 @@ def search_lane_center(space1:HSVSpace, space2:HSVSpace, hsv_image, is_yellow_le
     if _line_center2 == 0 and is_yellow_left:
         # miss detections 
         _line_center2 = hsv_image.shape[1]
-    
+
+    if _line_center1 == 0:
+        _line_center1 = hsv_image.shape[1] / 4
+
     # print(_line_center1, _line_center2)
     _lane_center = int((_line_center1 + _line_center2)/2)
     return max(min(_lane_center,LANE_R),LANE_L)
@@ -289,13 +292,15 @@ def search_inter_guide_line2(hsv_space: HSVSpace, hsv_image, action: int, recurs
           
     elif action == 2:
         # right turn
-        for i in range(90, 130, 10):
+        for i in range(90, 140, 10):
             y = i
-            line = np.nonzero(mask[y, :])[0]
+            line = np.nonzero(mask[y, 100 : ])[0]
+            line = line + 100
             seg = _break_segs(line)
+            print(seg)
             if len(seg) == 1:
                 result = min(max(RIGHT_TURN_L,int(np.mean(seg[0]))),RIGHT_TURN_R)
-                # print(y ,result)
+                print(y ,result)
                 return result
         return int(hsv_image.shape[1] * 3 / 5)
     
