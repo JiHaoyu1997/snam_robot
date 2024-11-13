@@ -201,7 +201,7 @@ class RobotVision:
         # guiding lines inside intersections - no dynamic reconfigure
         self.thur_guide_hsv = hsv.HSVSpace(h_u=125, h_l=95, s_u=255, s_l=180, v_u=255, v_l=120)  
         self.left_guide_hsv = hsv.HSVSpace(h_u=170, h_l=140, s_u= 255, s_l=130, v_u=255, v_l=120)
-        self.right_guide_hsv = hsv.HSVSpace(h_u=28, h_l=7, s_u= 255, s_l=100, v_u=255, v_l=150)
+        self.right_guide_hsv = hsv.HSVSpace(h_u=28, h_l=4, s_u= 255, s_l=100, v_u=255, v_l=150)
         self.inter_guide_line = [self.thur_guide_hsv, self.left_guide_hsv, self.right_guide_hsv]
 
         # 
@@ -483,7 +483,7 @@ class RobotVision:
             self.stop_timer = rospy.Timer(rospy.Duration(1), self.stop_cb, oneshot=True)
        
         target_x, _ = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=action)
-        print(target_x)
+        # print(target_x)
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
         self.pub_cmd_vel_from_img(v_x, omega_z)  
         mask_img = hsv_space.apply_mask(cv_hsv_img)
