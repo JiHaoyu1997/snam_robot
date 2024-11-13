@@ -189,19 +189,19 @@ class RobotVision:
         )
 
         # Buffer Line HSV - Pink
-        self.buffer_line_hsv = hsv.HSVSpace(h_u=190, h_l=140, s_u=255, s_l=70, v_u=255, v_l=130)
+        self.buffer_line_hsv = hsv.HSV_RANGES['pink']
         self.overexposed_buffer_line_hsv = hsv.HSVSpace(h_u=20, h_l=0, s_u=55, s_l=45, v_u=255, v_l=205)
 
         # Ready Line HSV - Blue
         self.ready_line_hsv = hsv.HSV_RANGES['blue']
 
         # Intersection Boundary Line HSV - Green
-        self.inter_boundary_line_hsv = hsv.HSVSpace(h_u=95, h_l=65, s_u=255, s_l=150, v_u=200, v_l=70)
+        self.inter_boundary_line_hsv = hsv.HSV_RANGES['green']
 
         # guiding lines inside intersections - no dynamic reconfigure
-        self.thur_guide_hsv = hsv.HSVSpace(h_u=125, h_l=95, s_u=255, s_l=180, v_u=255, v_l=120)  
-        self.left_guide_hsv = hsv.HSVSpace(h_u=170, h_l=140, s_u= 255, s_l=130, v_u=255, v_l=120)
-        self.right_guide_hsv = hsv.HSVSpace(h_u=28, h_l=7, s_u= 255, s_l=50, v_u=255, v_l=150)
+        self.thur_guide_hsv = hsv.HSV_RANGES['blue'] 
+        self.left_guide_hsv = hsv.HSV_RANGES['purple']
+        self.right_guide_hsv = hsv.HSV_RANGES['orange']
         self.inter_guide_line = [self.thur_guide_hsv, self.left_guide_hsv, self.right_guide_hsv]
 
         # 
