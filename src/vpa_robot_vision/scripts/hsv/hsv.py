@@ -30,14 +30,14 @@ class HSVSpace:
         return _mask
 
 HSV_RANGES = {
-    'pink':     HSVSpace(h_u=170, h_l=140, s_u=255, s_l=65,  v_u=255, v_l=150),
-    'green':    HSVSpace(h_u=100, h_l=50,  s_u=255, s_l=100, v_u=255, v_l=100),
-    'yellow':   HSVSpace(h_u=35,  h_l=25,  s_u=255, s_l=100, v_u=255, v_l=100),
     'white':    HSVSpace(h_u=179, h_l=0,   s_u=30,  s_l=0,   v_u=255, v_l=200),
     'red':      HSVSpace(h_u=180, h_l=170, s_u=220, s_l=180, v_u=255, v_l=100),  # 或者 h_u=180, h_l=170
+    'orange':   HSVSpace(h_u=30,  h_l=0,   s_u=255, s_l=100, v_u=235, v_l=180),
+    'yellow':   HSVSpace(h_u=35,  h_l=25,  s_u=255, s_l=100, v_u=255, v_l=100),
+    'green':    HSVSpace(h_u=100, h_l=50,  s_u=255, s_l=100, v_u=255, v_l=100),
     'blue':     HSVSpace(h_u=125, h_l=95,  s_u=255, s_l=180, v_u=255, v_l=120),
     'purple':   HSVSpace(h_u=159, h_l=140, s_u=255, s_l=130, v_u=255, v_l=120),
-    'orange':   HSVSpace(h_u=30,  h_l=0,   s_u=135, s_l=50,  v_u=235, v_l=180),
+    'pink':     HSVSpace(h_u=170, h_l=140, s_u=255, s_l=65,  v_u=255, v_l=150),
 }
 
 def convert_raw_img_to_hsv_img(data: Image, cv_bridge: CvBridge):

@@ -24,16 +24,12 @@ else:
 
 def search_buffer_line(cv_hsv_img, buffer_line_hsv: HSVSpace) -> list:
     buffer_line_mask_img = buffer_line_hsv.apply_mask(cv_hsv_img)
-
-    low_bound   = 15
-    upper_bound = 75
-
     _height_center = int(buffer_line_mask_img.shape[0]/2)
     _line_center   = 0
 
-    for i in range(low_bound, upper_bound, 15):
+    for i in range(15, 75, 15):
         # search this part of the picture
-        _line = np.nonzero(buffer_line_mask_img[_height_center + i,:])[0]
+        _line = np.nonzero(buffer_line_mask_img[_height_center + i, : ])[0]
         
         if len(_line) > 8 and len(_line) < 50:
             # there are proper amount of points at this part
@@ -297,10 +293,10 @@ def search_inter_guide_line2(hsv_space: HSVSpace, hsv_image, action: int, recurs
             line = np.nonzero(mask[y, 100 : ])[0]
             line = line + 100
             seg = _break_segs(line)
-            print(seg)
+            # print(seg)
             if len(seg) == 1:
                 result = min(max(RIGHT_TURN_L,int(np.mean(seg[0]))),RIGHT_TURN_R)
-                print(y ,result)
+                # print(y ,result)
                 return result
         return int(hsv_image.shape[1] * 3 / 5)
     
