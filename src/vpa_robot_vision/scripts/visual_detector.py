@@ -248,6 +248,7 @@ class RobotVision:
     def detect_inter_boundary_line(self, cv_hsv_img: Image):
         dis2bound = search_pattern.search_line(cv_hsv_img, self.inter_boundary_line_hsv, top_line=0)
         corss_inter_boundary = dis2bound > 25
+        
         if corss_inter_boundary:
             self.cross_inter_boundary_line_count += 1
             if self.cross_inter_boundary_line_count >= 2 and not self.cross:
@@ -485,7 +486,7 @@ class RobotVision:
             self.stop_timer = rospy.Timer(rospy.Duration(1), self.stop_cb, oneshot=True)
        
         target_x, _ = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=action)
-        print(target_x)
+        # print(target_x)
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
         self.pub_cmd_vel_from_img(v_x, omega_z)  
         mask_img = hsv_space.apply_mask(cv_hsv_img)
