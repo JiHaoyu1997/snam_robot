@@ -190,7 +190,9 @@ class RobotVision:
 
         # Buffer Line HSV - Pink
         self.buffer_line_hsv = hsv.HSV_RANGES['pink']
-        self.overexposed_buffer_line_hsv = hsv.HSVSpace(h_u=20, h_l=0, s_u=55, s_l=45, v_u=255, v_l=205)
+
+        # Overexposed_line_hsv White
+        self.overexposed_line_hsv = hsv.HSV_RANGES['white']
 
         # Ready Line HSV - Blue
         self.ready_line_hsv = hsv.HSV_RANGES['blue']
@@ -198,7 +200,7 @@ class RobotVision:
         # Intersection Boundary Line HSV - Green
         self.inter_boundary_line_hsv = hsv.HSV_RANGES['green']
 
-        # guiding lines inside intersections - no dynamic reconfigure
+        # guiding lines inside intersections
         self.thur_guide_hsv = hsv.HSV_RANGES['blue'] 
         self.left_guide_hsv = hsv.HSV_RANGES['purple']
         self.right_guide_hsv = hsv.HSV_RANGES['orange']
@@ -338,7 +340,7 @@ class RobotVision:
         buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.buffer_line_hsv)
 
         if buffer_line_x == None:
-            buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.overexposed_buffer_line_hsv)
+            buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.overexposed_line_hsv)
     
         if buffer_line_x == None:
             buffer_line_x = int(self.image_width * 2 / 5)

@@ -30,7 +30,7 @@ class HSVSpace:
         return _mask
 
 HSV_RANGES = {
-    'pink':     HSVSpace(h_u=170, h_l=140, s_u=255, s_l=100, v_u=255, v_l=150),
+    'pink':     HSVSpace(h_u=170, h_l=140, s_u=255, s_l=65,  v_u=255, v_l=150),
     'green':    HSVSpace(h_u=100, h_l=50,  s_u=255, s_l=100, v_u=255, v_l=100),
     'yellow':   HSVSpace(h_u=35,  h_l=25,  s_u=255, s_l=100, v_u=255, v_l=100),
     'white':    HSVSpace(h_u=179, h_l=0,   s_u=30,  s_l=0,   v_u=255, v_l=200),
