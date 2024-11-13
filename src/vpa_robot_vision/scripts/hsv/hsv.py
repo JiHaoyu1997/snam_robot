@@ -37,7 +37,7 @@ HSV_RANGES = {
     'green':    HSVSpace(h_u=100, h_l=50,  s_u=255, s_l=100, v_u=255, v_l=100),
     'blue':     HSVSpace(h_u=125, h_l=95,  s_u=255, s_l=180, v_u=255, v_l=120),
     'purple':   HSVSpace(h_u=159, h_l=140, s_u=255, s_l=130, v_u=255, v_l=120),
-    'pink':     HSVSpace(h_u=170, h_l=140, s_u=255, s_l=65,  v_u=255, v_l=150),
+    'pink':     HSVSpace(h_u=180, h_l=160, s_u=255, s_l=65,  v_u=255, v_l=150),
 }
 
 def convert_raw_img_to_hsv_img(data: Image, cv_bridge: CvBridge):
