@@ -30,10 +30,10 @@ class HSVSpace:
         return _mask
 
 HSV_RANGES = {
-    'red':      HSVSpace(h_u=8,   h_l=0,   s_u=255, s_l=150, v_u=255, v_l=150),  # 或者 h_u=180, h_l=170
-    'orange':   HSVSpace(h_u=20,  h_l=8,   s_u=255, s_l=100, v_u=235, v_l=100),
+    'red':      HSVSpace(h_u=5,   h_l=0,   s_u=255, s_l=150, v_u=255, v_l=150),  # 或者 h_u=180, h_l=170
+    'orange':   HSVSpace(h_u=20,  h_l=5,   s_u=255, s_l=100, v_u=235, v_l=100),
     'yellow':   HSVSpace(h_u=36,  h_l=26,  s_u=255, s_l=100, v_u=255, v_l=100),
-    'green':    HSVSpace(h_u=80,  h_l=60,  s_u=255, s_l=100, v_u=255, v_l=100),
+    'green':    HSVSpace(h_u=80,  h_l=60,  s_u=255, s_l=100, v_u=255, v_l=50),
     'blue':     HSVSpace(h_u=120, h_l=105, s_u=255, s_l=100, v_u=255, v_l=100),
     'purple':   HSVSpace(h_u=170, h_l=150, s_u=255, s_l=100, v_u=255, v_l=100),
     'pink':     HSVSpace(h_u=175, h_l=150, s_u=255, s_l=100, v_u=255, v_l=100),

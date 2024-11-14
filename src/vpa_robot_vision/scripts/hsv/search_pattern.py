@@ -14,8 +14,8 @@ if os.path.exists(filepath):
 else:
     # default values
     LEFT_TURN_R     = 200 
-    LEFT_TURN_L     = 60
-    RIGHT_TURN_R    = 260
+    LEFT_TURN_L     = 40
+    RIGHT_TURN_R    = 280
     RIGHT_TURN_L    = 120
     THUR_L          = 100
     THUR_R          = 220
@@ -47,7 +47,7 @@ def search_line(hsv_image, hsv_space: HSVSpace, top_line = 100) -> Union[int, fl
     # point = np.nonzero(mask[lower_bound : upper_bound, width_center - 50])
     # return len(point[0])
 
-    for i in range(-50, top_line, 50):
+    for i in range(-50, top_line, 25):
         point = np.nonzero(mask[lower_bound : upper_bound, width_center + i])
         # print(len(point[0]))
         if len(point[0]) > 5:
@@ -298,7 +298,7 @@ def search_inter_guide_line2(hsv_space: HSVSpace, hsv_image, action: int, recurs
                 result = min(max(RIGHT_TURN_L,int(np.mean(seg[0]))),RIGHT_TURN_R)
                 # print(y ,result)
                 return result
-        return int(hsv_image.shape[1] * 3 / 5)
+        return int(hsv_image.shape[1] * 2 / 3)
     
     else: 
         # thur
