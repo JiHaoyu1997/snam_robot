@@ -27,7 +27,7 @@ def search_buffer_line(cv_hsv_img, buffer_line_hsv: HSVSpace) -> list:
     _height_center = int(buffer_line_mask_img.shape[0]/2)
     _line_center   = 0
 
-    for i in range(15, 75, 15):
+    for i in range(60, 0, -10):
         # search this part of the picture
         _line = np.nonzero(buffer_line_mask_img[_height_center + i, : ])[0]
         

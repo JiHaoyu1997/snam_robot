@@ -246,7 +246,7 @@ class RobotVision:
         return self.pub_cv_img(cv_img=result_cv_img)
 
     def detect_inter_boundary_line(self, cv_hsv_img: Image):
-        dis2bound = search_pattern.search_line(cv_hsv_img, self.inter_boundary_line_hsv, top_line=0)
+        dis2bound = search_pattern.search_line(cv_hsv_img, self.inter_boundary_line_hsv, top_line=100)
         corss_inter_boundary = dis2bound > 25
         
         if corss_inter_boundary:
@@ -503,6 +503,7 @@ class RobotVision:
 
         dis2green = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.inter_boundary_line_hsv)
         if dis2green > 30 and self.stop_timer is None:
+            rospy.loginfo("Start")
             self.stop_timer = rospy.Timer(rospy.Duration(1), self.stop_cb, oneshot=True)
        
         target_x, _ = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=action)
