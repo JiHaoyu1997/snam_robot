@@ -15,7 +15,7 @@ class HSVSpace:
         self._s_upper = s_u
         self._s_lower = s_l
         self._v_upper = v_u
-        self._v_upper = v_l
+        self._v_lower = v_l
     
     def _generate_lower_mask(self):
         return np.array([self._h_lower, self._s_lower, self._v_lower])
