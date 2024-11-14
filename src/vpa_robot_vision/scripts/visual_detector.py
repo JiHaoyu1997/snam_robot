@@ -339,17 +339,15 @@ class RobotVision:
     
     def find_target_from_buffer_line(self, cv_img, cv_hsv_img):
         buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.buffer_line_hsv)
-        print(buffer_line_x, buffer_line_y, 1)
 
         if buffer_line_x == None:
             buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.overexposed_line_hsv)
-        print(buffer_line_x, buffer_line_y, 2)
 
         if buffer_line_x == None:
             buffer_line_x = int(cv_hsv_img.shape[1] / 2)
+
         if buffer_line_y == None:
             buffer_line_y = int(cv_hsv_img.shape[0] / 2)
-        print(buffer_line_x, buffer_line_y, 3)
         
         target_x = buffer_line_x         
         cv2.circle(cv_img, (buffer_line_x, buffer_line_y), 5, (255, 100, 0), 5)       
@@ -408,6 +406,9 @@ class RobotVision:
         if self.test_mode == 'hsv':
             self.find_hsv(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
+        elif self.test_mode == 'buffer':
+            self.go_thur_buffer(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+
         elif self.test_mode == 'lane':
             self.go_thur_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
@@ -448,6 +449,23 @@ class RobotVision:
 
         return
     
+    def go_thur_buffer(self, cv_img, cv_hsv_img):
+        dis2red = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.stop_line_hsv)
+        if dis2red > 30:
+            self.stop = True
+            rospy.loginfo("STOP")
+        
+        target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+        v_x, omega_z = self.calculate_velocity(target_x=target_x)
+        self.pub_cmd_vel_from_img(v_x, omega_z)  
+
+        mask_img = self.buffer_line_hsv.apply_mask(cv_hsv_img)
+           
+        self.pub_cv_img(cv_img=cv_img)
+        self.pub_mask_img(mask_img=mask_img)
+        
+        return 
+
     def go_thur_lane(self, cv_img, cv_hsv_img):
         dis2red = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.stop_line_hsv)
         if dis2red > 30:
