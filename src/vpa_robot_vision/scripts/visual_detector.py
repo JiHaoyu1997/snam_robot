@@ -339,15 +339,17 @@ class RobotVision:
     
     def find_target_from_buffer_line(self, cv_img, cv_hsv_img):
         buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.buffer_line_hsv)
+        print(buffer_line_x, buffer_line_y, 1)
 
         if buffer_line_x == None:
             buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.overexposed_line_hsv)
-    
-        if buffer_line_x == None:
-            buffer_line_x = int(self.image_width * 2 / 5)
+        print(buffer_line_x, buffer_line_y, 2)
 
+        if buffer_line_x == None:
+            buffer_line_x = int(cv_hsv_img.shape[1] / 2)
         if buffer_line_y == None:
-            buffer_line_y = int(self.image_height / 2)
+            buffer_line_y = int(cv_hsv_img.shape[0] / 2)
+        print(buffer_line_x, buffer_line_y, 3)
         
         target_x = buffer_line_x         
         cv2.circle(cv_img, (buffer_line_x, buffer_line_y), 5, (255, 100, 0), 5)       
