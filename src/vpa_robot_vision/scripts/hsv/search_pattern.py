@@ -27,7 +27,7 @@ def search_buffer_line(cv_hsv_img, buffer_line_hsv: HSVSpace) -> list:
     _height_center = int(buffer_line_mask_img.shape[0]/2)
     _line_center   = 0
 
-    h = _height_center + 20
+    h = _height_center + 10
     h_list = []
     for i in range(0, 40, 10):
         
