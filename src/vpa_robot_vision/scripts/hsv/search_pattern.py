@@ -85,12 +85,13 @@ def _search_lane_linecenter(_mask,
             if _isYellow:    
                 res = int(np.mean(point))
                 print(_height_center + i , res, 'left')
-                return int(np.mean(point))
+                return res
             else:
                 segs =_break_segs(point)
                 if len(segs) <= 1:
+                    res = int(np.mean(point))
                     print(_height_center + i , res, 'right1')
-                    return int(np.mean(point))
+                    return res
                 else:
                     valid_segments = {
                         key: seg for key, seg in segs.items()
@@ -99,15 +100,15 @@ def _search_lane_linecenter(_mask,
 
                     averages = { key: sum(seg) / len(seg) for key ,seg in valid_segments.items }
 
-                    result = None
+                    res = None
 
                     for key, avg in sorted(averages.items(), key=lambda x: -len(valid_segments[x[0]])):
                         if avg > 160:
-                            result = avg
+                            res = avg
                             break
 
                     print(_height_center + i , res, 'rigth2')
-                    return result if result is not None else 0
+                    return res if res is not None else 0
         else:
             continue
 
