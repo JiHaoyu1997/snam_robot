@@ -450,10 +450,15 @@ class RobotVision:
         return
     
     def go_thur_buffer(self, cv_img, cv_hsv_img):
-        dis2red = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.stop_line_hsv)
-        if dis2red > 30:
+        dis2orange = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=hsv.HSV_RANGES['orange'])
+        if dis2orange > 30:
             self.stop = True
             rospy.loginfo("STOP")
+        
+        dis2green = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.inter_boundary_line_hsv)
+        if dis2green > 30:
+            self.stop = False
+            rospy.loginfo("Start")
         
         target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
