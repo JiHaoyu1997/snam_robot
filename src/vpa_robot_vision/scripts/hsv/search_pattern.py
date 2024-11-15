@@ -82,7 +82,10 @@ def _search_lane_linecenter(_mask,
     for i in range(_lower_bias,_upper_bias,_interval):
         point = np.nonzero(_mask[_height_center + i, _width_range_left : _width_range_right])[0] + _width_range_left
         if len(point) > 8 and len(point) < 45:
-            if _isYellow:    
+            if _isYellow:
+                segs =_break_segs(point)
+                for key, val in segs.items():
+                    print(len(val))
                 res = int(np.mean(point))
                 print(_height_center + i , res, 'left')
                 return res
