@@ -14,7 +14,7 @@ Distributed Control At Signal Free Intersection - Robot
 User Controls
 
                      brightness 0x00980900 (int)    : min=0 max=100 step=1 default=50 value=50 flags=slider
-                       contrast 0x00980901 (int)    : min=-100 max=100 step=1 default=0 value=0 flags=slider
+                       contrast 0x00980901 (int)    : min=-100 max=100 step=1 default=0 value=50 flags=slider
                      saturation 0x00980902 (int)    : min=-100 max=100 step=1 default=0 value=0 flags=slider
                     red_balance 0x0098090e (int)    : min=1 max=7999 step=1 default=1000 value=1000 flags=slider
                    blue_balance 0x0098090f (int)    : min=1 max=7999 step=1 default=1000 value=1000 flags=slider
@@ -41,17 +41,16 @@ Camera Controls
          exposure_time_absolute 0x009a0902 (int)    : min=1 max=10000 step=1 default=1000 value=1000
      exposure_dynamic_framerate 0x009a0903 (bool)   : default=0 value=0
              auto_exposure_bias 0x009a0913 (intmenu): min=0 max=24 default=12 value=12
-      white_balance_auto_preset 0x009a0914 (menu)   : min=0 max=10 default=1 value=2
+      white_balance_auto_preset 0x009a0914 (menu)   : min=0 max=10 default=1 value=7
             image_stabilization 0x009a0916 (bool)   : default=0 value=0
                 iso_sensitivity 0x009a0917 (intmenu): min=0 max=4 default=0 value=0
            iso_sensitivity_auto 0x009a0918 (menu)   : min=0 max=1 default=1 value=1
          exposure_metering_mode 0x009a0919 (menu)   : min=0 max=2 default=0 value=0
-                     scene_mode 0x009a091a (menu)   : min=0 max=13 default=0 value=0
+                     scene_mode 0x009a091a (menu)   : min=0 max=13 default=0 value=11
 
 JPEG Compression Controls
 
             compression_quality 0x009d0903 (int)    : min=1 max=100 step=1 default=30 value=30
-
 
 ## v4l2-ctl  --device=/dev/video0 --all
 Driver Info:
