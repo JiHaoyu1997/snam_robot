@@ -79,32 +79,26 @@ def _search_lane_linecenter(_mask,
                             _isYellow: bool = True,
                         ) -> int:
     
-    for i in range(_lower_bias,_upper_bias,_interval):
+    for i in range(_lower_bias, _upper_bias, _interval):
         point = np.nonzero(_mask[_height_center + i, _width_range_left : _width_range_right])[0] + _width_range_left
-        segs =_break_segs(point)
-        valid_segments = {
-                key: seg for key, seg in segs.items()
-                if len(seg) > 8 and len(seg) < 21
-            }        
-        if len(valid_segments) <= 1:
-            res = int(np.mean(valid_segments[0]))
-            print(_height_center + i , res, 1)
-            return res
-        else:
-            res = None
-            averages = { key: sum(seg) / len(seg) for key ,seg in valid_segments.items }
-            for key, avg in sorted(averages.items(), key=lambda x: -len(valid_segments[x[0]])):
-                if _isYellow:
-                    if avg < 160:
-                        res = avg
-                        break
-                else:
-                    if avg > 160:
-                        res = avg
-                        break
+        segs = _break_segs(point)
+        valid_segments = {key: seg for key, seg in segs.items() if 8 < len(seg) < 21}
+        res = None
 
-            print(_height_center + i , res, 3)
-            return res if res is not None else 0
+        if len(valid_segments) <= 1:
+            res = int(np.mean(valid_segments[0]))  # 获取第一个值或空列表
+            print(_height_center + i, res, 1)
+            return res
+
+        averages = {key: np.mean(seg) for key, seg in valid_segments.items()}
+        sorted_segments = sorted(averages.items(), key=lambda x: -len(valid_segments[x[0]]))
+        
+        res = next(
+            (avg for key, avg in sorted_segments if (_isYellow and avg < 160) or (not _isYellow and avg > 160)),
+            None
+        )
+        print(_height_center + i, res, 2)
+        return res if res is not None else 0
     return 0 
 
 def search_lane_center(space1:HSVSpace, space2:HSVSpace, hsv_image, is_yellow_left:bool) -> int:
