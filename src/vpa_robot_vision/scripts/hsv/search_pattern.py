@@ -91,7 +91,7 @@ def _search_lane_linecenter(_mask,
 
         if len(valid_segments) == 1:
             res = int(np.mean(next(iter(valid_segments.values()), [])))  # 获取第一个值或空列表
-            # print(_height_center + i, res, 1, _isYellow)
+            print(_height_center + i, res, 1, _isYellow)
             return res
 
         averages = {key: int(np.mean(seg)) for key, seg in valid_segments.items()}
@@ -101,7 +101,7 @@ def _search_lane_linecenter(_mask,
             (avg for key, avg in sorted_segments if (_isYellow and 40 < avg < 160) or (not _isYellow and avg > 160)),
             None
         )
-        # print(_height_center + i, res, 2, _isYellow)
+        print(_height_center + i, res, 2, _isYellow)
         return res if res is not None else 0
     return 0 
 
