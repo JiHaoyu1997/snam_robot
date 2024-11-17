@@ -18,9 +18,6 @@
         <param name="camera_frame_id"               value="base_camera_link" />
         <param name="framerate"                     value="$(arg fps)"/>
         <param name="io_method"                     value="mmap"/>
-        <param name="white_balance_auto_preset"     value="7" />
-        <param name="scene_mode"                    value="11" />
-        <param name="contrast"                      value="50" />
     </node>
 
     <node name="robot_vision" pkg="vpa_robot_vision" type="visual_detector.py" output="screen">
@@ -50,4 +47,6 @@
         <param name="v_upper_s"            value="255"/>
         <param name="v_lower_s"            value="150"/>
     </node>
+
+    <node name="set_v4l2_param" pkg="vpa_robot_vision" type="roslaunch" args="$(find vpa_robot_vision)/scripts/set_v4l2_params.sh" />
 </launch>
