@@ -14,7 +14,7 @@ if os.path.exists(filepath):
 else:
     # default values
     LEFT_TURN_R     = 200 
-    LEFT_TURN_L     = 40
+    LEFT_TURN_L     = 60
     RIGHT_TURN_R    = 280
     RIGHT_TURN_L    = 120
     THUR_L          = 100
@@ -241,8 +241,8 @@ def search_inter_guide_line2(hsv_space: HSVSpace, hsv_image, action: int, recurs
                     mean0 = np.mean(seg2[0])
                     mean1 = np.mean(seg2[1])
                     if 40 < mean0 < 280 and 40 < mean1 < 280:
-                        dist0 = abs(mean0 - width// 2)
-                        dist1 = abs(mean1 - width// 2)
+                        dist0 = abs(mean0 - width // 3)
+                        dist1 = abs(mean1 - width // 3)
                         if dist0 < dist1:
                             res = int(np.mean(seg2[0]))
                         else:
