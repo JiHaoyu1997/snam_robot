@@ -1,7 +1,6 @@
 <launch>
     <arg name="robot_name"/>
     <arg name="test_mode"/>
-
     <arg name="width"       default="320"/>
     <arg name="height"      default="240"/>
     <arg name="fps"         default="10"/>
@@ -48,5 +47,5 @@
         <param name="v_lower_s"            value="150"/>
     </node>
 
-    <node name="set_v4l2_param" pkg="vpa_robot_vision" type="roslaunch" args="$(find vpa_robot_vision)/scripts/set_v4l2_params.sh" />
+    <node name="set_v4l2_param" pkg="vpa_robot_vision" type="set_v4l2_params.sh" />
 </launch>
