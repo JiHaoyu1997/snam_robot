@@ -25,19 +25,19 @@ class HSVSpace:
     
     def apply_mask(self, hsv_image):
         _mask   = cv2.inRange(hsv_image, self._generate_lower_mask(), self._generate_upper_mask())
-        _kernel = np.ones((9,9), np.uint8)
+        _kernel = np.ones((5,5), np.uint8)
         _mask   = cv2.morphologyEx(_mask,cv2.MORPH_CLOSE, _kernel)
         return _mask
 
 HSV_RANGES = {
-    'pink':     HSVSpace(h_u=180, h_l=140, s_u=255, s_l=100, v_u=255, v_l=150),
-    'yellow':   HSVSpace(h_u=30,  h_l=20,  s_u=255, s_l=100, v_u=255, v_l=150),
-    'red':      HSVSpace(h_u=10,  h_l=0,   s_u=255, s_l=100, v_u=255, v_l=150),  # 或者 h_u=180, h_l=170
-    'green':    HSVSpace(h_u=80,  h_l=50,  s_u=255, s_l=100, v_u=255, v_l=50),
-    'blue':     HSVSpace(h_u=125, h_l=95,  s_u=255, s_l=180, v_u=255, v_l=120),
-    'white':    HSVSpace(h_u=180, h_l=0,   s_u=80,  s_l=0,   v_u=255, v_l=180),
-    'purple':   HSVSpace(h_u=160, h_l=130, s_u=255, s_l=100, v_u=255, v_l=50),
-    'orange':   HSVSpace(h_u=25,  h_l=4,   s_u=255, s_l=100, v_u=255, v_l=150),
+    'red':      HSVSpace(h_u=5,   h_l=0,   s_u=255, s_l=150, v_u=255, v_l=150),  # 或者 h_u=180, h_l=170
+    'orange':   HSVSpace(h_u=30,  h_l=5,   s_u=255, s_l=100, v_u=235, v_l=100),
+    'yellow':   HSVSpace(h_u=36,  h_l=26,  s_u=255, s_l=100, v_u=255, v_l=100),
+    'green':    HSVSpace(h_u=80,  h_l=60,  s_u=255, s_l=100, v_u=255, v_l=50),
+    'blue':     HSVSpace(h_u=120, h_l=105, s_u=255, s_l=100, v_u=255, v_l=100),
+    'purple':   HSVSpace(h_u=170, h_l=150, s_u=255, s_l=100, v_u=255, v_l=100),
+    'pink':     HSVSpace(h_u=175, h_l=145, s_u=255, s_l=100, v_u=255, v_l=100),
+    'white':    HSVSpace(h_u=180, h_l=0,   s_u=70,  s_l=0,   v_u=255, v_l=200),
 }
 
 def convert_raw_img_to_hsv_img(data: Image, cv_bridge: CvBridge):

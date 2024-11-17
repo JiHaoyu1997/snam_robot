@@ -14,8 +14,8 @@ if os.path.exists(filepath):
 else:
     # default values
     LEFT_TURN_R     = 200 
-    LEFT_TURN_L     = 60
-    RIGHT_TURN_R    = 260
+    LEFT_TURN_L     = 40
+    RIGHT_TURN_R    = 280
     RIGHT_TURN_L    = 120
     THUR_L          = 100
     THUR_R          = 220
@@ -24,17 +24,26 @@ else:
 
 def search_buffer_line(cv_hsv_img, buffer_line_hsv: HSVSpace) -> list:
     buffer_line_mask_img = buffer_line_hsv.apply_mask(cv_hsv_img)
-
-    low_bound   = 15
-    upper_bound = 75
-
     _height_center = int(buffer_line_mask_img.shape[0]/2)
     _line_center   = 0
 
-    for i in range(low_bound, upper_bound, 15):
-        # search this part of the picture
-        _line = np.nonzero(buffer_line_mask_img[_height_center + i,:])[0]
+    h = _height_center + 10
+    h_list = []
+    for i in range(0, 40, 10):
         
+        if i == 0:
+            h_list.append(h)
+            continue
+        
+        j = 1 
+        h_list.append(h + j * i)
+        j = -j
+        h_list.append(h + j * i)
+
+    for h in h_list:
+        # search this part of the picture
+        _line = np.nonzero(buffer_line_mask_img[h, 40: ])[0]
+        _line = _line + 40
         if len(_line) > 8 and len(_line) < 50:
             # there are proper amount of points at this part
             _line_center = int(np.mean(_line))        
@@ -51,7 +60,7 @@ def search_line(hsv_image, hsv_space: HSVSpace, top_line = 100) -> Union[int, fl
     # point = np.nonzero(mask[lower_bound : upper_bound, width_center - 50])
     # return len(point[0])
 
-    for i in range(-50, top_line, 50):
+    for i in range(-50, top_line, 25):
         point = np.nonzero(mask[lower_bound : upper_bound, width_center + i])
         # print(len(point[0]))
         if len(point[0]) > 5:
@@ -61,49 +70,47 @@ def search_line(hsv_image, hsv_space: HSVSpace, top_line = 100) -> Union[int, fl
     return 0
 
 def _search_lane_linecenter(_mask, 
-                            _upper_bias: int,
                             _lower_bias: int,
-                            _height_center: int,
+                            _upper_bias: int,
                             _interval: int,
+                            _height_center: int,
                             _width_range_left: int,
                             _width_range_right: int,
                             _isYellow: bool = True,
                         ) -> int:
     
-    for i in range(_lower_bias,_upper_bias,_interval):
+    for i in range(_lower_bias, _upper_bias, _interval):
         point = np.nonzero(_mask[_height_center + i, _width_range_left : _width_range_right])[0] + _width_range_left
-        if len(point) > 8 and len(point) < 45:
-            if _isYellow:         
-                return int(np.mean(point))
-            else:
-                segs =_break_segs(point)
-                if len(segs) <= 1:
-                    return int(np.mean(point))
-                else:
-                    valid_segments = {
-                        key: seg for key, seg in segs.items()
-                        if len(seg) > 8 and len(seg) < 45
-                    }
+        segs = _break_segs(point)
+        valid_segments = {key: seg for key, seg in segs.items() if len(seg) < 35}
+        # print(f"valid_segments: {valid_segments}, {_isYellow}")
+        res = None
 
-                    averages = { key: sum(seg) / len(seg) for key ,seg in valid_segments.items }
-
-                    result = None
-
-                    for key, avg in sorted(averages.items(), key=lambda x: -len(valid_segments[x[0]])):
-                        if avg > 160:
-                            result = avg
-                            break
-                    return result if result is not None else 0
-        else:
+        if len(valid_segments) == 0:
             continue
-    return 0 # nothing found in the end
+
+        if len(valid_segments) == 1:
+            res = int(np.mean(next(iter(valid_segments.values()), [])))  # 获取第一个值或空列表
+            # print(_height_center + i, res, 1, _isYellow)
+            return res
+
+        averages = {key: int(np.mean(seg)) for key, seg in valid_segments.items()}
+        sorted_segments = sorted(averages.items(), key=lambda x: -len(valid_segments[x[0]]))
+        
+        res = next(
+            (avg for key, avg in sorted_segments if (_isYellow and 40 < avg < 160) or (not _isYellow and avg > 160)),
+            None
+        )
+        # print(_height_center + i, res, 2, _isYellow)
+        return res if res is not None else 0
+    return 0 
 
 def search_lane_center(space1:HSVSpace, space2:HSVSpace, hsv_image, is_yellow_left:bool) -> int:
     hsv_image1 = hsv_image
     hsv_image2 = hsv_image
     mask1 = space1.apply_mask(hsv_image1)
     mask2 = space2.apply_mask(hsv_image2)
-    _line_center1 = _search_lane_linecenter(mask1, 50, -20, int(hsv_image.shape[0]/2), 10, 0, int(hsv_image.shape[1]))
+    _line_center1 = _search_lane_linecenter(mask1, -20, 50, 10, int(hsv_image.shape[0]/2), 0, int(hsv_image.shape[1]))
 
     if _line_center1 == 0 and not is_yellow_left:
         # failed to find the center yellow line
@@ -111,16 +118,16 @@ def search_lane_center(space1:HSVSpace, space2:HSVSpace, hsv_image, is_yellow_le
         
     # search the while line, but limited area
     if is_yellow_left:
-        _line_center2 = _search_lane_linecenter(mask2, 50, -20, int(hsv_image.shape[0]/2), 10, _line_center1, int(hsv_image.shape[1]))
+        _line_center2 = _search_lane_linecenter(mask2, -20, 50, 10, int(hsv_image.shape[0]/2), _line_center1, int(hsv_image.shape[1]), False)
     else:
-        _line_center2 = _search_lane_linecenter(mask2, 50, -20, int(hsv_image.shape[0]/2), 10, 0 ,_line_center1)
+        _line_center2 = _search_lane_linecenter(mask2, -20, 50, 10, int(hsv_image.shape[0]/2), 0 ,_line_center1, False)
 
-    if _line_center2 == 0 and is_yellow_left:
+    if is_yellow_left :
         # miss detections 
-        _line_center2 = hsv_image.shape[1]
-
-    if _line_center1 == 0:
-        _line_center1 = hsv_image.shape[1] / 4
+        if _line_center1 == 0:
+            _line_center1 = hsv_image.shape[1] / 4
+        if _line_center2 == 0:
+            _line_center2 = hsv_image.shape[1] * 3 / 4
 
     # print(_line_center1, _line_center2)
     _lane_center = int((_line_center1 + _line_center2)/2)
@@ -297,15 +304,27 @@ def search_inter_guide_line2(hsv_space: HSVSpace, hsv_image, action: int, recurs
         # right turn
         for i in range(90, 140, 10):
             y = i
-            line = np.nonzero(mask[y, 100 : ])[0]
-            line = line + 100
+            line = np.nonzero(mask[y, 80 : ])[0]
+            line = line + 80
             seg = _break_segs(line)
             # print(seg)
             if len(seg) == 1:
                 result = min(max(RIGHT_TURN_L,int(np.mean(seg[0]))),RIGHT_TURN_R)
                 # print(y ,result)
                 return result
-        return int(hsv_image.shape[1] * 3 / 5)
+            
+            elif len(seg) == 2:
+                mean0 = np.mean(seg[0])
+                mean1 = np.mean(seg[1])
+                dist0 = abs(mean0 - 240)
+                dist1 = abs(mean1 - 240)
+                if dist0 < dist1:
+                    res = int(np.mean(seg[0]))
+                else:
+                    res = int(np.mean(seg[1]))
+                result = min(max(RIGHT_TURN_L, res), RIGHT_TURN_R)
+                    
+        return int(hsv_image.shape[1] * 2 / 3)
     
     else: 
         # thur

@@ -189,19 +189,21 @@ class RobotVision:
         )
 
         # Buffer Line HSV - Pink
-        self.buffer_line_hsv = hsv.HSVSpace(h_u=190, h_l=140, s_u=255, s_l=70, v_u=255, v_l=130)
-        self.overexposed_buffer_line_hsv = hsv.HSVSpace(h_u=20, h_l=0, s_u=55, s_l=45, v_u=255, v_l=205)
+        self.buffer_line_hsv = hsv.HSV_RANGES['pink']
+
+        # Overexposed_line_hsv White
+        self.overexposed_line_hsv = hsv.HSV_RANGES['white']
 
         # Ready Line HSV - Blue
         self.ready_line_hsv = hsv.HSV_RANGES['blue']
 
         # Intersection Boundary Line HSV - Green
-        self.inter_boundary_line_hsv = hsv.HSVSpace(h_u=95, h_l=65, s_u=255, s_l=150, v_u=200, v_l=70)
+        self.inter_boundary_line_hsv = hsv.HSV_RANGES['green']
 
-        # guiding lines inside intersections - no dynamic reconfigure
-        self.thur_guide_hsv = hsv.HSVSpace(h_u=125, h_l=95, s_u=255, s_l=180, v_u=255, v_l=120)  
-        self.left_guide_hsv = hsv.HSVSpace(h_u=170, h_l=140, s_u= 255, s_l=130, v_u=255, v_l=120)
-        self.right_guide_hsv = hsv.HSVSpace(h_u=28, h_l=4, s_u= 255, s_l=100, v_u=255, v_l=150)
+        # guiding lines inside intersections
+        self.thur_guide_hsv = hsv.HSV_RANGES['blue'] 
+        self.left_guide_hsv = hsv.HSV_RANGES['purple']
+        self.right_guide_hsv = hsv.HSV_RANGES['orange']
         self.inter_guide_line = [self.thur_guide_hsv, self.left_guide_hsv, self.right_guide_hsv]
 
         # 
@@ -244,8 +246,9 @@ class RobotVision:
         return self.pub_cv_img(cv_img=result_cv_img)
 
     def detect_inter_boundary_line(self, cv_hsv_img: Image):
-        dis2bound = search_pattern.search_line(cv_hsv_img, self.inter_boundary_line_hsv, top_line=0)
+        dis2bound = search_pattern.search_line(cv_hsv_img, self.inter_boundary_line_hsv, top_line=100)
         corss_inter_boundary = dis2bound > 25
+        
         if corss_inter_boundary:
             self.cross_inter_boundary_line_count += 1
             if self.cross_inter_boundary_line_count >= 2 and not self.cross:
@@ -338,13 +341,13 @@ class RobotVision:
         buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.buffer_line_hsv)
 
         if buffer_line_x == None:
-            buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.overexposed_buffer_line_hsv)
-    
+            buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.overexposed_line_hsv)
+
         if buffer_line_x == None:
-            buffer_line_x = int(self.image_width * 2 / 5)
+            buffer_line_x = int(cv_hsv_img.shape[1] / 2)
 
         if buffer_line_y == None:
-            buffer_line_y = int(self.image_height / 2)
+            buffer_line_y = int(cv_hsv_img.shape[0] / 2)
         
         target_x = buffer_line_x         
         cv2.circle(cv_img, (buffer_line_x, buffer_line_y), 5, (255, 100, 0), 5)       
@@ -403,6 +406,9 @@ class RobotVision:
         if self.test_mode == 'hsv':
             self.find_hsv(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
+        elif self.test_mode == 'buffer':
+            self.go_thur_buffer(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+
         elif self.test_mode == 'lane':
             self.go_thur_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
@@ -436,13 +442,36 @@ class RobotVision:
         self.pub_cv_img(cv_img=cv_img)
 
         # Apply the mask and publish the masked image
-        turn_right_line_mask_img = self.center_line_hsv.apply_mask(cv_hsv_img)
-        self.pub_mask_img(mask_img=turn_right_line_mask_img)
+        mask_img = self.center_line_hsv.apply_mask(cv_hsv_img)
+        _line_center1 = search_pattern._search_lane_linecenter(mask_img, -20, 50, 10, int(cv_hsv_img.shape[0]/2), 0, int(cv_hsv_img.shape[1]))
+        self.pub_mask_img(mask_img=mask_img)
 
-        self.find_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+        # self.find_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
         return
     
+    def go_thur_buffer(self, cv_img, cv_hsv_img):
+        dis2orange = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=hsv.HSV_RANGES['orange'])
+        if dis2orange > 30:
+            self.stop = True
+            rospy.loginfo("STOP")
+        
+        dis2green = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.inter_boundary_line_hsv)
+        if dis2green > 30:
+            self.stop = False
+            rospy.loginfo("Start")
+        
+        target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+        v_x, omega_z = self.calculate_velocity(target_x=target_x)
+        self.pub_cmd_vel_from_img(v_x, omega_z)  
+
+        mask_img = self.buffer_line_hsv.apply_mask(cv_hsv_img)
+           
+        self.pub_cv_img(cv_img=cv_img)
+        self.pub_mask_img(mask_img=mask_img)
+        
+        return 
+
     def go_thur_lane(self, cv_img, cv_hsv_img):
         dis2red = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.stop_line_hsv)
         if dis2red > 30:
@@ -480,6 +509,7 @@ class RobotVision:
 
         dis2green = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.inter_boundary_line_hsv)
         if dis2green > 30 and self.stop_timer is None:
+            rospy.loginfo("Start")
             self.stop_timer = rospy.Timer(rospy.Duration(1), self.stop_cb, oneshot=True)
        
         target_x, _ = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=action)
