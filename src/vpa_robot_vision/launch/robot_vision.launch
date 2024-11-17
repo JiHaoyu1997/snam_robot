@@ -13,14 +13,14 @@
         <param name="image_width"                   value="$(arg width)" />
         <param name="image_height"                  value="$(arg height)" />
         <param name="pixel_format"                  value="yuyv" />
+        <!-- Use the configurable argument for camera_info_url -->
+        <param name="camera_info_url"               value="$(arg camera_info_url)"/> 
+        <param name="camera_frame_id"               value="base_camera_link" />
+        <param name="framerate"                     value="$(arg fps)"/>
+        <param name="io_method"                     value="mmap"/>
         <param name="white_balance_auto_preset"     value="7" />
         <param name="scene_mode"                    value="11" />
         <param name="contrast"                      value="50" />
-        <!-- Use the configurable argument for camera_info_url -->
-        <param name="camera_info_url"   value="$(arg camera_info_url)"/> 
-        <param name="camera_frame_id"   value="base_camera_link" />
-        <param name="framerate"         value="$(arg fps)"/>
-        <param name="io_method"         value="mmap"/>
     </node>
 
     <node name="robot_vision" pkg="vpa_robot_vision" type="visual_detector.py" output="screen">

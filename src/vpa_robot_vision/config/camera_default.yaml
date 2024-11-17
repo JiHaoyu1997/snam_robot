@@ -1,7 +1,5 @@
 image_width: 640
 image_height: 480               
-# focus_auto: false
-# white_balance_temperature_auto: false
 camera_name: head_camera
 camera_matrix:
   rows: 3
