@@ -48,5 +48,5 @@
         <param name="v_lower_s"            value="150"/>
     </node>
 
-    <node name="set_v4l2_param" pkg="vpa_robot_vision" type="set_v4l2_params.sh" />
+    <node name="v4l2_setup_node" pkg="vpa_robot_vision" type="setup_v4l2.py" output="screen" />
 </launch>
