@@ -5,10 +5,10 @@ import subprocess
 
 def setup_v4l2():
     commands = [
-        "v4l2-ctl -d /dev/video0 --set-ctrl brightness=128",
-        "v4l2-ctl -d /dev/video0 --set-ctrl contrast=32",
-        "v4l2-ctl -d /dev/video0 --set-ctrl white_balance_temperature_auto=0",
-        "v4l2-ctl -d /dev/video0 --set-ctrl white_balance_temperature=4000",
+        "v4l2-ctl -d /dev/video0 --set-ctrl saturation=50",
+        "v4l2-ctl -d /dev/video0 --set-ctrl contrast=0",
+        "v4l2-ctl -d /dev/video0 --set-ctrl white_balance_auto_preset=3",
+        "v4l2-ctl -d /dev/video0 --set-ctrl scene_mode=11",
     ]
 
     for cmd in commands:
