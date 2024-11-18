@@ -80,30 +80,39 @@ def _search_lane_linecenter(_mask,
                         ) -> int:
     
     for i in range(_lower_bias, _upper_bias, _interval):
+        # 获取当前高度范围的点
         point = np.nonzero(_mask[_height_center + i, _width_range_left : _width_range_right])[0] + _width_range_left
         segs = _break_segs(point)
         valid_segments = {key: seg for key, seg in segs.items() if len(seg) < 35}
-        # print(f"valid_segments: {valid_segments}, {_isYellow}")
-        res = None
 
+        # 如果没有有效段，继续下一次循环
         if len(valid_segments) == 0:
             continue
 
+        # 如果只有一个有效段
         if len(valid_segments) == 1:
-            res = int(np.mean(next(iter(valid_segments.values()), [])))  # 获取第一个值或空列表
+            res = int(np.mean(next(iter(valid_segments.values()))))  # 获取第一个值
             print(_height_center + i, res, 1, _isYellow)
-            return res
+            return res  # 可以直接返回
 
+        # 处理多个有效段
         averages = {key: int(np.mean(seg)) for key, seg in valid_segments.items()}
-        sorted_segments = sorted(averages.items(), key=lambda x: -len(valid_segments[x[0]]))
-        
+        sorted_segments = sorted(averages.items(), key=lambda x: -len(valid_segments[x[0]]))  # 按段长度排序
+
+        # 查找符合条件的结果
         res = next(
             (avg for key, avg in sorted_segments if (_isYellow and 40 < avg < 160) or (not _isYellow and avg > 160)),
             None
         )
-        print(_height_center + i, res, 2, _isYellow)
-        return res if res is not None else 0
-    return 0 
+
+        # 如果找到符合条件的结果，打印并返回
+        if res is not None:
+            print(_height_center + i, res, 2, _isYellow)
+            return res
+
+    # 如果循环结束还没有找到结果，统一返回 0
+    return 0
+
 
 def search_lane_center(space1:HSVSpace, space2:HSVSpace, hsv_image, is_yellow_left:bool) -> int:
     hsv_image1 = hsv_image
