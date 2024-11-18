@@ -92,7 +92,7 @@ def _search_lane_linecenter(_mask,
         # 如果只有一个有效段
         if len(valid_segments) == 1:
             res = int(np.mean(next(iter(valid_segments.values()))))  # 获取第一个值
-            print(_height_center + i, res, 1, _isYellow)
+            # print(_height_center + i, res, 1, _isYellow)
             return res  # 可以直接返回
 
         # 处理多个有效段
@@ -107,10 +107,11 @@ def _search_lane_linecenter(_mask,
 
         # 如果找到符合条件的结果，打印并返回
         if res is not None:
-            print(_height_center + i, res, 2, _isYellow)
+            # print(_height_center + i, res, 2, _isYellow)
             return res
 
     # 如果循环结束还没有找到结果，统一返回 0
+    # print(_height_center + i, res, 3, _isYellow)
     return 0
 
 
