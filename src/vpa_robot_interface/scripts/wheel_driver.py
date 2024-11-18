@@ -130,7 +130,7 @@ class WheelDriverNode:
             self.kp     = kp
             self.ki     = ki
         else:
-            self.kp     = 0.08
+            self.kp     = 0.1
             self.ki     = 0.01
 
         self.omega_controller_left  = PIController(ki=self.ki,kp=self.kp)
