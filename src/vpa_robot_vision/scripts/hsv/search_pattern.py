@@ -64,6 +64,7 @@ def search_line(hsv_image, hsv_space: HSVSpace, top_line = 100) -> Union[int, fl
         point = np.nonzero(mask[lower_bound : upper_bound, width_center + i])
         # print(len(point[0]))
         if len(point[0]) > 5:
+            print(np.mean(point[0]), width_center + i)
             return len(point[0])
         else:
             continue # no valid result found
