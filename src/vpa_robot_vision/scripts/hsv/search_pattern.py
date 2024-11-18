@@ -56,7 +56,6 @@ def search_line(hsv_image, hsv_space: HSVSpace, top_line = 100) -> Union[int, fl
     lower_bound = int(hsv_image.shape[0]/2)
     upper_bound = 2 * lower_bound
     width_center = int(hsv_image.shape[1]/2)
-    print(lower_bound, upper_bound, width_center)
 
     # point = np.nonzero(mask[lower_bound : upper_bound, width_center - 50])
     # return len(point[0])
@@ -65,7 +64,6 @@ def search_line(hsv_image, hsv_space: HSVSpace, top_line = 100) -> Union[int, fl
         point = np.nonzero(mask[lower_bound : upper_bound, width_center + i])
         # print(len(point[0]))
         if len(point[0]) > 5:
-            print(point[0], width_center + i)
             return len(point[0])
         else:
             continue # no valid result found
