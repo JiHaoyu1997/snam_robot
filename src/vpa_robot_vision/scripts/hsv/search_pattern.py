@@ -44,7 +44,7 @@ def search_buffer_line(cv_hsv_img, buffer_line_hsv: HSVSpace) -> list:
         # search this part of the picture
         _line = np.nonzero(buffer_line_mask_img[h, 40: ])[0]
         _line = _line + 40
-        if len(_line) > 8 and len(_line) < 50:
+        if len(_line) > 8 and len(_line) < 35:
             # there are proper amount of points at this part
             _line_center = int(np.mean(_line))        
             return _line_center, _height_center + i
@@ -92,7 +92,7 @@ def _search_lane_linecenter(_mask,
         # 如果只有一个有效段
         if len(valid_segments) == 1:
             res = int(np.mean(next(iter(valid_segments.values()))))  # 获取第一个值
-            # print(_height_center + i, res, 1, _isYellow)
+            print(_height_center + i, res, 1, _isYellow)
             return res  # 可以直接返回
 
         # 处理多个有效段
@@ -107,7 +107,7 @@ def _search_lane_linecenter(_mask,
 
         # 如果找到符合条件的结果，打印并返回
         if res is not None:
-            # print(_height_center + i, res, 2, _isYellow)
+            print(_height_center + i, res, 2, _isYellow)
             return res
 
     # 如果循环结束还没有找到结果，统一返回 0

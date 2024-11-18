@@ -29,7 +29,7 @@
         <param name="h_upper_1"            value="36"/>
         <param name="h_lower_1"            value="26"/>
         <param name="s_upper_1"            value="255"/>
-        <param name="s_lower_1"            value="100"/>
+        <param name="s_lower_1"            value="125"/>
         <param name="v_upper_1"            value="255"/>
         <param name="v_lower_1"            value="100"/>
         <!-- lane detecting - white lane -->

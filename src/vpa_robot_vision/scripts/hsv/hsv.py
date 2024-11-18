@@ -32,12 +32,13 @@ class HSVSpace:
 HSV_RANGES = {
     'red':      HSVSpace(h_u=8,   h_l=0,   s_u=255, s_l=150, v_u=255, v_l=150),  # 或者 h_u=180, h_l=170
     'orange':   HSVSpace(h_u=30,  h_l=5,   s_u=255, s_l=100, v_u=235, v_l=100),
-    'yellow':   HSVSpace(h_u=36,  h_l=26,  s_u=255, s_l=100, v_u=255, v_l=100),
-    'green':    HSVSpace(h_u=95,  h_l=65,  s_u=255, s_l=100, v_u=255, v_l=100),
+    'yellow':   HSVSpace(h_u=36,  h_l=26,  s_u=255, s_l=125, v_u=255, v_l=100),
+    'green':    HSVSpace(h_u=95,  h_l=65,  s_u=255, s_l=100, v_u=255, v_l=90),
     'blue':     HSVSpace(h_u=120, h_l=105, s_u=255, s_l=100, v_u=255, v_l=100),
     'purple':   HSVSpace(h_u=165, h_l=140, s_u=255, s_l=100, v_u=255, v_l=100),
-    'pink':     HSVSpace(h_u=180, h_l=150, s_u=255, s_l=80, v_u=255, v_l=100),
-    'white':    HSVSpace(h_u=180, h_l=0,   s_u=70,  s_l=0,   v_u=255, v_l=200),
+    'pink':     HSVSpace(h_u=180, h_l=150, s_u=255, s_l=80,  v_u=255, v_l=100),
+    'white':    HSVSpace(h_u=180, h_l=0,   s_u=80,  s_l=0,   v_u=255, v_l=200),
+    'expos':    HSVSpace(h_u=40,  h_l=0,   s_u=100, s_l=0,   v_u=255, v_l=200),
 }
 
 def convert_raw_img_to_hsv_img(data: Image, cv_bridge: CvBridge):

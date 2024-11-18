@@ -192,7 +192,7 @@ class RobotVision:
         self.buffer_line_hsv = hsv.HSV_RANGES['pink']
 
         # Overexposed_line_hsv White
-        self.overexposed_line_hsv = hsv.HSV_RANGES['white']
+        self.overexposed_line_hsv = hsv.HSV_RANGES['expos']
 
         # Ready Line HSV - Blue
         self.ready_line_hsv = hsv.HSV_RANGES['blue']
@@ -451,12 +451,14 @@ class RobotVision:
         return
     
     def go_thur_buffer(self, cv_img, cv_hsv_img):
-        dis2orange = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=hsv.HSV_RANGES['orange'])
-        if dis2orange > 30:
+        dis2blue = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=hsv.HSV_RANGES['blue'])
+        print(dis2blue)
+        if dis2blue > 30:
             self.stop = True
             rospy.loginfo("STOP")
         
         dis2green = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.inter_boundary_line_hsv)
+        print(dis2green)
         if dis2green > 30:
             self.stop = False
             rospy.loginfo("Start")
