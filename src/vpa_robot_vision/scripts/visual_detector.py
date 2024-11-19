@@ -227,8 +227,10 @@ class RobotVision:
         
         """Step3 Init"""
         if self.curr_route == [0, 0, 0]:
-            rospy.loginfo("Not Start Tracking")
             return
+        else:
+            rospy.loginfo("Start Tracking")
+
 
         """Step4 BOUNDARY LINE DETECTOR"""
         self.detect_inter_boundary_line(cv_hsv_img=cv_hsv_img) 
@@ -243,7 +245,10 @@ class RobotVision:
         # since the cmd_vel is sending on a higher frequency than ACC msg, we estimate the distance to further avoid collsions
         self.pub_cmd_vel_from_img(v_x, omega_z)
 
-        return self.pub_cv_img(cv_img=result_cv_img)
+        self.pub_cv_img(cv_img=result_cv_img)
+        mask_img = self.right_guide_hsv.apply_mask(cv_hsv_img)
+        self.pub_mask_img(mask_img=mask_img)  
+        return
 
     def detect_inter_boundary_line(self, cv_hsv_img: Image):
         dis2bound = search_pattern.search_line(cv_hsv_img, self.inter_boundary_line_hsv, top_line=100)
