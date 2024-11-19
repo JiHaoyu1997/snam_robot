@@ -192,7 +192,7 @@ class RobotVision:
         self.buffer_line_hsv = hsv.HSV_RANGES['pink']
 
         # Overexposed_line_hsv White
-        self.overexposed_line_hsv = hsv.HSV_RANGES['white']
+        self.overexposed_line_hsv = hsv.HSV_RANGES['expos']
 
         # Ready Line HSV - Blue
         self.ready_line_hsv = hsv.HSV_RANGES['blue']
