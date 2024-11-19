@@ -57,42 +57,49 @@ def search_line(hsv_image, hsv_space: HSVSpace, top_line = 100) -> Union[int, fl
     return 0
 
 def _search_lane_linecenter(_mask, 
-                            _upper_bias: int,
                             _lower_bias: int,
-                            _height_center: int,
+                            _upper_bias: int,
                             _interval: int,
+                            _height_center: int,
                             _width_range_left: int,
                             _width_range_right: int,
                             _isYellow: bool = True,
                         ) -> int:
     
-    for i in range(_lower_bias,_upper_bias,_interval):
+    for i in range(_lower_bias, _upper_bias, _interval):
+        # 获取当前高度范围的点
         point = np.nonzero(_mask[_height_center + i, _width_range_left : _width_range_right])[0] + _width_range_left
-        if len(point) > 8 and len(point) < 45:
-            if _isYellow:         
-                return int(np.mean(point))
-            else:
-                segs =_break_segs(point)
-                if len(segs) <= 1:
-                    return int(np.mean(point))
-                else:
-                    valid_segments = {
-                        key: seg for key, seg in segs.items()
-                        if len(seg) > 8 and len(seg) < 45
-                    }
+        segs = _break_segs(point)
+        valid_segments = {key: seg for key, seg in segs.items() if len(seg) < 35}
 
-                    averages = { key: sum(seg) / len(seg) for key ,seg in valid_segments.items }
-
-                    result = None
-
-                    for key, avg in sorted(averages.items(), key=lambda x: -len(valid_segments[x[0]])):
-                        if avg > 160:
-                            result = avg
-                            break
-                    return result if result is not None else 0
-        else:
+        # 如果没有有效段，继续下一次循环
+        if len(valid_segments) == 0:
             continue
-    return 0 # nothing found in the end
+
+        # 如果只有一个有效段
+        if len(valid_segments) == 1:
+            res = int(np.mean(next(iter(valid_segments.values()))))  # 获取第一个值
+            # print(_height_center + i, res, 1, _isYellow)
+            return res  # 可以直接返回
+
+        # 处理多个有效段
+        averages = {key: int(np.mean(seg)) for key, seg in valid_segments.items()}
+        sorted_segments = sorted(averages.items(), key=lambda x: -len(valid_segments[x[0]]))  # 按段长度排序
+
+        # 查找符合条件的结果
+        res = next(
+            (avg for key, avg in sorted_segments if (_isYellow and 40 < avg < 160) or (not _isYellow and avg > 160)),
+            None
+        )
+
+        # 如果找到符合条件的结果，打印并返回
+        if res is not None:
+            # print(_height_center + i, res, 2, _isYellow)
+            return res
+
+    # 如果循环结束还没有找到结果，统一返回 0
+    # print(_height_center + i, res, 3, _isYellow)
+    return 0
 
 def search_lane_center(space1:HSVSpace, space2:HSVSpace, hsv_image, is_yellow_left:bool) -> int:
     hsv_image1 = hsv_image
