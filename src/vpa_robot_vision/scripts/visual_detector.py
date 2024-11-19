@@ -194,9 +194,6 @@ class RobotVision:
         # Overexposed_line_hsv White
         self.overexposed_line_hsv = hsv.HSV_RANGES['expos']
 
-        # Ready Line HSV - Blue
-        self.ready_line_hsv = hsv.HSV_RANGES['blue']
-
         # Intersection Boundary Line HSV - Green
         self.inter_boundary_line_hsv = hsv.HSV_RANGES['green']
 
@@ -242,7 +239,9 @@ class RobotVision:
         """Step7 PUB TWIST TO DECISION MAKER"""
         # since the cmd_vel is sending on a higher frequency than ACC msg, we estimate the distance to further avoid collsions
         self.pub_cmd_vel_from_img(v_x, omega_z)
-
+        
+        mask_img = self.inter_boundary_line_hsv.apply_mask(cv_hsv_img)
+        self.pub_mask_img(mask_img=mask_img)
         return self.pub_cv_img(cv_img=result_cv_img)
 
     def detect_inter_boundary_line(self, cv_hsv_img: Image):
@@ -275,7 +274,7 @@ class RobotVision:
         # NO TASK ==> STOP AT READY_LINE 
         if self.curr_route == [2, 6, 6]:
             self.current_zone = Zone.BUFFER_AREA
-            dis2ready = search_pattern.search_line(cv_hsv_img, self.ready_line_hsv)
+            dis2ready = search_pattern.search_line(cv_hsv_img, self.thur_guide_hsv)
             if dis2ready > 25:
                 self.stop = True
                 return target_x, cv_img
