@@ -444,8 +444,8 @@ class RobotVision:
         turn_right_line_mask_img = self.center_line_hsv.apply_mask(cv_hsv_img)
         self.pub_mask_img(mask_img=turn_right_line_mask_img)
 
-        self.find_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
-
+        dis2searchline = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.inter_boundary_line_hsv)
+        print(dis2searchline)
         return
     
     def go_thur_buffer(self, cv_img, cv_hsv_img):
