@@ -29,9 +29,6 @@ class TaskManager:
             'traction_encdors': False,
         }
 
-        # 
-        # self.curr_local_brake_status = True
-
         # Task List
         self.task_list = []
 
@@ -45,7 +42,6 @@ class TaskManager:
         self.update_task_lock = False
 
         # Publishers
-        # self.local_brake_pub = rospy.Publisher('local_brake', Bool, queue_size=1)
         self.curr_route_pub = rospy.Publisher('curr_route', Int8MultiArray, queue_size=1)
 
         # Subscribers
@@ -63,9 +59,6 @@ class TaskManager:
 
         # Start the task manager
         self.status_init()
-        
-        # Publish local brake status
-        # self.timer = rospy.Timer(rospy.Duration(1), self.pub_local_brake_status)
 
         # Publish initial route
         self.timer = rospy.Timer(rospy.Duration(1 / 10), self.pub_curr_route)
@@ -91,9 +84,7 @@ class TaskManager:
             
             # Update the 1st route 
             self.curr_route = [6, self.task_list[self.curr_task_index], self.task_list[self.curr_task_index + 1]]
-
-            # Release local Brake
-            # self.curr_local_brake_status = False
+            
         else:
             rospy.logwarn("%s: Task Manager initialization failed", self.robot_name)
 
@@ -146,10 +137,6 @@ class TaskManager:
         
         elif not cross_msg.cross:
             self.update_task_lock = False
-
-    # def pub_local_brake_status(self, event):
-    #     brake_msg = Bool(data=self.curr_local_brake_status)
-    #     self.local_brake_pub.publish(brake_msg)
 
     def pub_curr_route(self, event):
         route_msg = Int8MultiArray(data=self.curr_route)

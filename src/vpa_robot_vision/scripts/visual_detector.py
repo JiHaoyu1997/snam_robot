@@ -204,11 +204,12 @@ class RobotVision:
         self.thur_guide_hsv = hsv.HSV_RANGES['blue'] 
         self.left_guide_hsv = hsv.HSV_RANGES['purple']
         self.right_guide_hsv = hsv.HSV_RANGES['orange']
-        self.inter_guide_line = [self.thur_guide_hsv, self.left_guide_hsv, self.right_guide_hsv]
 
         # 
-        self._acc_aux_hsv = hsv.HSVSpace(150, 110, 180, 100, 255, 120)       
+        self._acc_aux_hsv = hsv.HSV_RANGES['red']      
 
+        self.inter_guide_line = [self.thur_guide_hsv, self.left_guide_hsv, self.right_guide_hsv]
+    
     def curr_route_sub_cb(self, route_msg: Int8MultiArray):
         if route_msg:
             self.curr_route = [route for route in route_msg.data]
