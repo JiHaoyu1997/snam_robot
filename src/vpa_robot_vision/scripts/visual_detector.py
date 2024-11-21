@@ -195,7 +195,7 @@ class RobotVision:
         self.buffer_line_hsv = hsv.HSV_RANGES['pink']
 
         # Overexposed_line_hsv White
-        self.overexposed_line_hsv = hsv.HSV_RANGES['white']
+        self.overexposed_line_hsv = hsv.HSV_RANGES['expos']
 
         # Ready Line HSV - Blue
         self.ready_line_hsv = hsv.HSV_RANGES['blue']
@@ -297,8 +297,7 @@ class RobotVision:
         # DEFAULT FIRST ROUTE [6, 2, X]
         elif self.curr_route[0] == 6 and self.curr_route[1] == 2:
             self.current_zone = Zone.INTERSECTION
-            dis2red = search_pattern.search_stop_line(cv_hsv_img, self.stop_line_hsv, self.stop_line_hsv2)
-            print(dis2red)
+            dis2red = search_pattern.search_line(cv_hsv_img, self.stop_line_hsv)
             if dis2red > 25:
                 self.enter_conflict_zone = True
 
@@ -338,8 +337,8 @@ class RobotVision:
         return target_x, cv_img
 
     def detect_conflict_boundary_line(self, cv_hsv_img):
-        dis2conflict = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.stop_line_hsv)
-        # print(dis2conflict)
+        dis2conflict = search_pattern.search_stop_line(cv_hsv_img, self.stop_line_hsv, self.stop_line_hsv2)
+        print(dis2conflict)
         if dis2conflict > 30:
             self.enter_conflict_zone = True
     
