@@ -69,6 +69,26 @@ def search_line(hsv_image, hsv_space: HSVSpace, top_line = 100) -> Union[int, fl
 
     return max_points
 
+def search_stop_line(hsv_image, hsv_space1: HSVSpace, hsv_space2: HSVSpace) -> Union[int, float]:
+    mask1 = hsv_space1.apply_mask(hsv_image)
+    mask2 = hsv_space2.apply_mask(hsv_image)
+    mask = mask1 + mask2
+
+    lower_bound = int(hsv_image.shape[0]/2)
+    upper_bound = int(hsv_image.shape[0])
+    width_center = int(hsv_image.shape[1]/2)
+
+    max_points = 0
+
+    for i in range(-50, 100, 50):
+        point = np.nonzero(mask[lower_bound : upper_bound, width_center + i])
+        num_points = len(point[0])    
+
+        if num_points > 5:
+            max_points = max(max_points, num_points)
+
+    return max_points
+
 def _search_lane_linecenter(_mask, 
                             _lower_bias: int,
                             _upper_bias: int,

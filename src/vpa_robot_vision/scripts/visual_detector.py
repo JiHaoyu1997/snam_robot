@@ -188,6 +188,9 @@ class RobotVision:
             v_l=int(rospy.get_param('~v_lower_s', 0))
         )
 
+        # 
+        self.stop_line_hsv2 = hsv.HSV_RANGES['red2'] 
+
         # Buffer Line HSV - Pink
         self.buffer_line_hsv = hsv.HSV_RANGES['pink']
 
@@ -294,7 +297,8 @@ class RobotVision:
         # DEFAULT FIRST ROUTE [6, 2, X]
         elif self.curr_route[0] == 6 and self.curr_route[1] == 2:
             self.current_zone = Zone.INTERSECTION
-            dis2red = search_pattern.search_line(cv_hsv_img, self.stop_line_hsv)
+            dis2red = search_pattern.search_stop_line(cv_hsv_img, self.stop_line_hsv, self.stop_line_hsv2)
+            print(dis2red)
             if dis2red > 25:
                 self.enter_conflict_zone = True
 
