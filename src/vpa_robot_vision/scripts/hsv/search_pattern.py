@@ -343,7 +343,7 @@ def search_inter_guide_line2(hsv_space: HSVSpace, hsv_image, action: int, recurs
                     res = int(np.mean(seg[1]))
                 result = min(max(RIGHT_TURN_L, res), RIGHT_TURN_R)
                     
-        return int(hsv_image.shape[1] * 0.75)
+        return int(hsv_image.shape[1] * 0.8)
     
     else: 
         # thur
