@@ -14,7 +14,7 @@ if os.path.exists(filepath):
 else:
     # default values
     LEFT_TURN_R     = 200 
-    LEFT_TURN_L     = 60
+    LEFT_TURN_L     = 40
     RIGHT_TURN_R    = 280
     RIGHT_TURN_L    = 120
     THUR_L          = 100
@@ -53,21 +53,21 @@ def search_buffer_line(cv_hsv_img, buffer_line_hsv: HSVSpace) -> list:
     
 def search_line(hsv_image, hsv_space: HSVSpace, top_line = 100) -> Union[int, float]:
     mask = hsv_space.apply_mask(hsv_image)
+
     lower_bound = int(hsv_image.shape[0]/2)
-    upper_bound = 2 * lower_bound
+    upper_bound = int(hsv_image.shape[0])
     width_center = int(hsv_image.shape[1]/2)
 
-    # point = np.nonzero(mask[lower_bound : upper_bound, width_center - 50])
-    # return len(point[0])
+    max_points = 0
 
-    for i in range(-50, top_line, 25):
+    for i in range(-50, top_line, 50):
         point = np.nonzero(mask[lower_bound : upper_bound, width_center + i])
-        # print(len(point[0]))
-        if len(point[0]) > 5:
-            return len(point[0])
-        else:
-            continue # no valid result found
-    return 0
+        num_points = len(point[0])    
+
+        if num_points > 5:
+            max_points = max(max_points, num_points)
+
+    return max_points
 
 def _search_lane_linecenter(_mask, 
                             _lower_bias: int,
@@ -83,27 +83,26 @@ def _search_lane_linecenter(_mask,
         point = np.nonzero(_mask[_height_center + i, _width_range_left : _width_range_right])[0] + _width_range_left
         segs = _break_segs(point)
         valid_segments = {key: seg for key, seg in segs.items() if len(seg) < 35}
-        # print(f"valid_segments: {valid_segments}, {_isYellow}")
-        res = None
 
         if len(valid_segments) == 0:
             continue
 
         if len(valid_segments) == 1:
-            res = int(np.mean(next(iter(valid_segments.values()), [])))  # 获取第一个值或空列表
-            print(_height_center + i, res, 1, _isYellow)
+            res = int(np.mean(next(iter(valid_segments.values()))))
             return res
 
         averages = {key: int(np.mean(seg)) for key, seg in valid_segments.items()}
         sorted_segments = sorted(averages.items(), key=lambda x: -len(valid_segments[x[0]]))
-        
+
         res = next(
             (avg for key, avg in sorted_segments if (_isYellow and 40 < avg < 160) or (not _isYellow and avg > 160)),
             None
         )
-        print(_height_center + i, res, 2, _isYellow)
-        return res if res is not None else 0
-    return 0 
+
+        if res is not None:
+            return res
+
+    return 0
 
 def search_lane_center(space1:HSVSpace, space2:HSVSpace, hsv_image, is_yellow_left:bool) -> int:
     hsv_image1 = hsv_image
