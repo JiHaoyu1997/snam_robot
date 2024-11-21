@@ -123,4 +123,4 @@ export ROS_IP=`hostname -I | awk '{print $1}'`
 export ROS_HOSTNAME=`hostname -I | awk '{print $1}'`
 # export ROS_MASTER_URI=http://labpc:11311
 export ROS_MASTER_URI=http://192.168.1.19:11311
-export robot_name=vivian
+export robot_name=luna
