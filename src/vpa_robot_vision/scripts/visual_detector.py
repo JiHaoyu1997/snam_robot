@@ -250,20 +250,28 @@ class RobotVision:
             self.cross_inter_boundary_line_count += 1
             if self.cross_inter_boundary_line_count >= 2:
                 if self.boundary_detect_req_lock.acquire(blocking=False):
+                    print("Lock acquired successfully")
                     with self.boundary_detect_req_lock:
                         self.enter_conflict_zone = False
                         new_route = self.req_new_route()
+                        print(f"New route: {new_route}")
                         new_route = [route for route in new_route]
                         self.curr_route = new_route
-                        threading.Thread(target=self.req_update_new_route, args=(new_route,)).start()  
+                        thread = threading.Thread(target=self.req_update_new_route, args=(new_route,))
+                        print("Starting new thread...")
+                        thread.start()
+                        thread.join()  # 等待线程完成
+                        print("Thread completed.")
+                else:
+                    print("Failed to acquire lock")
         else:
             self.cross_inter_boundary_line_count = 0
             if self.boundary_detect_req_lock.locked():
                 self.boundary_detect_req_lock.release()
-        
-        print(self.boundary_detect_req_lock.locked())
+                print(f"Lock released: {self.boundary_detect_req_lock.locked()}")
 
         return
+
 
     def req_new_route(self):
         try:
