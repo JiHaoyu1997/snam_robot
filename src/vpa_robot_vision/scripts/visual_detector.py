@@ -116,7 +116,7 @@ class RobotVision:
         self.cross_inter_boundary_line_count = 0
 
         # Boundary Crossing flag
-        self.boundary_detect_req_lock = False
+        self.boundary_detect_req_lock = threading.Lock()
 
         # Enter Conflict Zone flag
         self.enter_conflict_zone = False
@@ -248,16 +248,18 @@ class RobotVision:
 
         if cross_inter_boundary:
             self.cross_inter_boundary_line_count += 1
-            if self.cross_inter_boundary_line_count >= 2 and not self.boundary_detect_req_lock:
-                self.boundary_detect_req_lock = True
-                self.enter_conflict_zone = False
-                print(self.cross_inter_boundary_line_count)
-                new_route = self.req_new_route()
-                new_route = [route for route in new_route]
-                self.curr_route = new_route
-                threading.Thread(target=self.req_update_new_route, args=(new_route,)).start()  
+            if self.cross_inter_boundary_line_count >= 2:
+                if self.boundary_detect_req_lock.acquire(blocking=False):
+                    with self.boundary_detect_req_lock:
+                        self.enter_conflict_zone = False
+                        new_route = self.req_new_route()
+                        new_route = [route for route in new_route]
+                        self.curr_route = new_route
+                        threading.Thread(target=self.req_update_new_route, args=(new_route,)).start()  
         else:
             self.cross_inter_boundary_line_count = 0
+            if self.boundary_detect_req_lock.locked():
+                self.boundary_detect_req_lock.release()
 
         return
 
@@ -285,9 +287,6 @@ class RobotVision:
                 rospy.logerr(resp.message)
         except rospy.ServiceException as e:
             rospy.logerr('%s: Request update inter info service call failed: %s', self.robot_name, e)
-        finally:
-            self.boundary_detect_req_lock = False
-
 
     def find_and_draw_target(self, cv_img, cv_hsv_img):
         rospy.loginfo(f"current route is {self.curr_route}")
