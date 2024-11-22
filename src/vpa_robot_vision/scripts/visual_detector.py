@@ -260,6 +260,8 @@ class RobotVision:
             self.cross_inter_boundary_line_count = 0
             if self.boundary_detect_req_lock.locked():
                 self.boundary_detect_req_lock.release()
+        
+        print(self.boundary_detect_req_lock.locked())
 
         return
 
