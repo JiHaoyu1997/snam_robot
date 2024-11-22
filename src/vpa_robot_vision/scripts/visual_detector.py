@@ -253,6 +253,7 @@ class RobotVision:
                 self.boundary_detect_req_lock = True
                 self.enter_conflict_zone = False
                 new_route = self.req_new_route()
+                new_route = [route for route in new_route]
                 self.curr_route = new_route
                 threading.Thread(target=self.req_update_new_route, args=(new_route,)).start()  
         else:
@@ -322,7 +323,6 @@ class RobotVision:
                     target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
                 except Exception as e:
                     print(e)
-                    print(f"current route is {self.curr_route}")
 
             else:
                 rospy.loginfo(f"Enter Conflict Zone")

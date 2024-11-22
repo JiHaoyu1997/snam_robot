@@ -1,4 +1,4 @@
 int8[] new_route
 ---
 bool success
-string messasge
+string message

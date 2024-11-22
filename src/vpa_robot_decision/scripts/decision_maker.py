@@ -80,6 +80,7 @@ class RobotDecision:
     def update_route_cb(self, req: NewRouteRequest):
         """Callback for updating route if conditions are met."""
         new_route = req.new_route
+        print(f"{self.node_name}: new_route: {new_route}")
         if len(new_route) != 3:
             rospy.logerr("Route message does not contain 3 elements.")
             return NewRouteResponse(success=False, message='Update Error')
