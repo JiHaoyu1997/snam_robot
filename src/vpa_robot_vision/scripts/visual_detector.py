@@ -251,6 +251,7 @@ class RobotVision:
             if self.cross_inter_boundary_line_count >= 2 and not self.boundary_detect_req_lock:
                 self.boundary_detect_req_lock = True
                 self.enter_conflict_zone = False
+                print(self.cross_inter_boundary_line_count)
                 new_route = self.req_new_route()
                 new_route = [route for route in new_route]
                 self.curr_route = new_route
