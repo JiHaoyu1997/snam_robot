@@ -5,14 +5,14 @@ from typing import List
 
 from robot.robot import find_id_by_robot_name
 
-from std_msgs.msg import Int8MultiArray
 from geometry_msgs.msg import Twist
 
 from vpa_robot_decision.msg import RobotInfo as RobotInfoMsg
 from vpa_robot_decision.msg import InterInfo as InterInfoMsg
 
 from vpa_robot_decision.srv import InterMng, InterMngRequest, InterMngResponse
-from vpa_robot_task.srv import ReadySignal, ReadySignalRequest, ReadySignalResponse
+from vpa_robot_decision.srv import NewRoute, NewRouteRequest, NewRouteResponse
+from vpa_robot_task.srv import ReadySignal, ReadySignalResponse
 
 class RobotInfo:
     def __init__(self, name="", id=0, a=0.0, v=0.0, p=0.0, enter_time=0.0, arrive_cp_time=0.0, exit_time=0.0):
@@ -32,6 +32,7 @@ class InterInfo:
         self.robot_info = []  # List of RobotInfo instances
 
 class RobotDecision:
+    # Initialization
     def __init__(self) -> None:
         # Initialize ROS node
         rospy.init_node('decision_maker')
@@ -53,15 +54,18 @@ class RobotDecision:
         self.cmd_vel_pub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
 
         # Subscribers
-        self.curr_route_sub = rospy.Subscriber('curr_route', Int8MultiArray, self.curr_route_cb)        
-        self.inter_info_sub = rospy.Subscriber(self.local_inter_info_topic, InterInfoMsg, self.inter_info_cb)
         self.cmd_vel_from_img_sub = rospy.Subscriber('cmd_vel_from_img', Twist, self.cmd_vel_from_img_cb)
+        self.inter_info_sub = rospy.Subscriber(self.local_inter_info_topic, InterInfoMsg, self.inter_info_cb)
 
-        # Service client
+        # Servers
+        self.update_route_server = rospy.Service('update_route_srv', NewRoute, self.update_route_cb)
+
+        # Clients
         self.inter_mng_client = rospy.ServiceProxy('/inter_mng_srv', InterMng)
 
         self.send_ready_signal()
     
+    # Methods
     def send_ready_signal(self):
         rospy.wait_for_service('ready_signal')
         try:
@@ -69,37 +73,27 @@ class RobotDecision:
             response: ReadySignalResponse = ready_signal_client.call(self.node_name)
             if response.success:
                 rospy.loginfo(f"{self.robot_name}: Decision Maker is Online")
+                self.curr_route = [6, 6, 2]   
         except rospy.ServiceException as e:
             rospy.logerr(f"service call failed: {e}")
 
-    def curr_route_cb(self, route_msg: Int8MultiArray):
-        """Callback for the current route, updates route if conditions are met."""
-        if len(route_msg.data) != 3:
+    def update_route_cb(self, req: NewRouteRequest):
+        """Callback for updating route if conditions are met."""
+        new_route = req.new_route
+        if len(new_route) != 3:
             rospy.logerr("Route message does not contain 3 elements.")
-            return
-        
-        new_route = [route_msg.data[0], route_msg.data[1], route_msg.data[2]]
-        # rospy.loginfo(f"decision maker curr_route: {self.curr_route}")
-        # rospy.loginfo(f"decision maker new_route: {new_route}")
-
-        # 
-        if self.curr_route == [0, 0, 0]:
-            self.curr_route = new_route
-            return
-        
-        # 
-        if self.curr_route == new_route:
-            return
-        
-        elif self.curr_route[1] == new_route[0] and self.curr_route[2] == new_route[1]:  # Valid route update
+            return NewRouteResponse(success=False, message='Update Error')
+             
+        if self.curr_route[1] == new_route[0] and self.curr_route[2] == new_route[1]:
             last_inter_id = new_route[0]
             curr_inter_id = new_route[1]
             self.update_global_inter_info(last_inter_id, curr_inter_id)
             self.curr_route = new_route
             self.local_inter_id = curr_inter_id
             self.update_inter_sub()
+            return NewRouteResponse(success=True, message=f"{self.robot_name} updated new inter info")
         else:
-            rospy.logerr(f"Route update sequence mismatch: {self.curr_route} and {new_route}.")
+            rospy.logerr(f"Route update sequence mismatch: {self.curr_route} and {new_route}.")       
 
     def update_global_inter_info(self, last_inter_id, curr_inter_id):
         """Update global intersection info by calling the service."""

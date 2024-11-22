@@ -2,8 +2,7 @@
 
 import rospy
 
-import time
-import numpy as np
+import threading
 from enum import Enum
 
 
@@ -19,13 +18,14 @@ from dynamic_reconfigure.server import Server
 from vpa_robot_vision.cfg import color_hsvConfig
 
 # Msg
-from std_msgs.msg import Int8MultiArray
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Image 
 
 from vpa_robot_vision.msg import CrossInfo
 
+from vpa_robot_task.srv import AssignRoute, AssignRouteRequest, AssignRouteResponse
 from vpa_robot_task.srv import ReadySignal, ReadySignalResponse
+from vpa_robot_decision.srv import NewRoute, NewRouteRequest, NewRouteResponse
 
 class Zone(Enum):
     BUFFER_AREA     = 0 # this is queuing area outside the intersections 
@@ -69,29 +69,31 @@ class RobotVision:
         # std_msgs img ==> ros img
         self.cv_bridge = CvBridge()
 
-        # init hsv color spaces for selecting 
-        self.color_space_init()
-
         # 
         self.status_flag_init()
 
+        # init hsv color spaces for selecting 
+        self.color_space_init()
+
         # Publishers
-        self.cv_image_pub = rospy.Publisher("cv_image", Image, queue_size=1)
-        self.mask_image_pub = rospy.Publisher("mask_image", Image, queue_size=1)
+        self.cv_image_pub = rospy.Publisher('cv_image', Image, queue_size=1)
+        self.mask_image_pub = rospy.Publisher('mask_image', Image, queue_size=1)
         self.cmd_vel_from_img_pub = rospy.Publisher('cmd_vel_from_img', Twist, queue_size=1)
+        self.inter_boundary_line_detect_pub = rospy.Publisher('inter_boundary_line_detect', CrossInfo, queue_size=1) 
 
         # Subscribers
-        self.curr_route_sub = rospy.Subscriber('curr_route', Int8MultiArray, self.curr_route_sub_cb)
         self.image_raw_sub = rospy.Subscriber("robot_cam/image_raw", Image, self.image_raw_sub_cb)
 
         # Servers
         self.srv_color = Server(color_hsvConfig, self.dynamic_reconfigure_callback_hsv)
 
         # Clients
-        self.inter_boundary_line_detect_pub = rospy.Publisher('inter_boundary_line_detect', CrossInfo, queue_size=1) 
+        self.assign_route_client = rospy.ServiceProxy('assign_route_srv', AssignRoute)
+        self.update_route_client = rospy.ServiceProxy('update_route_srv', NewRoute)
 
         self.send_ready_signal()
     
+    # Methods
     def send_ready_signal(self):
         rospy.wait_for_service('ready_signal')
         try:
@@ -99,10 +101,11 @@ class RobotVision:
             response: ReadySignalResponse = ready_signal_client.call(self.node_name)
             if response.success:
                 rospy.loginfo(f"{self.robot_name}: Visual Detector is Online")
+                self.curr_route = [6, 6, 2]
+
         except rospy.ServiceException as e:
             rospy.logerr(f"service call failed: {e}")
 
-    # Methods
     def status_flag_init(self):
         # Current route (three intersections: last, current and next)
         self.curr_route = [0, 0, 0]
@@ -116,7 +119,7 @@ class RobotVision:
         self.cross_inter_boundary_line_count = 0
 
         # Boundary Crossing flag
-        self.cross = False
+        self.boundary_detect_req_lock = False
 
         # Enter Conflict Zone flag
         self.enter_conflict_zone = False
@@ -210,14 +213,7 @@ class RobotVision:
         self.inter_guide_line = [self.thur_guide_hsv, self.left_guide_hsv, self.right_guide_hsv]
 
         # 
-        self._acc_aux_hsv = hsv.HSVSpace(150, 110, 180, 100, 255, 120)       
-
-    def curr_route_sub_cb(self, route_msg: Int8MultiArray):
-        if route_msg:
-            self.curr_route = [route for route in route_msg.data]
-            # rospy.loginfo(f"current route is {self.curr_route}")
-        else:
-            self.curr_route = [0, 0, 0]
+        self._acc_aux_hsv = hsv.HSV_RANGES['red']       
 
     def image_raw_sub_cb(self, data: Image):
         """Step1 CONVERT RAW IMAGE TO HSV IMAGE"""
@@ -256,21 +252,46 @@ class RobotVision:
         
         if corss_inter_boundary:
             self.cross_inter_boundary_line_count += 1
-            if self.cross_inter_boundary_line_count >= 2 and not self.cross:
-                rospy.loginfo(f'{self.robot_name} cross the boundary line between inter{self.curr_route[1]} and inter{self.curr_route[2]}')
-                self.cross = True
+            if self.cross_inter_boundary_line_count >= 2 and not self.boundary_detect_req_lock:
+                new_route = self.req_new_route()
+                self.curr_route = new_route
+                threading.Thread(target=self.req_update_new_route).start()
+                self.boundary_detect_req_lock = True
                 self.enter_conflict_zone = False
+
         else:
             self.cross_inter_boundary_line_count = 0
-            self.cross = False
-
-        # 
-        cross_msg = CrossInfo()
-        cross_msg.cross = self.cross
-        cross_msg.robot_name = self.robot_name
-        cross_msg.last_inter_id = self.curr_route[1]
-        cross_msg.local_inter_id = self.curr_route[2]
-        self.inter_boundary_line_detect_pub.publish(cross_msg)
+            self.boundary_detect_req_lock = False
+        
+        return 
+    
+    def req_new_route(self):
+        try:
+            route = [0, 0 ,0]
+            req = AssignRouteRequest()
+            req.last_inter_id = self.curr_route[1]
+            req.next_inter_id = self.curr_route[2]
+            resp: AssignRouteResponse = self.assign_route_client.call(req)
+            route = resp.route        
+            rospy.loginfo(f'{self.robot_name} cross the boundary line between inter{self.curr_route[1]} and inter{self.curr_route[2]}')
+            return route
+        except rospy.ServiceException as e:
+            rospy.logerr('%s: Request New Route Service Call Failed: %s', self.robot_name, e)
+            return [0, 0 ,0]
+    
+    def req_update_new_route(self, new_route):
+        rospy.wait_for_service('update_route_srv')
+        try:
+            req = NewRouteRequest(new_route=new_route)
+            resp: NewRouteResponse = self.update_route_client.call(new_route)
+            if resp.success:
+                rospy.loginfo(resp.messasge)
+            else:
+                rospy.logerr(resp.messasge)
+            return
+        except rospy.ServiceException as e:
+            rospy.logerr('%s: Request update inter info service call failed: %s', self.robot_name, e)
+            return
 
     def find_and_draw_target(self, cv_img, cv_hsv_img):
         rospy.loginfo(f"current route is {self.curr_route}")
@@ -324,11 +345,11 @@ class RobotVision:
         self.current_zone = Zone.INTERSECTION
         # check if conflict zone
         self.detect_conflict_boundary_line(cv_hsv_img=cv_hsv_img)
-        # lane
         if not self.enter_conflict_zone:
+            # lane
             target_x, cv_img = self.find_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
-        # conflict zone
         else:
+            # conflict zone
             rospy.loginfo(f"Enter Conflict Zone")
             self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
             rospy.loginfo(f"Next Action is {self.action_dic[self.next_action]}") 
@@ -338,7 +359,7 @@ class RobotVision:
 
     def detect_conflict_boundary_line(self, cv_hsv_img):
         dis2conflict = search_pattern.search_stop_line(cv_hsv_img, self.stop_line_hsv, self.stop_line_hsv2)
-        print(dis2conflict)
+        # print(dis2conflict)
         if dis2conflict > 30:
             self.enter_conflict_zone = True
     

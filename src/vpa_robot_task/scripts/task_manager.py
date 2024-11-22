@@ -4,11 +4,9 @@ import rospy
 
 import time
 
-from std_msgs.msg import Bool, Int8MultiArray
-from std_srvs.srv import Trigger, TriggerResponse
+from std_msgs.msg import Int8MultiArray
 
-from vpa_robot_vision.msg import CrossInfo
-
+from vpa_robot_task.srv import AssignRoute, AssignRouteRequest, AssignRouteResponse
 from vpa_robot_task.srv import AssignTask, AssignTaskRequest, AssignTaskResponse
 from vpa_robot_task.srv import ReadySignal, ReadySignalRequest, ReadySignalResponse
 
@@ -29,9 +27,6 @@ class TaskManager:
             'traction_encdors': False,
         }
 
-        # 
-        # self.curr_local_brake_status = True
-
         # Task List
         self.task_list = []
 
@@ -39,78 +34,55 @@ class TaskManager:
         self.curr_task_index = 0
 
         # Current route (three intersections: last, current and next)
-        self.curr_route = []
-
-        # 
-        self.update_task_lock = False
+        self.curr_route = [6, 6, 2]
 
         # Publishers
-        # self.local_brake_pub = rospy.Publisher('local_brake', Bool, queue_size=1)
         self.curr_route_pub = rospy.Publisher('curr_route', Int8MultiArray, queue_size=1)
 
         # Subscribers
-        self.start_sub = rospy
-        self.inter_boundary_line_detect_sub = rospy.Subscriber('inter_boundary_line_detect', CrossInfo, self.inter_boundary_line_detect_cb)
 
         # Servers
         self.node_ready_handle_server = rospy.Service('ready_signal', ReadySignal, self.ready_signal_cb)
+        self.assign_route_server = rospy.Service('assign_route_srv', AssignRoute, self.assign_route_cb)
 
         # Clients
-        self.assign_task_client = rospy.ServiceProxy('/assgin_task_srv', AssignTask)
-
-        # Init Log
-        rospy.loginfo('Task Manager is Online')
+        self.assign_task_client = rospy.ServiceProxy('/assign_task_srv', AssignTask)
 
         # Start the task manager
         self.status_init()
-        
-        # Publish local brake status
-        # self.timer = rospy.Timer(rospy.Duration(1), self.pub_local_brake_status)
-
+    
         # Publish initial route
         self.timer = rospy.Timer(rospy.Duration(1 / 10), self.pub_curr_route)
 
     # Methods
-    def ready_signal_cb(self, req: ReadySignalRequest):
-        NODE_NAME = req.node_name 
-        if NODE_NAME in self.node_status:
-            self.node_status[NODE_NAME] = True    
-            return ReadySignalResponse(success=True)
-        else:
-            rospy.logwarn("Node not recognized")
-            return ReadySignalResponse(success=False)
-
     def status_init(self):
         while not all(self.node_status.values()):
             rospy.loginfo("Waiting for all nodes to ready")
             time.sleep(1)
+            
+        rospy.loginfo("All nodes are ready! Task Manager is Online")
 
-        rospy.loginfo("All nodes are ready!")
         if self.request_task():
             rospy.loginfo(f"{self.robot_name}: Task List confirmed: {self.task_list}")
             
-            # Update the 1st route 
-            self.curr_route = [6, self.task_list[self.curr_task_index], self.task_list[self.curr_task_index + 1]]
-
-            # Release local Brake
-            # self.curr_local_brake_status = False
         else:
             rospy.logwarn("%s: Task Manager initialization failed", self.robot_name)
 
     def request_task(self) -> bool:
         rospy.loginfo("%s: Waiting for Task Assign Server", self.robot_name)
-        rospy.wait_for_service("/assgin_task_srv")
-        try:
-            req = AssignTaskRequest()
-            req.robot_name = self.robot_name
+        rospy.wait_for_service("/assign_task_srv")
 
+        try:
+            req = AssignTaskRequest(robot_name = self.robot_name)
             resp: AssignTaskResponse = self.assign_task_client.call(req)
+
             if self.validate_task_list(resp.task_list):
                 self.task_list = resp.task_list
                 return True
             else:
                 rospy.logerr("%s: Task list validation failed", self.robot_name)
                 return False          
+            
         except rospy.ServiceException as e:
             rospy.logerr('%s: Service call failed: %s', self.robot_name, e)
             return False
@@ -118,42 +90,51 @@ class TaskManager:
     def validate_task_list(self, task_list) -> bool:
         # TODO: Implement task list validation
         return bool(task_list) and len(task_list) >= 2
-    
-    def inter_boundary_line_detect_cb(self, cross_msg: CrossInfo):
-        """ Update Current Route """
-        if cross_msg.cross and not self.update_task_lock:
-            # AD
-            if not (self.curr_route[1] == cross_msg.last_inter_id and self.curr_route[2] == cross_msg.local_inter_id):
-                rospy.logwarn(f"Task Update Func Error")
-                return
-            # BD
-            if self.curr_task_index >= len(self.task_list) - 2:
-                rospy.logwarn("%s: Task List Index out of bounds!", self.robot_name)
-                self.curr_route = [2, 6, 6]
-                return
 
-            # Update current route
-            self.curr_task_index += 1
-            self.curr_route = [
-                self.task_list[self.curr_task_index - 1], 
-                self.task_list[self.curr_task_index], 
-                self.task_list[self.curr_task_index + 1]
-            ]
-            rospy.loginfo(f"Updated current route: {self.curr_route}")    
+    def ready_signal_cb(self, req: ReadySignalRequest):
+        NODE_NAME = req.node_name 
 
-            # 
-            self.update_task_lock = True
+        if NODE_NAME in self.node_status:
+            self.node_status[NODE_NAME] = True    
+            return ReadySignalResponse(success=True)
         
-        elif not cross_msg.cross:
-            self.update_task_lock = False
+        else:
+            rospy.logwarn("Node not recognized")
+            return ReadySignalResponse(success=False)
+    
+    def assign_route_cb(self, req: AssignRouteRequest):
+        """ Assign Current Route """
 
-    # def pub_local_brake_status(self, event):
-    #     brake_msg = Bool(data=self.curr_local_brake_status)
-    #     self.local_brake_pub.publish(brake_msg)
+        last_inter_id = req.last_inter_id
+        next_inter_id = req.next_inter_id
+        
+        # Abnormal Detection
+        if not (self.curr_route[1] == last_inter_id and self.curr_route[2] == next_inter_id):
+            rospy.logerr(f"Route Update Error")
+            self.curr_route = [0, 0 ,0]
+            # TODO: shutdown
 
+        # Boundary Detection
+        if self.curr_task_index >= len(self.task_list) - 2:
+            rospy.logwarn("%s: Task List Index out of bounds!", self.robot_name)
+            self.curr_task_index = 0
+            self.curr_route = [2, 6, 6]
+
+        # Update current route
+        self.curr_task_index += 1      
+        self.curr_route = [
+            self.task_list[self.curr_task_index - 1], 
+            self.task_list[self.curr_task_index], 
+            self.task_list[self.curr_task_index + 1]
+        ]
+        rospy.loginfo(f"Updated current route: {self.curr_route}")   
+        
+        return AssignRouteResponse(route=self.curr_route)
+    
     def pub_curr_route(self, event):
         route_msg = Int8MultiArray(data=self.curr_route)
         self.curr_route_pub.publish(route_msg)
+
 
 if __name__ == '__main__':
     N = TaskManager()
