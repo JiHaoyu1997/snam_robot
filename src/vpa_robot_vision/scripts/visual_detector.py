@@ -21,11 +21,9 @@ from vpa_robot_vision.cfg import color_hsvConfig
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Image 
 
-from vpa_robot_vision.msg import CrossInfo
-
+from vpa_robot_decision.srv import NewRoute, NewRouteRequest, NewRouteResponse
 from vpa_robot_task.srv import AssignRoute, AssignRouteRequest, AssignRouteResponse
 from vpa_robot_task.srv import ReadySignal, ReadySignalResponse
-from vpa_robot_decision.srv import NewRoute, NewRouteRequest, NewRouteResponse
 
 class Zone(Enum):
     BUFFER_AREA     = 0 # this is queuing area outside the intersections 
@@ -79,8 +77,7 @@ class RobotVision:
         self.cv_image_pub = rospy.Publisher('cv_image', Image, queue_size=1)
         self.mask_image_pub = rospy.Publisher('mask_image', Image, queue_size=1)
         self.cmd_vel_from_img_pub = rospy.Publisher('cmd_vel_from_img', Twist, queue_size=1)
-        self.inter_boundary_line_detect_pub = rospy.Publisher('inter_boundary_line_detect', CrossInfo, queue_size=1) 
-
+ 
         # Subscribers
         self.image_raw_sub = rospy.Subscriber("robot_cam/image_raw", Image, self.image_raw_sub_cb)
 
