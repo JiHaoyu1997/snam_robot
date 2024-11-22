@@ -227,7 +227,6 @@ class RobotVision:
         else:
             rospy.loginfo_once("Start Tracking")
 
-
         """Step4 BOUNDARY LINE DETECTOR"""
         self.detect_inter_boundary_line(cv_hsv_img=cv_hsv_img) 
 
