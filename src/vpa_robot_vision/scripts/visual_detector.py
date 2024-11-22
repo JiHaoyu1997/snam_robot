@@ -248,50 +248,48 @@ class RobotVision:
 
     def detect_inter_boundary_line(self, cv_hsv_img: Image):
         dis2bound = search_pattern.search_line(cv_hsv_img, self.inter_boundary_line_hsv, top_line=100)
-        corss_inter_boundary = dis2bound > 25
-        
-        if corss_inter_boundary:
+        cross_inter_boundary = dis2bound > 25
+
+        if cross_inter_boundary:
             self.cross_inter_boundary_line_count += 1
             if self.cross_inter_boundary_line_count >= 2 and not self.boundary_detect_req_lock:
-                new_route = self.req_new_route()
-                self.curr_route = new_route
-                threading.Thread(target=self.req_update_new_route).start()
                 self.boundary_detect_req_lock = True
                 self.enter_conflict_zone = False
-
+                new_route = self.req_new_route()
+                self.curr_route = new_route
+                threading.Thread(target=self.req_update_new_route, args=(new_route,)).start()  
         else:
             self.cross_inter_boundary_line_count = 0
-            self.boundary_detect_req_lock = False
-        
-        return 
-    
+
+        return
+
     def req_new_route(self):
         try:
-            route = [0, 0 ,0]
+            route = [0, 0, 0]
             req = AssignRouteRequest()
             req.last_inter_id = self.curr_route[1]
             req.next_inter_id = self.curr_route[2]
             resp: AssignRouteResponse = self.assign_route_client.call(req)
-            route = resp.route        
             rospy.loginfo(f'{self.robot_name} cross the boundary line between inter{self.curr_route[1]} and inter{self.curr_route[2]}')
-            return route
+            return resp.route if resp.route else route
         except rospy.ServiceException as e:
             rospy.logerr('%s: Request New Route Service Call Failed: %s', self.robot_name, e)
-            return [0, 0 ,0]
-    
+            return [0, 0, 0]
+
     def req_update_new_route(self, new_route):
         rospy.wait_for_service('update_route_srv')
         try:
             req = NewRouteRequest(new_route=new_route)
-            resp: NewRouteResponse = self.update_route_client.call(new_route)
+            resp: NewRouteResponse = self.update_route_client.call(req)
             if resp.success:
-                rospy.loginfo(resp.messasge)
+                rospy.loginfo(resp.message)
             else:
-                rospy.logerr(resp.messasge)
-            return
+                rospy.logerr(resp.message)
         except rospy.ServiceException as e:
             rospy.logerr('%s: Request update inter info service call failed: %s', self.robot_name, e)
-            return
+        finally:
+            self.boundary_detect_req_lock = False
+
 
     def find_and_draw_target(self, cv_img, cv_hsv_img):
         rospy.loginfo(f"current route is {self.curr_route}")
