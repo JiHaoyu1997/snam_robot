@@ -1,26 +1,15 @@
-import os
 import numpy as np
 from typing import Union
-
 from hsv.hsv import HSVSpace
 
-
-script_dir  = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-filepath    = os.path.join(script_dir,'robot_setting')
-
-if os.path.exists(filepath):
-    from robot_setting_example import LEFT_TURN_L,LEFT_TURN_R,RIGHT_TURN_L,RIGHT_TURN_R,THUR_L,THUR_R,LANE_L,LANE_R
-    print('Loading customize robot settings')
-else:
-    # default values
-    LEFT_TURN_R     = 200 
-    LEFT_TURN_L     = 40
-    RIGHT_TURN_R    = 280
-    RIGHT_TURN_L    = 120
-    THUR_L          = 100
-    THUR_R          = 220
-    LANE_L          = 80
-    LANE_R          = 240
+LEFT_TURN_R     = 200 
+LEFT_TURN_L     = 40
+RIGHT_TURN_R    = 280
+RIGHT_TURN_L    = 120
+THUR_L          = 100
+THUR_R          = 220
+LANE_L          = 80
+LANE_R          = 240
 
 def search_buffer_line(cv_hsv_img, buffer_line_hsv: HSVSpace) -> list:
     buffer_line_mask_img = buffer_line_hsv.apply_mask(cv_hsv_img)
