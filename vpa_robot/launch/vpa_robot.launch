@@ -17,7 +17,7 @@
         </include>
 
        
-        <include file="$(find vpa_robot/launch/robot_task.launch">
+        <include file="$(find vpa_robot)/launch/robot_task.launch">
             <arg name="robot_name" value="$(arg robot_name)" />
         </include>
 
