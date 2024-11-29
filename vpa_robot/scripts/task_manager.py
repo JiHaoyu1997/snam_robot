@@ -6,9 +6,9 @@ import time
 
 from std_msgs.msg import Int8MultiArray
 
-from vpa_robot_task.srv import AssignRoute, AssignRouteRequest, AssignRouteResponse
-from vpa_robot_task.srv import AssignTask, AssignTaskRequest, AssignTaskResponse
-from vpa_robot_task.srv import ReadySignal, ReadySignalRequest, ReadySignalResponse
+from vpa_robot.srv import AssignRoute, AssignRouteRequest, AssignRouteResponse
+from vpa_robot.srv import AssignTask, AssignTaskRequest, AssignTaskResponse
+from vpa_robot.srv import ReadySignal, ReadySignalRequest, ReadySignalResponse
 
 class TaskManager:
     # Properties

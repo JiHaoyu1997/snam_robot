@@ -1,4 +1,0 @@
-float32 omega_left_ref
-float32 omega_left_sig
-float32 omega_right_ref
-float32 omega_right_sig

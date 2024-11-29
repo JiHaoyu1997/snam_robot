@@ -15,15 +15,16 @@ from pid_controller import pid_controller
 
 # Dynamic reconfiguration
 from dynamic_reconfigure.server import Server
-from vpa_robot_vision.cfg import color_hsvConfig
+from vpa_robot.cfg import color_hsvConfig
 
 # Msg
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Image 
 
-from vpa_robot_decision.srv import NewRoute, NewRouteRequest, NewRouteResponse
-from vpa_robot_task.srv import AssignRoute, AssignRouteRequest, AssignRouteResponse
-from vpa_robot_task.srv import ReadySignal, ReadySignalResponse
+# Srv
+from vpa_robot.srv import NewRoute, NewRouteRequest, NewRouteResponse
+from vpa_robot.srv import AssignRoute, AssignRouteRequest, AssignRouteResponse
+from vpa_robot.srv import ReadySignal, ReadySignalResponse
 
 class Zone(Enum):
     BUFFER_AREA     = 0 # this is queuing area outside the intersections 

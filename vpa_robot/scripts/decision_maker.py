@@ -7,12 +7,11 @@ from robot.robot import find_id_by_robot_name
 
 from geometry_msgs.msg import Twist
 
-from vpa_robot_decision.msg import RobotInfo as RobotInfoMsg
-from vpa_robot_decision.msg import InterInfo as InterInfoMsg
-
-from vpa_robot_decision.srv import InterMng, InterMngRequest, InterMngResponse
-from vpa_robot_decision.srv import NewRoute, NewRouteRequest, NewRouteResponse
-from vpa_robot_task.srv import ReadySignal, ReadySignalResponse
+from vpa_robot.msg import RobotInfo as RobotInfoMsg
+from vpa_robot.msg import InterInfo as InterInfoMsg
+from vpa_robot.srv import InterMng, InterMngRequest, InterMngResponse
+from vpa_robot.srv import NewRoute, NewRouteRequest, NewRouteResponse
+from vpa_robot.srv import ReadySignal, ReadySignalResponse
 
 class RobotInfo:
     def __init__(self, name="", id=0, a=0.0, v=0.0, p=0.0, enter_time=0.0, arrive_cp_time=0.0, exit_time=0.0):
