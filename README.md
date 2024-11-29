@@ -1,3 +1,3 @@
 # snam_robot
 
-For student research TU Dresden
+For student research at TU Dresden

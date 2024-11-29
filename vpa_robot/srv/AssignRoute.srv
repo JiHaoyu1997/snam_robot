@@ -1,0 +1,4 @@
+int8 last_inter_id
+int8 next_inter_id
+---
+int8[] route
