@@ -20,7 +20,7 @@
         <param name="io_method"                     value="mmap"/>
     </node>
 
-    <node name="robot_vision" pkg="vpa_robot_vision" type="visual_detector.py" output="screen">
+    <node name="robot_vision" pkg="vpa_robot" type="visual_detector.py" output="screen">
         <param name="robot_name"    value="$(arg robot_name)"/>
         <param name="image_width"   value="$(arg width)"/>
         <param name="image_height"  value="$(arg height)"/>

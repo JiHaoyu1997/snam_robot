@@ -1,6 +1,6 @@
 <launch>
     <arg name="robot_name"/>
-    <node name="robot_decision" pkg="vpa_robot_decision" type="decision_maker.py" output="screen">
+    <node name="robot_decision" pkg="vpa_robot" type="decision_maker.py" output="screen">
         <param name="robot_name" value="$(arg robot_name)"/>
     </node>
 </launch>
