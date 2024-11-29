@@ -23,8 +23,6 @@ class TaskManager:
         self.node_status = {
             'robot_vision': False,
             'robot_decision': False,
-            'traction_wheels': False,
-            'traction_encdors': False,
         }
 
         # Task List
