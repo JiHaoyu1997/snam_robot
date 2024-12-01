@@ -17,3 +17,36 @@ robot_dict = {
 
 def find_id_by_robot_name(robot_name):
     return next((key for key, value in robot_dict.items() if value == robot_name), None)
+
+import rospy
+
+import math
+
+class RobotMotion:
+
+    def __init__(self, name="",id=0):
+        self.robot_name = name
+        self.robot_id = id
+        self.curr_pose_data = []
+        self.previous_position = None
+        self.total_travel_distance = 0.0
+    
+    def kinematic_recoder(self, pose, vel):
+        self.curr_pose_data = pose
+        self.vel = vel
+        return self.calc_total_travel_distance()
+        
+    def calc_total_travel_distance(self):
+        current_point = (self.curr_pose_data[1], self.curr_pose_data[2])
+
+        if self.previous_point is not None:
+            distance = self.calculate_distance(self.previous_point, current_point)
+            self.total_travel_distance += distance
+            rospy.loginfo(f"Current Travel Distance: {self.total_travel_distance}")
+
+        self.previous_point = current_point
+        return
+
+    @staticmethod
+    def calculate_distance(point1, point2):
+        return math.sqrt((point2[0] - point1[0])**2 + (point2[1] - point1[1])**2)

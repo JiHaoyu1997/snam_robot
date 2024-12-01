@@ -3,7 +3,7 @@
 import rospy
 from typing import List
 
-from robot.robot import find_id_by_robot_name
+from robot.robot import find_id_by_robot_name, RobotMotion
 
 from geometry_msgs.msg import Twist
 
@@ -41,6 +41,8 @@ class RobotDecision:
 
         # Robot name
         self.robot_name = rospy.get_param('~robot_name', 'db19')
+        self.robot_id = find_id_by_robot_name(robot_name=self.robot_name)
+        self.robot_motion_controller = RobotMotion(name=self.robot_name, id=self.robot_id) 
 
         # Initialize route and intersection information
         self.robot_info = RobotInfo(name=self.robot_name)
@@ -160,6 +162,15 @@ class RobotDecision:
         # Example: Placeholder - logic to be implemented
         rospy.logdebug(f"Making decision based on intersection {robot_inter_info.inter} and incoming command.")
         return twist_from_img
+
+    def kinematic_data_sub_cb(self, kinematic_data_msg):
+        for data in kinematic_data_msg:
+            if self.robot_id == data.robot_id:
+                curr_pose = data.pose
+                curr_vel = data.vel
+                self.robot_motion_controller.kinematic_recoder(pose=curr_pose, vel=curr_vel)
+        return
+
 
 if __name__ == '__main__':
     N = RobotDecision()
