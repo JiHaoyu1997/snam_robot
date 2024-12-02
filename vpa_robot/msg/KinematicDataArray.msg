@@ -1,0 +1,3 @@
+# KinematicDataArray.msg
+
+KinematicData[] data

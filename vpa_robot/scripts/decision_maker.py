@@ -9,6 +9,7 @@ from geometry_msgs.msg import Twist
 
 from vpa_robot.msg import RobotInfo as RobotInfoMsg
 from vpa_robot.msg import InterInfo as InterInfoMsg
+from vpa_robot.msg import KinematicDataArray
 from vpa_robot.srv import InterMng, InterMngRequest, InterMngResponse
 from vpa_robot.srv import NewRoute, NewRouteRequest, NewRouteResponse
 from vpa_robot.srv import ReadySignal, ReadySignalResponse
@@ -56,6 +57,7 @@ class RobotDecision:
 
         # Subscribers
         self.cmd_vel_from_img_sub = rospy.Subscriber('cmd_vel_from_img', Twist, self.cmd_vel_from_img_cb)
+        self.kinematic_info_sub = rospy.Subscriber('/kinematic_info', KinematicDataArray, self.kinematic_info_sub_cb)
         self.inter_info_sub = rospy.Subscriber(self.local_inter_info_topic, InterInfoMsg, self.inter_info_cb)
 
         # Servers
@@ -163,8 +165,8 @@ class RobotDecision:
         rospy.logdebug(f"Making decision based on intersection {robot_inter_info.inter} and incoming command.")
         return twist_from_img
 
-    def kinematic_data_sub_cb(self, kinematic_data_msg):
-        for data in kinematic_data_msg:
+    def kinematic_info_sub_cb(self, kinematic_data_msg: KinematicDataArray):
+        for data in kinematic_data_msg.data:
             if self.robot_id == data.robot_id:
                 curr_pose = data.pose
                 curr_vel = data.vel
