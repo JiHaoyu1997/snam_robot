@@ -92,7 +92,6 @@ def _search_lane_linecenter(_mask,
         point = np.nonzero(_mask[_height_center + i, _width_range_left : _width_range_right])[0] + _width_range_left
         segs = _break_segs(point)
         valid_segments = {key: seg for key, seg in segs.items() if len(seg) < 35}
-        print(i ,valid_segments)
         
         if len(valid_segments) == 0:
             continue
@@ -122,7 +121,7 @@ def search_lane_center(space1:HSVSpace, space2:HSVSpace, hsv_image, is_yellow_le
     hsv_image2 = hsv_image
     mask1 = space1.apply_mask(hsv_image1)
     mask2 = space2.apply_mask(hsv_image2)
-    _line_center1 = _search_lane_linecenter(mask1, -30, 30, 10, int(hsv_image.shape[0]/2), 0, int(hsv_image.shape[1]))
+    _line_center1 = _search_lane_linecenter(mask1, 30, -30, -10, int(hsv_image.shape[0]/2), 0, int(hsv_image.shape[1]))
 
     if _line_center1 == 0 and not is_yellow_left:
         # failed to find the center yellow line
@@ -130,9 +129,9 @@ def search_lane_center(space1:HSVSpace, space2:HSVSpace, hsv_image, is_yellow_le
         
     # search the while line, but limited area
     if is_yellow_left:
-        _line_center2 = _search_lane_linecenter(mask2, -30, 30, 10, int(hsv_image.shape[0]/2), _line_center1, int(hsv_image.shape[1]), False)
+        _line_center2 = _search_lane_linecenter(mask2, 30, -30, -10, int(hsv_image.shape[0]/2), _line_center1, int(hsv_image.shape[1]), False)
     else:
-        _line_center2 = _search_lane_linecenter(mask2, -30, 30, 10, int(hsv_image.shape[0]/2), 0 ,_line_center1, False)
+        _line_center2 = _search_lane_linecenter(mask2, 30, -30, -10, int(hsv_image.shape[0]/2), 0 ,_line_center1, False)
 
     if is_yellow_left :
         # miss detections 
@@ -141,7 +140,6 @@ def search_lane_center(space1:HSVSpace, space2:HSVSpace, hsv_image, is_yellow_le
         if _line_center2 == 0:
             _line_center2 = hsv_image.shape[1]
 
-    print(_line_center1, _line_center2)
     _lane_center = int((_line_center1 + _line_center2)/2)
     return max(min(_lane_center,LANE_R),LANE_L)
 
