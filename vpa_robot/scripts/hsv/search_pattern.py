@@ -96,20 +96,23 @@ def _search_lane_linecenter(_mask,
         if len(valid_segments) == 0:
             continue
 
-        if len(valid_segments) == 1:
+        elif len(valid_segments) == 1:
             res = int(np.mean(next(iter(valid_segments.values()))))
+            if _isYellow and res > 240:
+                res = 0
             return res
 
-        averages = {key: int(np.mean(seg)) for key, seg in valid_segments.items()}
-        sorted_segments = sorted(averages.items(), key=lambda x: -len(valid_segments[x[0]]))
+        else:
+            averages = {key: int(np.mean(seg)) for key, seg in valid_segments.items()}
+            sorted_segments = sorted(averages.items(), key=lambda x: -len(valid_segments[x[0]]))
 
-        res = next(
-            (avg for key, avg in sorted_segments if (_isYellow and 40 < avg < 160) or (not _isYellow and avg > 160)),
-            None
-        )
+            res = next(
+                (avg for key, avg in sorted_segments if (_isYellow and 40 < avg < 160) or (not _isYellow and avg > 160)),
+                None
+            )
 
-        if res is not None:
-            return res
+            if res is not None:
+                return res
 
     return 0
 
@@ -137,7 +140,7 @@ def search_lane_center(space1:HSVSpace, space2:HSVSpace, hsv_image, is_yellow_le
         if _line_center2 == 0:
             _line_center2 = hsv_image.shape[1]
 
-    print(_line_center1, _line_center2)
+    # print(_line_center1, _line_center2)
     _lane_center = int((_line_center1 + _line_center2)/2)
     return max(min(_lane_center,LANE_R),LANE_L)
 
