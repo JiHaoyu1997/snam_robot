@@ -42,7 +42,7 @@ class RobotMotion:
         if self.pre_position is not None:
             distance = self.calculate_distance(self.pre_position, curr_position)
             self.total_travel_distance += distance
-            rospy.loginfo(f"Current Travel Distance: {self.total_travel_distance: 5f}")
+            # rospy.loginfo(f"Current Travel Distance: {self.total_travel_distance: 5f}")
 
         self.pre_position = curr_position
         return
