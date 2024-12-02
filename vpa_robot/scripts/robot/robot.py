@@ -28,7 +28,7 @@ class RobotMotion:
         self.robot_name = name
         self.robot_id = id
         self.curr_pose_data = []
-        self.previous_position = None
+        self.pre_position = None
         self.total_travel_distance = 0.0
     
     def kinematic_recoder(self, pose, vel):
@@ -37,14 +37,14 @@ class RobotMotion:
         return self.calc_total_travel_distance()
         
     def calc_total_travel_distance(self):
-        current_point = (self.curr_pose_data[1], self.curr_pose_data[2])
+        curr_position = (self.curr_pose_data[1], self.curr_pose_data[2])
 
-        if self.previous_position is not None:
-            distance = self.calculate_distance(self.previous_position, current_point)
+        if self.pre_position is not None:
+            distance = self.calculate_distance(self.pre_position, curr_position)
             self.total_travel_distance += distance
-            rospy.loginfo(f"Current Travel Distance: {self.total_travel_distance}")
+            rospy.loginfo(f"Current Travel Distance: {self.total_travel_distance: 5f}")
 
-        self.previous_position = current_point
+        self.pre_position = curr_position
         return
 
     @staticmethod

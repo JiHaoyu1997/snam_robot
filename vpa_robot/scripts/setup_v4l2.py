@@ -14,7 +14,7 @@ def setup_v4l2():
     for cmd in commands:
         result = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         rospy.loginfo(f"Command: {cmd}")
-        rospy.loginfo(f"Output: {result.stdout.decode('utf-8')}")
+        # rospy.loginfo(f"Output: {result.stdout.decode('utf-8')}")
         if result.stderr:
             rospy.logwarn(f"Error: {result.stderr.decode('utf-8')}")
 
