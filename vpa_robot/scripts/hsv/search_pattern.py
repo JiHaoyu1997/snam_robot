@@ -98,7 +98,7 @@ def _search_lane_linecenter(_mask,
 
         elif len(valid_segments) == 1:
             res = int(np.mean(next(iter(valid_segments.values()))))
-            if _isYellow and res > 240:
+            if _isYellow and res > 200:
                 res = 0
             return res
 
