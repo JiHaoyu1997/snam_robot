@@ -92,6 +92,7 @@ def _search_lane_linecenter(_mask,
         point = np.nonzero(_mask[_height_center + i, _width_range_left : _width_range_right])[0] + _width_range_left
         segs = _break_segs(point)
         valid_segments = {key: seg for key, seg in segs.items() if len(seg) < 35}
+        print(i ,valid_segments)
         
         if len(valid_segments) == 0:
             continue
