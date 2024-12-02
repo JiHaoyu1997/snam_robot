@@ -501,7 +501,6 @@ class RobotVision:
 
         dis2red = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.stop_line_hsv)
         if dis2red > 30 and self.stop_timer is None:
-            rospy.loginfo("STOP")
             self.stop_timer = rospy.Timer(rospy.Duration(1 / 2), self.stop_cb, oneshot=True)
 
         target_x, _ = self.find_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
@@ -530,7 +529,6 @@ class RobotVision:
 
         dis2green = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.inter_boundary_line_hsv)
         if dis2green > 30 and self.stop_timer is None:
-            rospy.loginfo("STOP")
             self.stop_timer = rospy.Timer(rospy.Duration(1), self.stop_cb, oneshot=True)
        
         target_x, _ = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=action)
