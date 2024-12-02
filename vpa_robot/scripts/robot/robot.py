@@ -39,12 +39,12 @@ class RobotMotion:
     def calc_total_travel_distance(self):
         current_point = (self.curr_pose_data[1], self.curr_pose_data[2])
 
-        if self.previous_point is not None:
-            distance = self.calculate_distance(self.previous_point, current_point)
+        if self.previous_position is not None:
+            distance = self.calculate_distance(self.previous_position, current_point)
             self.total_travel_distance += distance
             rospy.loginfo(f"Current Travel Distance: {self.total_travel_distance}")
 
-        self.previous_point = current_point
+        self.previous_position = current_point
         return
 
     @staticmethod
