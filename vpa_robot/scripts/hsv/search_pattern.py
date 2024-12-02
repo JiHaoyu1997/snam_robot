@@ -137,7 +137,7 @@ def search_lane_center(space1:HSVSpace, space2:HSVSpace, hsv_image, is_yellow_le
         if _line_center2 == 0:
             _line_center2 = hsv_image.shape[1] * 3 / 4
 
-    # print(_line_center1, _line_center2)
+    print(_line_center1, _line_center2)
     _lane_center = int((_line_center1 + _line_center2)/2)
     return max(min(_lane_center,LANE_R),LANE_L)
 
