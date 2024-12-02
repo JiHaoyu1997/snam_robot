@@ -501,7 +501,7 @@ class RobotVision:
 
         dis2red = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.stop_line_hsv)
         if dis2red > 30 and self.stop_timer is None:
-            self.stop_timer = rospy.Timer(rospy.Duration(1 / 2), self.stop_cb, oneshot=True)
+            self.stop_timer = rospy.Timer(rospy.Duration(1), self.stop_cb, oneshot=True)
 
         target_x, _ = self.find_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
