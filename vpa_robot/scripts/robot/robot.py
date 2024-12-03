@@ -83,28 +83,34 @@ class RobotMotion:
             rospy.loginfo(f"Total distance traveled: {self.total_distance_wheel_omega:.3f} meters")
 
     def update_position(self, v, omega, dt):
-        # 根据线速度和角速度更新位置和朝向
-        if omega == 0:  # 如果角速度为0，机器人沿直线移动
-            dx = v * dt * math.cos(self.theta)
-            dy = v * dt * math.sin(self.theta)
-            distance = v * dt  # 距离为线速度 * 时间
-        else:  # 如果有角速度，计算弧度变化
-            # 更新朝向
-            dtheta = omega * dt
-            # 更新位置
-            dx = (v / omega) * (math.sin(self.theta + dtheta) - math.sin(self.theta))
-            dy = (v / omega) * (math.cos(self.theta) - math.cos(self.theta + dtheta))
-            distance = (v / omega) * abs(dtheta)  # 距离为弧长：r * delta_theta
+            """
+            计算路径长度
+            """
+            if omega == 0:  # 如果角速度为0，机器人沿直线移动
+                # 更新位置
+                dx = v * dt * math.cos(self.theta)
+                dy = v * dt * math.sin(self.theta)
+                distance = v * dt  # 距离为线速度 * 时间
 
-        # 更新机器人位置和朝向
-        self.x += dx
-        self.y += dy
-        self.theta += omega * dt
+            else:  # 如果有角速度，计算弧度变化
+                # 计算角度变化
+                dtheta = omega * dt
+                # 计算弧长（路径长度）
+                distance = abs(v / omega * dtheta)  # 路径长度 = 半径 * 角度变化
 
-        # 保证角度在[-pi, pi]范围内
-        self.theta = (self.theta + math.pi) % (2 * math.pi) - math.pi
+                # 更新位置：弧线运动
+                dx = (v / omega) * (math.sin(self.theta + dtheta) - math.sin(self.theta))
+                dy = (v / omega) * (math.cos(self.theta) - math.cos(self.theta + dtheta))
 
-        # 累加总路径长度
-        self.total_distance_wheel_omega += distance
+            # 更新机器人位置和朝向
+            self.x += dx
+            self.y += dy
+            self.theta += omega * dt
 
-        return distance
+            # 保证角度在[-pi, pi]范围内
+            self.theta = (self.theta + math.pi) % (2 * math.pi) - math.pi
+
+            # 累加总路径长度
+            self.total_distance_wheel_omega += distance
+
+            return distance
