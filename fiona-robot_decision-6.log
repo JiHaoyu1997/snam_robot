@@ -13160,3 +13160,329 @@ rospy.exceptions.ROSException: publish() to a closed topic
 [rosout][INFO] 2024-12-03 17:02:15,781: Wheel Omega: Linear velocity: 0.000 m/s, Angular velocity: 0.000 rad/s
 [rosout][INFO] 2024-12-03 17:02:15,809: Total distance traveled: 1.503 meters
 [rospy.core][INFO] 2024-12-03 17:02:16,369: signal_shutdown [atexit]
+[rospy.client][INFO] 2024-12-03 17:33:34,267: init_node, name[/fiona/robot_decision], pid[5745]
+[xmlrpc][INFO] 2024-12-03 17:33:34,270: XML-RPC server binding to 0.0.0.0:0
+[xmlrpc][INFO] 2024-12-03 17:33:34,274: Started XML-RPC server [http://192.168.1.13:46401/]
+[rospy.init][INFO] 2024-12-03 17:33:34,275: ROS Slave URI: [http://192.168.1.13:46401/]
+[rospy.impl.masterslave][INFO] 2024-12-03 17:33:34,276: _ready: http://192.168.1.13:46401/
+[rospy.registration][INFO] 2024-12-03 17:33:34,280: Registering with master node http://labpc:11311
+[xmlrpc][INFO] 2024-12-03 17:33:34,287: xml rpc node: starting XML-RPC server
+[rospy.init][INFO] 2024-12-03 17:33:34,377: registered with master
+[rospy.rosout][INFO] 2024-12-03 17:33:34,378: initializing /rosout core topic
+[rospy.rosout][INFO] 2024-12-03 17:33:34,414: connected to core topic /rosout
+[rospy.simtime][INFO] 2024-12-03 17:33:34,422: /use_sim_time is not set, will not subscribe to simulated time [/clock] topic
+[rospy.internal][INFO] 2024-12-03 17:33:34,523: topic[/kinematic_info] adding connection to [http://192.168.1.19:37791/], count 0
+[rospy.internal][INFO] 2024-12-03 17:33:34,540: topic[/fiona/wheel_omega] adding connection to [http://192.168.1.13:35933/], count 0
+[rosout][INFO] 2024-12-03 17:33:34,560: fiona: Decision Maker is Online
+[rosout][INFO] 2024-12-03 17:33:34,568: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:34,617: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rospy.internal][INFO] 2024-12-03 17:33:34,635: topic[/rosout] adding connection to [/rosout], count 0
+[rosout][INFO] 2024-12-03 17:33:34,668: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:34,697: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:34,717: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:34,768: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:34,799: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:34,818: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:34,868: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:34,898: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:34,918: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:34,968: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:35,000: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:35,018: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:35,071: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:35,098: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:35,118: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:35,171: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:35,198: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:35,218: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:35,268: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:35,298: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:35,317: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:35,367: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:35,399: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:35,418: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:35,468: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:35,498: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:35,518: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:35,568: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:35,598: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:35,618: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:35,668: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:35,698: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:35,718: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:35,768: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:35,798: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:35,818: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:35,868: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:35,898: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:35,918: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:35,968: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:35,998: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:36,018: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:36,069: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:36,097: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:36,118: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:36,168: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:36,198: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:36,218: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:36,268: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:36,297: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:36,318: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:36,368: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:36,398: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:36,418: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:36,467: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:36,498: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:36,517: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:36,568: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:36,598: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:36,618: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:36,667: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:36,700: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rospy.internal][INFO] 2024-12-03 17:33:36,721: topic[/fiona/cmd_vel] adding connection to [/fiona/traction_wheels], count 0
+[rosout][INFO] 2024-12-03 17:33:36,718: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:36,767: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:36,798: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:36,818: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:36,868: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:36,898: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:36,917: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:36,967: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:36,999: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:37,018: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:37,067: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:37,098: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:37,118: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:37,168: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:37,198: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:37,217: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:37,268: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:37,298: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:37,318: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:37,368: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:37,400: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:37,418: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:37,473: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:37,498: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:37,518: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:37,568: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:37,598: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:37,618: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:37,668: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:37,698: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:37,718: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:37,767: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:37,798: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:37,818: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:37,868: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:37,898: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:37,918: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:37,967: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:37,998: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:38,017: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:38,069: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:38,098: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:38,118: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:38,168: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:38,199: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:38,217: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:38,268: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:38,298: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:38,318: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rospy.internal][INFO] 2024-12-03 17:33:38,353: topic[/fiona/cmd_vel_from_img] adding connection to [http://192.168.1.13:40591/], count 0
+[rosout][INFO] 2024-12-03 17:33:38,368: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:38,399: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:38,418: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:38,468: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:38,498: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:38,517: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:38,568: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:38,597: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:38,618: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:38,668: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:38,697: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:38,717: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:38,768: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:38,797: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:38,817: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000 m
+[rosout][INFO] 2024-12-03 17:33:38,868: Wheel Omega -- Linear vel: 0.161 m/s, Ang vel: -0.406 rad/s, Tot Dis: 0.016 m
+[rosout][INFO] 2024-12-03 17:33:38,898: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:38,917: Wheel Omega -- Linear vel: 0.181 m/s, Ang vel: -0.603 rad/s, Tot Dis: 0.034 m
+[rosout][INFO] 2024-12-03 17:33:38,968: Wheel Omega -- Linear vel: 0.174 m/s, Ang vel: -0.292 rad/s, Tot Dis: 0.052 m
+[rosout][INFO] 2024-12-03 17:33:38,997: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:39,017: Wheel Omega -- Linear vel: 0.191 m/s, Ang vel: -0.026 rad/s, Tot Dis: 0.071 m
+[rosout][INFO] 2024-12-03 17:33:39,068: Wheel Omega -- Linear vel: 0.217 m/s, Ang vel: -0.086 rad/s, Tot Dis: 0.092 m
+[rosout][INFO] 2024-12-03 17:33:39,098: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:39,118: Wheel Omega -- Linear vel: 0.233 m/s, Ang vel: -0.127 rad/s, Tot Dis: 0.116 m
+[rosout][INFO] 2024-12-03 17:33:39,168: Wheel Omega -- Linear vel: 0.235 m/s, Ang vel: -0.138 rad/s, Tot Dis: 0.139 m
+[rosout][INFO] 2024-12-03 17:33:39,198: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:39,217: Wheel Omega -- Linear vel: 0.229 m/s, Ang vel: -0.177 rad/s, Tot Dis: 0.162 m
+[rosout][INFO] 2024-12-03 17:33:39,268: Wheel Omega -- Linear vel: 0.226 m/s, Ang vel: -0.175 rad/s, Tot Dis: 0.185 m
+[rosout][INFO] 2024-12-03 17:33:39,301: AprilTag -- Linear vel: 0.007 m/s, Ang vel: 0.009 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:39,317: Wheel Omega -- Linear vel: 0.213 m/s, Ang vel: -0.124 rad/s, Tot Dis: 0.206 m
+[rosout][INFO] 2024-12-03 17:33:39,368: Wheel Omega -- Linear vel: 0.205 m/s, Ang vel: -0.061 rad/s, Tot Dis: 0.227 m
+[rosout][INFO] 2024-12-03 17:33:39,398: AprilTag -- Linear vel: 0.019 m/s, Ang vel: 0.017 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:39,417: Wheel Omega -- Linear vel: 0.211 m/s, Ang vel: -0.087 rad/s, Tot Dis: 0.248 m
+[rosout][INFO] 2024-12-03 17:33:39,468: Wheel Omega -- Linear vel: 0.215 m/s, Ang vel: -0.261 rad/s, Tot Dis: 0.269 m
+[rosout][INFO] 2024-12-03 17:33:39,498: AprilTag -- Linear vel: 0.032 m/s, Ang vel: 0.038 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:39,518: Wheel Omega -- Linear vel: 0.221 m/s, Ang vel: -0.135 rad/s, Tot Dis: 0.291 m
+[rosout][INFO] 2024-12-03 17:33:39,569: Wheel Omega -- Linear vel: 0.225 m/s, Ang vel: -0.193 rad/s, Tot Dis: 0.314 m
+[rosout][INFO] 2024-12-03 17:33:39,598: AprilTag -- Linear vel: 0.045 m/s, Ang vel: 0.050 rad/s, Tot Dis: 0.000m
+[rosout][INFO] 2024-12-03 17:33:39,617: Wheel Omega -- Linear vel: 0.234 m/s, Ang vel: -0.404 rad/s, Tot Dis: 0.337 m
+[rosout][INFO] 2024-12-03 17:33:39,668: Wheel Omega -- Linear vel: 0.246 m/s, Ang vel: -0.539 rad/s, Tot Dis: 0.362 m
+[rosout][INFO] 2024-12-03 17:33:39,697: AprilTag -- Linear vel: 0.067 m/s, Ang vel: 0.066 rad/s, Tot Dis: 0.006m
+[rosout][INFO] 2024-12-03 17:33:39,718: Wheel Omega -- Linear vel: 0.231 m/s, Ang vel: -0.265 rad/s, Tot Dis: 0.385 m
+[rosout][INFO] 2024-12-03 17:33:39,768: Wheel Omega -- Linear vel: 0.219 m/s, Ang vel: -0.125 rad/s, Tot Dis: 0.407 m
+[rosout][INFO] 2024-12-03 17:33:39,797: AprilTag -- Linear vel: 0.089 m/s, Ang vel: 0.084 rad/s, Tot Dis: 0.014m
+[rosout][INFO] 2024-12-03 17:33:39,817: Wheel Omega -- Linear vel: 0.202 m/s, Ang vel: -0.137 rad/s, Tot Dis: 0.427 m
+[rosout][INFO] 2024-12-03 17:33:39,868: Wheel Omega -- Linear vel: 0.228 m/s, Ang vel: -0.357 rad/s, Tot Dis: 0.450 m
+[rosout][INFO] 2024-12-03 17:33:39,898: AprilTag -- Linear vel: 0.127 m/s, Ang vel: 0.122 rad/s, Tot Dis: 0.035m
+[rosout][INFO] 2024-12-03 17:33:39,918: Wheel Omega -- Linear vel: 0.223 m/s, Ang vel: -0.122 rad/s, Tot Dis: 0.472 m
+[rosout][INFO] 2024-12-03 17:33:39,968: Wheel Omega -- Linear vel: 0.233 m/s, Ang vel: 0.192 rad/s, Tot Dis: 0.496 m
+[rosout][INFO] 2024-12-03 17:33:39,998: AprilTag -- Linear vel: 0.157 m/s, Ang vel: 0.146 rad/s, Tot Dis: 0.049m
+[rosout][INFO] 2024-12-03 17:33:40,018: Wheel Omega -- Linear vel: 0.237 m/s, Ang vel: 0.151 rad/s, Tot Dis: 0.519 m
+[rosout][INFO] 2024-12-03 17:33:40,068: Wheel Omega -- Linear vel: 0.237 m/s, Ang vel: 0.441 rad/s, Tot Dis: 0.543 m
+[rosout][INFO] 2024-12-03 17:33:40,098: AprilTag -- Linear vel: 0.184 m/s, Ang vel: 0.168 rad/s, Tot Dis: 0.064m
+[rosout][INFO] 2024-12-03 17:33:40,117: Wheel Omega -- Linear vel: 0.229 m/s, Ang vel: 0.245 rad/s, Tot Dis: 0.566 m
+[rosout][INFO] 2024-12-03 17:33:40,168: Wheel Omega -- Linear vel: 0.223 m/s, Ang vel: 0.195 rad/s, Tot Dis: 0.588 m
+[rosout][INFO] 2024-12-03 17:33:40,197: AprilTag -- Linear vel: 0.194 m/s, Ang vel: 0.176 rad/s, Tot Dis: 0.081m
+[rosout][INFO] 2024-12-03 17:33:40,217: Wheel Omega -- Linear vel: 0.220 m/s, Ang vel: 0.261 rad/s, Tot Dis: 0.610 m
+[rosout][INFO] 2024-12-03 17:33:40,269: Wheel Omega -- Linear vel: 0.226 m/s, Ang vel: 0.239 rad/s, Tot Dis: 0.633 m
+[rosout][INFO] 2024-12-03 17:33:40,297: AprilTag -- Linear vel: 0.212 m/s, Ang vel: 0.141 rad/s, Tot Dis: 0.116m
+[rosout][INFO] 2024-12-03 17:33:40,317: Wheel Omega -- Linear vel: 0.234 m/s, Ang vel: 0.150 rad/s, Tot Dis: 0.656 m
+[rosout][INFO] 2024-12-03 17:33:40,368: Wheel Omega -- Linear vel: 0.233 m/s, Ang vel: 0.188 rad/s, Tot Dis: 0.679 m
+[rosout][INFO] 2024-12-03 17:33:40,399: AprilTag -- Linear vel: 0.223 m/s, Ang vel: 0.106 rad/s, Tot Dis: 0.135m
+[rosout][INFO] 2024-12-03 17:33:40,418: Wheel Omega -- Linear vel: 0.234 m/s, Ang vel: 0.131 rad/s, Tot Dis: 0.703 m
+[rosout][INFO] 2024-12-03 17:33:40,468: Wheel Omega -- Linear vel: 0.234 m/s, Ang vel: 0.240 rad/s, Tot Dis: 0.726 m
+[rosout][INFO] 2024-12-03 17:33:40,497: AprilTag -- Linear vel: 0.225 m/s, Ang vel: 0.063 rad/s, Tot Dis: 0.154m
+[rosout][INFO] 2024-12-03 17:33:40,518: Wheel Omega -- Linear vel: 0.232 m/s, Ang vel: 0.187 rad/s, Tot Dis: 0.749 m
+[rosout][INFO] 2024-12-03 17:33:40,568: Wheel Omega -- Linear vel: 0.230 m/s, Ang vel: 0.190 rad/s, Tot Dis: 0.772 m
+[rosout][INFO] 2024-12-03 17:33:40,597: AprilTag -- Linear vel: 0.231 m/s, Ang vel: 0.022 rad/s, Tot Dis: 0.174m
+[rosout][INFO] 2024-12-03 17:33:40,617: Wheel Omega -- Linear vel: 0.226 m/s, Ang vel: 0.187 rad/s, Tot Dis: 0.795 m
+[rosout][INFO] 2024-12-03 17:33:40,668: Wheel Omega -- Linear vel: 0.227 m/s, Ang vel: 0.197 rad/s, Tot Dis: 0.818 m
+[rosout][INFO] 2024-12-03 17:33:40,698: AprilTag -- Linear vel: 0.231 m/s, Ang vel: -0.021 rad/s, Tot Dis: 0.194m
+[rosout][INFO] 2024-12-03 17:33:40,717: Wheel Omega -- Linear vel: 0.228 m/s, Ang vel: 0.217 rad/s, Tot Dis: 0.841 m
+[rosout][INFO] 2024-12-03 17:33:40,768: Wheel Omega -- Linear vel: 0.235 m/s, Ang vel: 0.156 rad/s, Tot Dis: 0.864 m
+[rosout][INFO] 2024-12-03 17:33:40,798: AprilTag -- Linear vel: 0.234 m/s, Ang vel: -0.068 rad/s, Tot Dis: 0.213m
+[rosout][INFO] 2024-12-03 17:33:40,817: Wheel Omega -- Linear vel: 0.236 m/s, Ang vel: -0.011 rad/s, Tot Dis: 0.888 m
+[rosout][INFO] 2024-12-03 17:33:40,868: Wheel Omega -- Linear vel: 0.233 m/s, Ang vel: 0.067 rad/s, Tot Dis: 0.911 m
+[rosout][INFO] 2024-12-03 17:33:40,898: AprilTag -- Linear vel: 0.242 m/s, Ang vel: -0.136 rad/s, Tot Dis: 0.253m
+[rosout][INFO] 2024-12-03 17:33:40,917: Wheel Omega -- Linear vel: 0.230 m/s, Ang vel: 0.060 rad/s, Tot Dis: 0.934 m
+[rosout][INFO] 2024-12-03 17:33:40,968: Wheel Omega -- Linear vel: 0.234 m/s, Ang vel: -0.047 rad/s, Tot Dis: 0.957 m
+[rosout][INFO] 2024-12-03 17:33:40,998: AprilTag -- Linear vel: 0.237 m/s, Ang vel: -0.168 rad/s, Tot Dis: 0.272m
+[rosout][INFO] 2024-12-03 17:33:41,017: Wheel Omega -- Linear vel: 0.230 m/s, Ang vel: -0.135 rad/s, Tot Dis: 0.980 m
+[rosout][INFO] 2024-12-03 17:33:41,068: Wheel Omega -- Linear vel: 0.237 m/s, Ang vel: -0.183 rad/s, Tot Dis: 1.004 m
+[rosout][INFO] 2024-12-03 17:33:41,097: AprilTag -- Linear vel: 0.233 m/s, Ang vel: -0.175 rad/s, Tot Dis: 0.292m
+[rosout][INFO] 2024-12-03 17:33:41,117: Wheel Omega -- Linear vel: 0.238 m/s, Ang vel: -0.252 rad/s, Tot Dis: 1.028 m
+[rosout][INFO] 2024-12-03 17:33:41,168: Wheel Omega -- Linear vel: 0.229 m/s, Ang vel: -0.131 rad/s, Tot Dis: 1.051 m
+[rosout][INFO] 2024-12-03 17:33:41,197: AprilTag -- Linear vel: 0.233 m/s, Ang vel: -0.171 rad/s, Tot Dis: 0.312m
+[rosout][INFO] 2024-12-03 17:33:41,218: Wheel Omega -- Linear vel: 0.235 m/s, Ang vel: -0.022 rad/s, Tot Dis: 1.074 m
+[rosout][INFO] 2024-12-03 17:33:41,268: Wheel Omega -- Linear vel: 0.233 m/s, Ang vel: -0.054 rad/s, Tot Dis: 1.098 m
+[rosout][INFO] 2024-12-03 17:33:41,297: AprilTag -- Linear vel: 0.233 m/s, Ang vel: -0.146 rad/s, Tot Dis: 0.331m
+[rosout][INFO] 2024-12-03 17:33:41,318: Wheel Omega -- Linear vel: 0.238 m/s, Ang vel: -0.112 rad/s, Tot Dis: 1.122 m
+[rosout][INFO] 2024-12-03 17:33:41,368: Wheel Omega -- Linear vel: 0.235 m/s, Ang vel: -0.266 rad/s, Tot Dis: 1.145 m
+[rosout][INFO] 2024-12-03 17:33:41,398: AprilTag -- Linear vel: 0.231 m/s, Ang vel: -0.119 rad/s, Tot Dis: 0.351m
+[rosout][INFO] 2024-12-03 17:33:41,417: Wheel Omega -- Linear vel: 0.230 m/s, Ang vel: -0.244 rad/s, Tot Dis: 1.168 m
+[rosout][INFO] 2024-12-03 17:33:41,468: Wheel Omega -- Linear vel: 0.234 m/s, Ang vel: -0.198 rad/s, Tot Dis: 1.191 m
+[rosout][INFO] 2024-12-03 17:33:41,498: AprilTag -- Linear vel: 0.230 m/s, Ang vel: -0.062 rad/s, Tot Dis: 0.390m
+[rosout][INFO] 2024-12-03 17:33:41,517: Wheel Omega -- Linear vel: 0.230 m/s, Ang vel: -0.065 rad/s, Tot Dis: 1.214 m
+[rosout][INFO] 2024-12-03 17:33:41,568: Wheel Omega -- Linear vel: 0.230 m/s, Ang vel: -0.095 rad/s, Tot Dis: 1.237 m
+[rosout][INFO] 2024-12-03 17:33:41,598: AprilTag -- Linear vel: 0.228 m/s, Ang vel: -0.013 rad/s, Tot Dis: 0.410m
+[rosout][INFO] 2024-12-03 17:33:41,618: Wheel Omega -- Linear vel: 0.235 m/s, Ang vel: -0.233 rad/s, Tot Dis: 1.261 m
+[rosout][INFO] 2024-12-03 17:33:41,668: Wheel Omega -- Linear vel: 0.244 m/s, Ang vel: -0.174 rad/s, Tot Dis: 1.285 m
+[rosout][INFO] 2024-12-03 17:33:41,697: AprilTag -- Linear vel: 0.224 m/s, Ang vel: 0.031 rad/s, Tot Dis: 0.429m
+[rosout][INFO] 2024-12-03 17:33:41,718: Wheel Omega -- Linear vel: 0.241 m/s, Ang vel: -0.122 rad/s, Tot Dis: 1.309 m
+[rosout][INFO] 2024-12-03 17:33:41,768: Wheel Omega -- Linear vel: 0.216 m/s, Ang vel: -0.011 rad/s, Tot Dis: 1.331 m
+[rosout][INFO] 2024-12-03 17:33:41,798: AprilTag -- Linear vel: 0.225 m/s, Ang vel: 0.068 rad/s, Tot Dis: 0.448m
+[rosout][INFO] 2024-12-03 17:33:41,817: Wheel Omega -- Linear vel: 0.162 m/s, Ang vel: -0.002 rad/s, Tot Dis: 1.347 m
+[rosout][INFO] 2024-12-03 17:33:41,868: Wheel Omega -- Linear vel: 0.130 m/s, Ang vel: 0.054 rad/s, Tot Dis: 1.360 m
+[rosout][INFO] 2024-12-03 17:33:41,899: AprilTag -- Linear vel: 0.229 m/s, Ang vel: 0.105 rad/s, Tot Dis: 0.467m
+[rosout][INFO] 2024-12-03 17:33:41,917: Wheel Omega -- Linear vel: 0.114 m/s, Ang vel: -0.002 rad/s, Tot Dis: 1.372 m
+[rosout][INFO] 2024-12-03 17:33:41,968: Wheel Omega -- Linear vel: 0.114 m/s, Ang vel: -0.002 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:41,998: AprilTag -- Linear vel: 0.236 m/s, Ang vel: 0.137 rad/s, Tot Dis: 0.506m
+[rosout][INFO] 2024-12-03 17:33:42,017: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:42,069: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:42,097: AprilTag -- Linear vel: 0.229 m/s, Ang vel: 0.137 rad/s, Tot Dis: 0.525m
+[rosout][INFO] 2024-12-03 17:33:42,117: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:42,168: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:42,197: AprilTag -- Linear vel: 0.218 m/s, Ang vel: 0.127 rad/s, Tot Dis: 0.543m
+[rosout][INFO] 2024-12-03 17:33:42,217: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:42,268: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:42,297: AprilTag -- Linear vel: 0.200 m/s, Ang vel: 0.114 rad/s, Tot Dis: 0.558m
+[rosout][INFO] 2024-12-03 17:33:42,318: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:42,368: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:42,398: AprilTag -- Linear vel: 0.183 m/s, Ang vel: 0.097 rad/s, Tot Dis: 0.573m
+[rosout][INFO] 2024-12-03 17:33:42,417: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:42,469: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:42,498: AprilTag -- Linear vel: 0.148 m/s, Ang vel: 0.068 rad/s, Tot Dis: 0.597m
+[rosout][INFO] 2024-12-03 17:33:42,518: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:42,568: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:42,598: AprilTag -- Linear vel: 0.119 m/s, Ang vel: 0.045 rad/s, Tot Dis: 0.606m
+[rosout][INFO] 2024-12-03 17:33:42,618: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:42,668: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:42,698: AprilTag -- Linear vel: 0.088 m/s, Ang vel: 0.024 rad/s, Tot Dis: 0.614m
+[rosout][INFO] 2024-12-03 17:33:42,718: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:42,769: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:42,797: AprilTag -- Linear vel: 0.058 m/s, Ang vel: 0.007 rad/s, Tot Dis: 0.619m
+[rosout][INFO] 2024-12-03 17:33:42,818: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:42,868: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:42,898: AprilTag -- Linear vel: 0.036 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.619m
+[rosout][INFO] 2024-12-03 17:33:42,917: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:42,968: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:43,007: AprilTag -- Linear vel: 0.023 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.619m
+[rosout][INFO] 2024-12-03 17:33:43,017: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:43,068: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:43,098: AprilTag -- Linear vel: 0.012 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.619m
+[rosout][INFO] 2024-12-03 17:33:43,117: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:43,168: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:43,197: AprilTag -- Linear vel: 0.005 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.619m
+[rosout][INFO] 2024-12-03 17:33:43,217: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:43,269: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:43,298: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.619m
+[rosout][INFO] 2024-12-03 17:33:43,317: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:43,368: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:43,398: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.619m
+[rosout][INFO] 2024-12-03 17:33:43,417: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:43,468: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:43,499: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.619m
+[rosout][INFO] 2024-12-03 17:33:43,518: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:43,568: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:43,601: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.619m
+[rosout][INFO] 2024-12-03 17:33:43,617: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:43,668: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:43,699: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.619m
+[rosout][INFO] 2024-12-03 17:33:43,717: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:43,768: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:43,798: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.619m
+[rosout][INFO] 2024-12-03 17:33:43,817: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:43,868: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:43,898: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.619m
+[rosout][INFO] 2024-12-03 17:33:43,917: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:43,969: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:43,999: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.619m
+[rosout][INFO] 2024-12-03 17:33:44,018: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:44,068: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:44,102: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.619m
+[rosout][INFO] 2024-12-03 17:33:44,117: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:44,168: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:44,200: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.619m
+[rosout][INFO] 2024-12-03 17:33:44,217: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:44,268: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:44,299: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.619m
+[rosout][INFO] 2024-12-03 17:33:44,318: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:44,368: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:44,398: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.619m
+[rosout][INFO] 2024-12-03 17:33:44,418: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:44,468: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rosout][INFO] 2024-12-03 17:33:44,501: AprilTag -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 0.619m
+[rosout][INFO] 2024-12-03 17:33:44,518: Wheel Omega -- Linear vel: 0.000 m/s, Ang vel: 0.000 rad/s, Tot Dis: 1.383 m
+[rospy.core][INFO] 2024-12-03 17:33:44,529: signal_shutdown [signal-2]
+[rospy.internal][INFO] 2024-12-03 17:33:44,541: topic[/fiona/wheel_omega] removing connection to http://192.168.1.13:35933/
+[rospy.internal][INFO] 2024-12-03 17:33:44,548: topic[/rosout] removing connection to /rosout
+[rospy.internal][INFO] 2024-12-03 17:33:44,550: topic[/fiona/cmd_vel] removing connection to /fiona/traction_wheels
+[rospy.internal][INFO] 2024-12-03 17:33:44,553: topic[/fiona/cmd_vel_from_img] removing connection to http://192.168.1.13:40591/
+[rospy.internal][INFO] 2024-12-03 17:33:44,554: topic[/fiona/cmd_vel_from_img] removing connection to http://192.168.1.13:40591/
+[rospy.internal][INFO] 2024-12-03 17:33:44,559: topic[/kinematic_info] removing connection to http://192.168.1.19:37791/
+[rospy.internal][INFO] 2024-12-03 17:33:44,560: topic[/kinematic_info] removing connection to http://192.168.1.19:37791/
+[rospy.impl.masterslave][INFO] 2024-12-03 17:33:44,561: signal-2
+[rospy.core][INFO] 2024-12-03 17:33:45,140: signal_shutdown [atexit]

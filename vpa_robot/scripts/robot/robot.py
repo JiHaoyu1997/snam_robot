@@ -76,7 +76,7 @@ class RobotMotion:
             v = self.radius * (omega_left + omega_right) / 2.0  # 线速度
             omega = self.radius * (omega_right - omega_left) / self.baseline  # 角速度
 
-            dt = 0.1
+            dt = 1 / 20
             distance_moved = self.update_position(v, omega, dt)
 
             # 打印当前速度和位置
