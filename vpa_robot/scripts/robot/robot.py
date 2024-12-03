@@ -45,7 +45,8 @@ class RobotMotion:
     def calc_total_travel_distance(self):
         curr_position = (self.curr_pose_data[1], self.curr_pose_data[2])
         
-        if self.prev_pose_data is not None:
+        if not self.prev_pose_data:
+            print(self.prev_pose_data)
             pre_position = (self.prev_pose_data[1], self.prev_pose_data[2])
             distance = self.calculate_distance(pre_position, curr_position)
             time = self.curr_pose_data[0] - self.prev_pose_data[0]
