@@ -33,11 +33,11 @@ class RobotMotion:
 
         self.prev_pose_data = []
         self.curr_pose_data = []
-        self.pre_position = None
         self.total_travel_distance = 0.0
     
     def kinematic_recoder(self, pose, vel):
         self.prev_pose_data = self.curr_pose_data
+        print(self.prev_pose_data)
         self.curr_pose_data = pose
         self.vel = vel
         return self.calc_total_travel_distance()
