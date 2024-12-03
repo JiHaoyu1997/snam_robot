@@ -37,22 +37,22 @@ class RobotMotion:
     
     def kinematic_recoder(self, pose, vel):
         self.prev_pose_data = self.curr_pose_data
-        print(self.prev_pose_data)
         self.curr_pose_data = pose
         self.vel = vel
         return self.calc_total_travel_distance()
         
     def calc_total_travel_distance(self):
+        if len(self.prev_pose_data <=3 ):
+            rospy.logwarn("Pose data is incomplete.")
+            return
+
+        prev_position = (self.prev_pose_data[1], self.prev_pose_data[2])
         curr_position = (self.curr_pose_data[1], self.curr_pose_data[2])
-        
-        if not self.prev_pose_data:
-            print(self.prev_pose_data)
-            pre_position = (self.prev_pose_data[1], self.prev_pose_data[2])
-            distance = self.calculate_distance(pre_position, curr_position)
-            time = self.curr_pose_data[0] - self.prev_pose_data[0]
-            self.total_travel_distance += distance
-            vel = distance / time
-            rospy.loginfo(f"Current Travel Distance: {self.total_travel_distance:.3f}, Current Velocity: {vel:.3f}")
+        distance = self.calculate_distance(prev_position, curr_position)
+        time = self.curr_pose_data[0] - self.prev_pose_data[0]
+        self.total_travel_distance += distance
+        vel = distance / time
+        rospy.loginfo(f"Current Travel Distance: {self.total_travel_distance:.3f}, Current Velocity: {vel:.3f}")
 
         return
 
