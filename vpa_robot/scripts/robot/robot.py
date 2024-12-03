@@ -42,7 +42,7 @@ class RobotMotion:
         return self.calc_total_travel_distance()
         
     def calc_total_travel_distance(self):
-        if len(self.prev_pose_data <=3 ):
+        if len(self.prev_pose_data) <= 3:
             rospy.logwarn("Pose data is incomplete.")
             return
 
