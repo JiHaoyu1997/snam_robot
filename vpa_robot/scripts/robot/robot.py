@@ -31,24 +31,29 @@ class RobotMotion:
         self.radius = 0.0318
         self.baseline = 0.1
 
+        self.prev_pose_data = []
         self.curr_pose_data = []
         self.pre_position = None
         self.total_travel_distance = 0.0
     
     def kinematic_recoder(self, pose, vel):
+        self.prev_pose_data = self.curr_pose_data
         self.curr_pose_data = pose
         self.vel = vel
         return self.calc_total_travel_distance()
         
     def calc_total_travel_distance(self):
         curr_position = (self.curr_pose_data[1], self.curr_pose_data[2])
-
-        if self.pre_position is not None:
-            distance = self.calculate_distance(self.pre_position, curr_position)
+        
+        if self.prev_pose_data is not None:
+            pre_position = (self.prev_pose_data[1], self.prev_pose_data[2])
+            distance = self.calculate_distance(pre_position, curr_position)
+            time = self.curr_pose_data[0] - self.prev_pose_data[0]
+            vel = distance / time
+            print(vel)
             self.total_travel_distance += distance
             rospy.loginfo(f"Current Travel Distance: {self.total_travel_distance:.3f}")
 
-        self.pre_position = curr_position
         return
 
     @staticmethod
