@@ -49,7 +49,7 @@ class RobotMotion:
         prev_position = (self.prev_pose_data[1], self.prev_pose_data[2])
         curr_position = (self.curr_pose_data[1], self.curr_pose_data[2])
         distance = self.calculate_distance(prev_position, curr_position)
-        
+
         time = self.curr_pose_data[0] - self.prev_pose_data[0]
         vel = distance / time
         print(distance, time, vel)
@@ -63,8 +63,8 @@ class RobotMotion:
     def calculate_distance(point1, point2):
         threshold = 0.005
         distance = math.sqrt((point2[0] - point1[0])**2 + (point2[1] - point1[1])**2)
-        if distance <= threshold:
-            return 0
+        # if distance <= threshold:
+        #     return 0
         return distance
     
     def vel_caculator(self, msg):
