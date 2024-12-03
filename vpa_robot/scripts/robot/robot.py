@@ -49,7 +49,7 @@ class RobotMotion:
 
     @staticmethod
     def calculate_distance(point1, point2):
-        threshold = 0.002
+        threshold = 0.004
         distance = math.sqrt((point2[0] - point1[0])**2 + (point2[1] - point1[1])**2)
         if distance <= threshold:
             return 0
