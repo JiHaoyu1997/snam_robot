@@ -10,6 +10,7 @@ from geometry_msgs.msg import Twist
 from vpa_robot.msg import RobotInfo as RobotInfoMsg
 from vpa_robot.msg import InterInfo as InterInfoMsg
 from vpa_robot.msg import KinematicDataArray
+from vpa_robot_interface.msg import WheelsEncoder
 from vpa_robot.srv import InterMng, InterMngRequest, InterMngResponse
 from vpa_robot.srv import NewRoute, NewRouteRequest, NewRouteResponse
 from vpa_robot.srv import ReadySignal, ReadySignalResponse
@@ -58,6 +59,7 @@ class RobotDecision:
         # Subscribers
         self.cmd_vel_from_img_sub = rospy.Subscriber('cmd_vel_from_img', Twist, self.cmd_vel_from_img_cb)
         self.kinematic_info_sub = rospy.Subscriber('/kinematic_info', KinematicDataArray, self.kinematic_info_sub_cb)
+        self.wheel_omega_sub = rospy.Subscriber('wheel_omega', WheelsEncoder, self.wheel_omega_sub_cb)
         self.inter_info_sub = rospy.Subscriber(self.local_inter_info_topic, InterInfoMsg, self.inter_info_cb)
 
         # Servers
@@ -172,6 +174,9 @@ class RobotDecision:
                 curr_vel = data.vel
                 self.robot_motion_controller.kinematic_recoder(pose=curr_pose, vel=curr_vel)
         return
+    
+    def wheel_omega_sub_cb(self, wheel_omega_msg: WheelsEncoder):
+        return self.robot_motion_controller.vel_caculator(msg=wheel_omega_msg)
 
 
 if __name__ == '__main__':
