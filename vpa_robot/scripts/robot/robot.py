@@ -34,6 +34,11 @@ class RobotMotion:
         self.prev_pose_data = []
         self.curr_pose_data = []
         self.total_travel_distance = 0.0
+
+        self.x = 0.0
+        self.y = 0.0
+        self.theta = 0.0
+        self.total_distance_wheel_omega = 0.0
     
     def kinematic_recoder(self, pose, vel):
         self.prev_pose_data = self.curr_pose_data
@@ -62,16 +67,44 @@ class RobotMotion:
         return distance
     
     def vel_caculator(self, msg):
-        # 读取左右轮角速度
-        omega_left = msg.omega_left
-        omega_right = msg.omega_right
+            # 读取左右轮角速度
+            omega_left = msg.omega_left
+            omega_right = msg.omega_right
 
-        # 计算机器人线速度和角速度
-        v = self.radius * (omega_left + omega_right) / 2.0
-        omega = self.radius * (omega_right - omega_left) / self.baseline
+            # 计算机器人线速度和角速度
+            v = self.radius * (omega_left + omega_right) / 2.0  # 线速度
+            omega = self.radius * (omega_right - omega_left) / self.baseline  # 角速度
 
-        rospy.loginfo(f"Wheel Omega: Linear velocity: {v:.3f} m/s")
-        rospy.loginfo(f"ApriliTag: Linear velocity: {self.vel[0]:.3f} m/s")
-        return
+            dt = 0.1
+            distance_moved = self.update_position(v, omega, dt)
 
+            # 打印当前速度和位置
+            rospy.loginfo(f"Wheel Omega: Linear velocity: {v:.3f} m/s, Angular velocity: {omega:.3f} rad/s")
+            rospy.loginfo(f"Total distance traveled: {self.total_distance_wheel_omega:.3f} meters")
 
+    def update_position(self, v, omega, dt):
+        # 根据线速度和角速度更新位置和朝向
+        if omega == 0:  # 如果角速度为0，机器人沿直线移动
+            dx = v * dt * math.cos(self.theta)
+            dy = v * dt * math.sin(self.theta)
+            distance = v * dt  # 距离为线速度 * 时间
+        else:  # 如果有角速度，计算弧度变化
+            # 更新朝向
+            dtheta = omega * dt
+            # 更新位置
+            dx = (v / omega) * (math.sin(self.theta + dtheta) - math.sin(self.theta))
+            dy = (v / omega) * (math.cos(self.theta) - math.cos(self.theta + dtheta))
+            distance = (v / omega) * abs(dtheta)  # 距离为弧长：r * delta_theta
+
+        # 更新机器人位置和朝向
+        self.x += dx
+        self.y += dy
+        self.theta += omega * dt
+
+        # 保证角度在[-pi, pi]范围内
+        self.theta = (self.theta + math.pi) % (2 * math.pi) - math.pi
+
+        # 累加总路径长度
+        self.total_distance_wheel_omega += distance
+
+        return distance
