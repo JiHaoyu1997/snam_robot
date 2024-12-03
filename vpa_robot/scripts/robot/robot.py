@@ -33,7 +33,7 @@ class RobotMotion:
 
         self.prev_pose_data = []
         self.curr_pose_data = []
-        self.total_travel_distance = 0.0
+        self.total_distance_apriltag = 0.0
 
         self.x = 0.0
         self.y = 0.0
@@ -44,17 +44,22 @@ class RobotMotion:
         self.prev_pose_data = self.curr_pose_data
         self.curr_pose_data = pose
         self.vel = vel
-        return self.calc_total_travel_distance()
+        return self.calc_total_distance_apriltag()
         
-    def calc_total_travel_distance(self):
+    def calc_total_distance_apriltag(self):
         if len(self.prev_pose_data) <= 3:
             return
 
         prev_position = (self.prev_pose_data[1], self.prev_pose_data[2])
         curr_position = (self.curr_pose_data[1], self.curr_pose_data[2])
         distance = self.calculate_distance(prev_position, curr_position)        
-        self.total_travel_distance += distance
-        rospy.loginfo(f"Current Travel Distance: {self.total_travel_distance:.3f}")
+        self.total_distance_apriltag += distance
+        rospy.loginfo(
+            f"AprilTag --
+            Linear vel: {self.vel[0]:.3f} m/s, 
+            Ang vel: {self.vel[1]:.3f} rad/s, 
+            Tot Dis: {self.total_distance_apriltag:.3f}"
+        )
 
         return
 
@@ -79,8 +84,13 @@ class RobotMotion:
             distance_moved = self.update_position(v, omega, dt)
 
             # 打印当前速度和位置
-            rospy.loginfo(f"Wheel Omega: Linear velocity: {v:.3f} m/s, Angular velocity: {omega:.3f} rad/s")
-            rospy.loginfo(f"Total distance traveled: {self.total_distance_wheel_omega:.3f} meters")
+            rospy.loginfo(
+                f"Wheel Omega -- 
+                Linear vel: {v:.3f} m/s, 
+                Ang vel: {omega:.3f} rad/s, 
+                Tot Dis: {self.total_distance_wheel_omega:.3f} meters"
+            )
+
 
     def update_position(self, v, omega, dt):
         # 根据线速度和角速度更新位置和朝向
