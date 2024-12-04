@@ -42,7 +42,7 @@ def bufffer_pi_control(ref, sig, vf=0.3, vs=0.3):
 err_intergal = 0
 last_time_called = 0
 
-def inter_pi_control(ref, sig, vf=0.3,vs=0.3):
+def inter_pi_control(ref, sig, vf=0.3, vs=0.3):
     
     # kp: the p gain for this controller
     # ki: the i gain for this controller

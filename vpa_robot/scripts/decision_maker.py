@@ -165,7 +165,10 @@ class RobotDecision:
         """Decision-making process based on the robot's current state and received command."""
         # Example: Placeholder - logic to be implemented
         rospy.logdebug(f"Making decision based on intersection {robot_inter_info.inter} and incoming command.")
-        return twist_from_img
+        
+        twsit_from_decion = Twist
+        twsit_from_decion.linear.x = 0.3
+        return twsit_from_decion
 
     def kinematic_info_sub_cb(self, kinematic_data_msg: KinematicDataArray):
         for data in kinematic_data_msg.data:
@@ -176,7 +179,7 @@ class RobotDecision:
         return
     
     def wheel_omega_sub_cb(self, wheel_omega_msg: WheelsEncoder):
-        return self.robot_motion_controller.vel_caculator(msg=wheel_omega_msg)
+        return self.robot_motion_controller.tick_recorder(msg=wheel_omega_msg)
 
 
 if __name__ == '__main__':
