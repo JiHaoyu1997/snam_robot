@@ -166,7 +166,7 @@ class RobotDecision:
         # Example: Placeholder - logic to be implemented
         rospy.logdebug(f"Making decision based on intersection {robot_inter_info.inter} and incoming command.")
         
-        twsit_from_decion = Twist
+        twsit_from_decion = Twist()
         twsit_from_decion.linear.x = 0.3
         return twsit_from_decion
 
