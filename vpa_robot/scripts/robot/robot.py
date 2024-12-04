@@ -59,7 +59,7 @@ class RobotMotion:
         curr_position = (self.curr_pose_data[1], self.curr_pose_data[2])
         distance = self.calculate_distance(prev_position, curr_position)        
         self.total_distance_apriltag += distance
-        rospy.loginfo(f"AprilTag -- Linear vel: {self.vel[0]:.3f} m/s, Ang vel: {self.vel[1]:.3f} rad/s, Tot Dis: {self.total_distance_apriltag:.3f}m")
+        # rospy.loginfo(f"AprilTag -- Linear vel: {self.vel[0]:.3f} m/s, Ang vel: {self.vel[1]:.3f} rad/s, Tot Dis: {self.total_distance_apriltag:.3f}m")
 
         return
 
@@ -80,4 +80,4 @@ class RobotMotion:
             s_right = right_ticks / self.ticks_per_circle * 2 * math.pi * self.radius
 
             # 打印当前速度和位置
-            rospy.loginfo(f"Wheel Omega -- Left Wheel Distance: {s_left:.3f} m, Right Wheel Distance: {s_right:.3f}m.")
+            # rospy.loginfo(f"Wheel Omega -- Left Wheel Distance: {s_left:.3f} m, Right Wheel Distance: {s_right:.3f}m.")
