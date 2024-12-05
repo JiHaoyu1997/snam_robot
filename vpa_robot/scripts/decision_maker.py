@@ -5,6 +5,7 @@ from typing import List
 
 from robot.robot import find_id_by_robot_name, RobotMotion
 
+from std_msgs.msg import Bool
 from geometry_msgs.msg import Twist
 
 from vpa_robot.msg import RobotInfo as RobotInfoMsg
@@ -16,21 +17,62 @@ from vpa_robot.srv import NewRoute, NewRouteRequest, NewRouteResponse
 from vpa_robot.srv import ReadySignal, ReadySignalResponse
 
 class RobotInfo:
-    def __init__(self, name="", id=0, a=0.0, v=0.0, p=0.0, enter_time=0.0, arrive_cp_time=0.0, exit_time=0.0):
+    def __init__(self, name="", id=0, a=0.0, v=0.0, p=0.0, coordinate=(0.0, 0,0), enter_time=0.0, arrive_cp_time=0.0, exit_time=0.0):
         self.robot_name = name
         self.robot_id = id
         self.robot_a = a  # Acceleration
         self.robot_v = v  # Velocity
         self.robot_p = p  # Position
+        self.robot_coordinate = coordinate # Coordinate
         self.robot_enter_time = enter_time
         self.robot_arrive_cp_time = arrive_cp_time
         self.robot_exit_time = exit_time
+
 
 class InterInfo:
     def __init__(self, inter=0):
         self.inter = inter  # Intersection ID
         self.robot_id_list = []  # List of robot names or IDs
         self.robot_info = []  # List of RobotInfo instances
+
+
+class FCFSModel:
+    def __init__(self, robot_id=0) -> None:
+        self.robot_id = robot_id
+        self.enter_conflict_zone = False
+
+
+    def decision_maker(self, twist_from_img: Twist, robot_inter_info: InterInfo):
+        robot_id_list = robot_inter_info.robot_id_list
+        self.pass_permssion = True if self.robot_id == robot_id_list[0] else False
+
+        if self.enter_conflict_zone:
+            if not self.pass_permssion:
+                twist  = Twist()
+                return twist
+            else:
+                return twist_from_img
+        
+        else:
+            return twist_from_img
+
+
+class CBAAandDMPC:
+    def __init__(self, robot_id=0) -> None:
+        self.robot_id = robot_id
+        self.enter_conflict_zone = False
+
+    def get_priority_by_CBAA(self):
+        pass
+
+    def get_twist_by_DMPC(self):
+        pass
+
+    def decision_maker(self, twist_from_img, robot_info):
+        priority = self.get_priority_by_CBAA()
+        twist = self.get_twist_by_DMPC()
+        return twist       
+
 
 class RobotDecision:
     # Initialization
@@ -44,6 +86,7 @@ class RobotDecision:
         # Robot name
         self.robot_name = rospy.get_param('~robot_name', 'db19')
         self.robot_id = find_id_by_robot_name(robot_name=self.robot_name)
+        self.decision_model = FCFSModel(robot_id=self.robot_id)
         self.robot_motion_controller = RobotMotion(name=self.robot_name, id=self.robot_id) 
 
         # Initialize route and intersection information
@@ -57,9 +100,10 @@ class RobotDecision:
         self.cmd_vel_pub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
 
         # Subscribers
+        self.inform_enter_conflict_sub = rospy.Subscriber('inform_enter_conflict', Bool, self.inform_enter_conflict_cb)
         self.cmd_vel_from_img_sub = rospy.Subscriber('cmd_vel_from_img', Twist, self.cmd_vel_from_img_cb)
-        self.kinematic_info_sub = rospy.Subscriber('/kinematic_info', KinematicDataArray, self.kinematic_info_sub_cb)
-        self.wheel_omega_sub = rospy.Subscriber('wheel_omega', WheelsEncoder, self.wheel_omega_sub_cb)
+        self.kinematic_info_sub = rospy.Subscriber('/kinematic_info', KinematicDataArray, self.kinematic_info_cb)
+        self.wheel_omega_sub = rospy.Subscriber('wheel_omega', WheelsEncoder, self.wheel_omega_cb)
         self.inter_info_sub = rospy.Subscriber(self.local_inter_info_topic, InterInfoMsg, self.inter_info_cb)
 
         # Servers
@@ -135,7 +179,7 @@ class RobotDecision:
             InterInfoMsg,
             self.inter_info_cb
         )
-        rospy.loginfo(f"Updated Intersection Subscription to {self.local_inter_info_topic}")
+        rospy.loginfo(f"{self.robot_name} updated inter_sub to {self.local_inter_info_topic}")
 
     def inter_info_cb(self, inter_info_msg: InterInfoMsg):
         """Updates local intersection information based on the message."""
@@ -149,6 +193,7 @@ class RobotDecision:
                 a=info.robot_a,
                 v=info.robot_v,
                 p=info.robot_p,
+                coordinate=info.robot_coordinate,
                 enter_time=info.robot_enter_time,
                 arrive_cp_time=info.robot_arrive_cp_time,
                 exit_time=info.robot_exit_time
@@ -156,20 +201,20 @@ class RobotDecision:
         ]
 
     def cmd_vel_from_img_cb(self, msg: Twist):
-        """Publishes Twist messages received from the vision system."""
-        # Make a decision or directly forward based on image input
+        """
+        Receive Twist messages from the vision system.
+        """
         cmd_vel = self.make_decision(twist_from_img=msg, robot_inter_info=self.local_inter_info)
         self.cmd_vel_pub.publish(cmd_vel)
 
     def make_decision(self, twist_from_img: Twist, robot_inter_info: InterInfo) -> Twist:
-        """Decision-making process based on the robot's current state and received command."""
-        # Example: Placeholder - logic to be implemented
-        rospy.logdebug(f"Making decision based on intersection {robot_inter_info.inter} and incoming command.")
-        twsit_from_decion = Twist()
-        twsit_from_decion.linear.x = 0.3
-        return twist_from_img
+        """
+        Decision-making process based on the robot's current state and received command.
+        """
+        twist_from_decision = self.decision_model.decision_maker(twist_from_img, robot_inter_info)
+        return twist_from_decision
 
-    def kinematic_info_sub_cb(self, kinematic_data_msg: KinematicDataArray):
+    def kinematic_info_cb(self, kinematic_data_msg: KinematicDataArray):
         for data in kinematic_data_msg.data:
             if self.robot_id == data.robot_id:
                 curr_pose = data.pose
@@ -177,8 +222,12 @@ class RobotDecision:
                 self.robot_motion_controller.kinematic_recoder(pose=curr_pose, vel=curr_vel)
         return
     
-    def wheel_omega_sub_cb(self, wheel_omega_msg: WheelsEncoder):
+    def wheel_omega_cb(self, wheel_omega_msg: WheelsEncoder):
         return self.robot_motion_controller.tick_recorder(msg=wheel_omega_msg)
+    
+    def inform_enter_conflict_cb(self, msg: Bool):
+        if msg:
+            self.decision_model.enter_conflict_zone = msg.data
 
 
 if __name__ == '__main__':
