@@ -84,7 +84,7 @@ class RobotVision:
  
         # Subscribers
         self.image_raw_sub = rospy.Subscriber("robot_cam/image_raw", Image, self.image_raw_sub_cb)
-
+        self.shutdown_sub = rospy.Subscriber("robot_interface_shutdown", Bool, self.signal_shutdown)
         # Servers
         self.srv_color = Server(color_hsvConfig, self.dynamic_reconfigure_callback_hsv)
 
@@ -108,30 +108,16 @@ class RobotVision:
             rospy.logerr(f"service call failed: {e}")
 
     def status_flag_init(self):
-        # Current route (three intersections: last, current and next)
         self.curr_route = [0, 0, 0]
-
-        # Current zone (default buffer area)
         self.current_zone = Zone.BUFFER_AREA
 
-        # self.lane_direction = LaneDirection.RIGHT_HAND 
-
-        # Intersection Boundary Line count
-        self.cross_inter_boundary_line_count = 0
-
-        # Boundary Crossing flag
-        self.boundary_detect_req_lock = threading.Lock()
-
-        # Enter Conflict Zone flag
         self.enter_conflict_zone = False
+        self.cross_inter_boundary_line_count = 0
+        self.cross_conflict_boundary_line_count = 0
+        self.inter_boundary_detect_lock = threading.Lock()
 
-        # Stop Operation
         self.stop = False
-
-        # timer to stop
         self.stop_timer = None
-
-        # in lane status flag
         self.in_lane = True
 
         # Time lock (prohibit unreasonable status change)
@@ -279,7 +265,7 @@ class RobotVision:
         if cross_inter_boundary:
             self.cross_inter_boundary_line_count += 1
             if self.cross_inter_boundary_line_count >= 2:
-                if self.boundary_detect_req_lock.acquire(blocking=False):
+                if self.inter_boundary_detect_lock.acquire(blocking=False):
                     try:
                         self.update_enter_conflict_status(enter=False)
                         new_route = self.req_new_route()
@@ -290,18 +276,24 @@ class RobotVision:
                         pass
         else:
             self.cross_inter_boundary_line_count = 0
-            if self.boundary_detect_req_lock.locked():
-                self.boundary_detect_req_lock.release()
+            if self.inter_boundary_detect_lock.locked():
+                self.inter_boundary_detect_lock.release()
 
         return
     
 
     def detect_conflict_boundary_line(self, cv_hsv_img):
         dis2conflict = search_pattern.search_stop_line(cv_hsv_img, self.stop_line_hsv, self.stop_line_hsv2)
-        
-        if dis2conflict > 30:
-            self.update_enter_conflict_status(enter=True)
-        
+        cross_conflict_boundary = dis2conflict > 25
+
+        if cross_conflict_boundary:
+            self.cross_conflict_boundary_line_count += 1
+            if self.cross_conflict_boundary_line_count >= 2:
+                self.update_enter_conflict_status(enter=True)
+
+        else:
+            self.cross_inter_boundary_line_count = 0
+
         return
 
     def req_new_route(self):
@@ -460,6 +452,10 @@ class RobotVision:
         self.cmd_vel_from_img_pub.publish(cmd_msg)
 
         return
+
+    def signal_shutdown(self,msg:Bool):
+        if msg.data:
+            rospy.signal_shutdown('viusal detector node shutdown')
 
     def test_mode_func(self, cv_img, cv_hsv_img):
         if self.test_mode == 'hsv':

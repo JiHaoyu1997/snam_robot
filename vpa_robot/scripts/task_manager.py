@@ -4,7 +4,7 @@ import rospy
 
 import time
 
-from std_msgs.msg import Int8MultiArray
+from std_msgs.msg import Bool, Int8MultiArray
 
 from vpa_robot.srv import AssignRoute, AssignRouteRequest, AssignRouteResponse
 from vpa_robot.srv import AssignTask, AssignTaskRequest, AssignTaskResponse
@@ -101,7 +101,9 @@ class TaskManager:
             return ReadySignalResponse(success=False)
     
     def assign_route_cb(self, req: AssignRouteRequest):
-        """ Assign Current Route """
+        """ 
+        Assign Current Route 
+        """
 
         last_inter_id = req.last_inter_id
         next_inter_id = req.next_inter_id
@@ -110,7 +112,11 @@ class TaskManager:
         if not (self.curr_route[1] == last_inter_id and self.curr_route[2] == next_inter_id):
             rospy.logerr(f"Route Update Error")
             self.curr_route = [0, 0 ,0]
-            # TODO: shutdown
+            pub = rospy.Publisher('robot_interface_shutdown', Bool, queue_size=1)
+            msg = Bool()
+            msg.data = True
+            pub.publish(msg)
+            rospy.signal_shutdown('Abnormal is detected, shutting down the node.')
 
         # Boundary Detection
         if self.curr_task_index >= len(self.task_list) - 2:

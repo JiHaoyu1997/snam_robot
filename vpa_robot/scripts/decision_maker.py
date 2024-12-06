@@ -76,8 +76,7 @@ class RobotDecision:
     def __init__(self) -> None:
         # Initialize ROS node
         rospy.init_node('decision_maker')
-        
-        #
+        rospy.on_shutdown(self.shutdown_handler)
         self.node_name = 'robot_decision' 
 
         # Robot name
@@ -102,7 +101,8 @@ class RobotDecision:
         self.kinematic_info_sub = rospy.Subscriber('/kinematic_info', KinematicDataArray, self.kinematic_info_cb)
         self.wheel_omega_sub = rospy.Subscriber('wheel_omega', WheelsEncoder, self.wheel_omega_cb)
         self.inter_info_sub = rospy.Subscriber(self.local_inter_info_topic, InterInfoMsg, self.inter_info_cb)
-
+        self.shutdown_sub = rospy.Subscriber("robot_interface_shutdown", Bool, self.signal_shutdown)
+        
         # Servers
         self.update_route_server = rospy.Service('update_route_srv', NewRoute, self.update_route_cb)
 
@@ -227,6 +227,14 @@ class RobotDecision:
     def inform_enter_conflict_cb(self, msg: Bool):
         if msg:
             self.decision_model.enter_conflict_zone = msg.data
+    
+    def shutdown_handler(self):
+        cmd_vel = Twist()
+        self.cmd_vel_pub.publish(cmd_vel)
+
+    def signal_shutdown(self,msg:Bool):
+        if msg.data:
+            rospy.signal_shutdown('decision maker node shutdown')
 
 
 if __name__ == '__main__':
