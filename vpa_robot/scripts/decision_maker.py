@@ -199,10 +199,12 @@ class RobotDecision:
             ) for info in robot_info
         ]
 
+
     def cmd_vel_from_img_cb(self, msg: Twist):
         """
         Receive Twist messages from the vision system.
         """
+        print(self.local_inter_info)
         cmd_vel = self.make_decision(twist_from_img=msg, robot_inter_info=self.local_inter_info)
         self.cmd_vel_pub.publish(cmd_vel)
 
