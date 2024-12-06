@@ -43,18 +43,16 @@ class FCFSModel:
 
 
     def decision_maker(self, twist_from_img: Twist, robot_inter_info: InterInfo):
-        robot_id_list = robot_inter_info.robot_id_list
-        self.pass_permssion = True if self.robot_id == robot_id_list[0] else False
-
-        if self.enter_conflict_zone:
-            if not self.pass_permssion:
-                twist  = Twist()
-                return twist
-            else:
-                return twist_from_img
-        
-        else:
+        if not robot_inter_info.robot_id_list:
             return twist_from_img
+
+        self.pass_permssion = self.robot_id == robot_inter_info.robot_id_list[0]
+
+        if self.enter_conflict_zone and not self.pass_permssion:
+            return Twist()  # Stop the robot if it doesn't have permission
+
+        return twist_from_img
+
 
 
 class CBAAandDMPC:
