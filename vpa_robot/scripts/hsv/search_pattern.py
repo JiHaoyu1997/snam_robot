@@ -79,16 +79,14 @@ def search_stop_line(hsv_image, hsv_space1: HSVSpace, hsv_space2: HSVSpace) -> U
     return max_points
 
 def _search_lane_linecenter(_mask, 
-                            _lower_bias: int,
-                            _upper_bias: int,
-                            _interval: int,
                             _height_center: int,
                             _width_range_left: int,
                             _width_range_right: int,
                             _isYellow: bool = True,
                         ) -> int:
     
-    for i in range(_lower_bias, _upper_bias, _interval):
+    step_list = [0, 10, 20, 30, -10, -20]
+    for i in step_list:
         point = np.nonzero(_mask[_height_center + i, _width_range_left : _width_range_right])[0] + _width_range_left
         segs = _break_segs(point)
         valid_segments = {key: seg for key, seg in segs.items() if len(seg) < 35}
@@ -116,29 +114,25 @@ def _search_lane_linecenter(_mask,
 
     return 0
 
-def search_lane_center(space1:HSVSpace, space2:HSVSpace, hsv_image, is_yellow_left: bool) -> int:
+def search_lane_center(space1: HSVSpace, space2: HSVSpace, hsv_image, is_yellow_left: bool) -> int:
     hsv_image1 = hsv_image
     hsv_image2 = hsv_image
     mask1 = space1.apply_mask(hsv_image1)
     mask2 = space2.apply_mask(hsv_image2)
-    _line_center1 = _search_lane_linecenter(mask1, -20, 30, 10, int(hsv_image.shape[0]/2), 0, int(hsv_image.shape[1]))
+    height_center = int(hsv_image.shape[0]/2)
 
-    if _line_center1 == 0 and not is_yellow_left:
-        # failed to find the center yellow line
-        _line_center1 = hsv_image.shape[1]
+    _line_center1 = _search_lane_linecenter(mask1, height_center, 0, int(hsv_image.shape[1]))
         
     # search the while line, but limited area
     if is_yellow_left:
-        _line_center2 = _search_lane_linecenter(mask2, -20, 30, 10, int(hsv_image.shape[0]/2), _line_center1, int(hsv_image.shape[1]), False)
-    else:
-        _line_center2 = _search_lane_linecenter(mask2, -20, 30, 10, int(hsv_image.shape[0]/2), 0 ,_line_center1, False)
-
-    if is_yellow_left :
-        # miss detections 
-        # if _line_center1 == 0:
-        #     _line_center1 = hsv_image.shape[1] / 4
+        _line_center2 = _search_lane_linecenter(mask2, height_center, _line_center1, int(hsv_image.shape[1]), False)
         if _line_center2 == 0:
-            _line_center2 = hsv_image.shape[1]
+            _line_center2 = hsv_image.shape[1]   
+    
+    else:
+        if _line_center1 == 0:
+            _line_center1 = hsv_image.shape[1]
+            _line_center2 = _search_lane_linecenter(mask2, height_center, 0 ,_line_center1, False)
 
     print(_line_center1, _line_center2)
     _lane_center = int((_line_center1 + _line_center2)/2)
