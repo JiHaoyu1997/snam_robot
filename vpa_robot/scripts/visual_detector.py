@@ -473,6 +473,9 @@ class RobotVision:
         elif self.test_mode == 'sturn':
             self.go_sturn(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
+        elif self.test_mode == 'straight':
+            self.go_straight()
+
         else:
             self.go_thur_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
@@ -675,6 +678,10 @@ class RobotVision:
         self.pub_cv_img(cv_img=cv_img)
         self.pub_mask_img(mask_img=mask_img)     
 
+        return
+    
+    def go_straight(self):
+        self.pub_cmd_vel_from_img(v_x=0.3, omega_z=0, v_factor=1) 
         return
     
     def stop_cb(self, event):

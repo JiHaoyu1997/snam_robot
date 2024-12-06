@@ -170,6 +170,10 @@ class RobotDecision:
     def update_inter_sub(self):
         if hasattr(self, 'inter_info_sub'):
             self.inter_info_sub.unregister()
+        
+        if self.local_inter_id == 6:
+            rospy.loginfo(f"{self.robot_name} drives back to buffer area")
+            return
 
         self.local_inter_info_topic = f'/inter_info/{self.local_inter_id}'
         self.inter_info_sub = rospy.Subscriber(
@@ -177,7 +181,7 @@ class RobotDecision:
             InterInfoMsg,
             self.inter_info_cb
         )
-        rospy.loginfo(f"{self.robot_name} updated inter_sub to {self.local_inter_info_topic}")
+        rospy.loginfo(f"{self.robot_name} updated inter_info_sub to {self.local_inter_info_topic}")
 
     def inter_info_cb(self, inter_info_msg: InterInfoMsg):
         """Updates local intersection information based on the message."""
