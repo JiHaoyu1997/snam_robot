@@ -61,7 +61,7 @@ def convert_raw_img_to_hsv_img(data: Image, cv_bridge: CvBridge):
     acc_hsv_img = from_cv_to_hsv(acc_img)
     cv_hsv_img = from_cv_to_hsv(cv_img)
 
-    return cv_img, cv_hsv_img, acc_hsv_img
+    return cv_img, cv_hsv_img, acc_img, acc_hsv_img
 
 def adjust_gamma(cv_img, gamma=1.0):
     invGamma = 1.0 / gamma

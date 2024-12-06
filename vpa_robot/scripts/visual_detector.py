@@ -231,7 +231,7 @@ class RobotVision:
         Annotation
         """
         # Step1 CONVERT RAW IMAGE TO HSV IMAGE
-        cv_img, cv_hsv_img, acc_hsv_img = hsv.convert_raw_img_to_hsv_img(data=data, cv_bridge=self.cv_bridge)
+        cv_img, cv_hsv_img, acc_img, acc_hsv_img = hsv.convert_raw_img_to_hsv_img(data=data, cv_bridge=self.cv_bridge)
 
         # Step2 Test Mode
         if self.test_mode != 'default':
@@ -259,7 +259,7 @@ class RobotVision:
 
         # Step9 PUB IMAGE MESSAGES       
         self.pub_cv_img(cv_img=result_cv_img)
-        self.pub_acc_img(acc_img=acc_hsv_img)
+        self.pub_acc_img(acc_img=acc_img)
 
         return
     

@@ -52,9 +52,8 @@ class FCFSModel:
             return Twist()  # Stop the robot if it doesn't have permission
 
         return twist_from_img
-
-
-
+    
+    
 class CBAAandDMPC:
     def __init__(self, robot_id=0) -> None:
         self.robot_id = robot_id
