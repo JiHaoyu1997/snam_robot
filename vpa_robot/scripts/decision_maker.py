@@ -45,6 +45,8 @@ class FCFSModel:
     def decision_maker(self, twist_from_img: Twist, robot_inter_info: InterInfo):
         if not robot_inter_info.robot_id_list:
             return twist_from_img
+        
+        print(robot_inter_info.robot_id_list)
 
         self.pass_permssion = self.robot_id == robot_inter_info.robot_id_list[0]
 
