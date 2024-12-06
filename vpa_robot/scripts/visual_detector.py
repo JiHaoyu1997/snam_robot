@@ -269,7 +269,7 @@ class RobotVision:
         """    
         msg = Bool
         msg.data = enter
-        self.inform_enter_conflict_pub(msg)
+        self.inform_enter_conflict_pub.publish(msg)
         self.enter_conflict_zone = enter
 
     def detect_inter_boundary_line(self, cv_hsv_img: Image):
