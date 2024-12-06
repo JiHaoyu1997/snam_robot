@@ -18,8 +18,9 @@ from dynamic_reconfigure.server import Server
 from vpa_robot.cfg import color_hsvConfig
 
 # Msg
+from std_msgs.msg import Bool
 from geometry_msgs.msg import Twist
-from sensor_msgs.msg import Image 
+from sensor_msgs.msg import Image, Range
 
 # Srv
 from vpa_robot.srv import NewRoute, NewRouteRequest, NewRouteResponse
@@ -76,8 +77,10 @@ class RobotVision:
 
         # Publishers
         self.cv_image_pub = rospy.Publisher('cv_image', Image, queue_size=1)
+        self.acc_image_pub = rospy.Publisher('acc_image', Image, queue_size=1)
         self.mask_image_pub = rospy.Publisher('mask_image', Image, queue_size=1)
         self.cmd_vel_from_img_pub = rospy.Publisher('cmd_vel_from_img', Twist, queue_size=1)
+        self.inform_enter_conflict_pub = rospy.Publisher('inform_enter_conflict', Bool, queue_size=1)
  
         # Subscribers
         self.image_raw_sub = rospy.Subscriber("robot_cam/image_raw", Image, self.image_raw_sub_cb)
@@ -125,10 +128,10 @@ class RobotVision:
         # Stop Operation
         self.stop = False
 
-        # 
+        # timer to stop
         self.stop_timer = None
 
-        # 
+        # in lane status flag
         self.in_lane = True
 
         # Time lock (prohibit unreasonable status change)
@@ -146,13 +149,23 @@ class RobotVision:
         self.next_action = 0        # the next action to perfrom 
         self.inquiry_inter_by_period = False # if teh robot will check if can pass the current intersection
         self.lock_inter_source = True
-
         self.action_dic = {
             0:'go thur',
             1:'turn left',
             2:'turn right',
             3:'stop'
         }
+
+        # ACC
+        if self.acc_mode:
+            rospy.loginfo(f"{self.robot_name} start acc mode")
+            self.tof_sub = rospy.Subscriber("tof_distance", Range, self.acc_dis_cb)            
+            self.distance_acc = 100 # meters, as a sufficently big value for missing object
+            self.acc_update_time = 0
+
+    def acc_dis_cb(self,msg: Range):
+        self.acc_update_time = msg.header.stamp.secs + msg.header.stamp.nsecs * 1e-9
+        self.distance_acc = msg.range
 
     def color_space_init(self) -> None:
         # 
@@ -189,7 +202,7 @@ class RobotVision:
             v_l=int(rospy.get_param('~v_lower_s', 0))
         )
 
-        # 
+        # HSV space for Red2 (stop line)
         self.stop_line_hsv2 = hsv.HSV_RANGES['red2'] 
 
         # Buffer Line HSV - Pink
@@ -210,36 +223,54 @@ class RobotVision:
         self.right_guide_hsv = hsv.HSV_RANGES['orange']
         self.inter_guide_line = [self.thur_guide_hsv, self.left_guide_hsv, self.right_guide_hsv]
 
-        # 
-        self._acc_aux_hsv = hsv.HSV_RANGES['red']       
+        # ACC HSV - RED
+        self.acc_aux_hsv = hsv.HSV_RANGES['red_acc']       
 
     def image_raw_sub_cb(self, data: Image):
-        """Step1 CONVERT RAW IMAGE TO HSV IMAGE"""
-        cv_img, cv_hsv_img, acc_hsv_img = hsv.convert_raw_img_to_hsv_img(data=data, cv_bridge=self.cv_bridge)
+        """
+        Annotation
+        """
+        # Step1 CONVERT RAW IMAGE TO HSV IMAGE
+        cv_img, cv_hsv_img, acc_img, acc_hsv_img = hsv.convert_raw_img_to_hsv_img(data=data, cv_bridge=self.cv_bridge)
 
-        """Step2 Test Mode"""
+        # Step2 Test Mode
         if self.test_mode != 'default':
             self.test_mode_func(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
             return
         
-        """Step3 Init"""
+        # Step3 Init
         if self.curr_route == [0, 0, 0]:
             return
 
-        """Step4 BOUNDARY LINE DETECTOR"""
+        # Step4 BOUNDARY LINE DETECTOR
         self.detect_inter_boundary_line(cv_hsv_img=cv_hsv_img) 
 
-        """Step5 FROM HSV IMAGE TO TARGET COORDINATE"""
+        # Step5 FROM HSV IMAGE TO TARGET COORDINATE
         target_x, result_cv_img = self.find_and_draw_target(cv_img=cv_img, cv_hsv_img=cv_hsv_img)  
                 
-        """Step6 FROM TARGET COORDINATE TO TWIST"""
+        # Step6 FROM TARGET COORDINATE TO TWIST
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
-           
-        """Step7 PUB TWIST TO DECISION MAKER"""
-        # since the cmd_vel is sending on a higher frequency than ACC msg, we estimate the distance to further avoid collsions
-        self.pub_cmd_vel_from_img(v_x, omega_z)
 
-        return self.pub_cv_img(cv_img=result_cv_img)
+        # Step7 ACC FUNC
+        v_factor = self.calc_vel_factor(v_x=v_x, acc_hsv_img=acc_hsv_img)
+           
+        # Step8 PUB TWIST TO DECISION MAKER
+        self.pub_cmd_vel_from_img(v_x, omega_z, v_factor)
+
+        # Step9 PUB IMAGE MESSAGES       
+        self.pub_cv_img(cv_img=result_cv_img)
+        self.pub_acc_img(acc_img=acc_img)
+
+        return
+    
+    def update_enter_conflict_status(self, enter: bool = True):
+        """
+        publish msg to req enter conflict zone
+        """    
+        msg = Bool()
+        msg.data = enter
+        self.inform_enter_conflict_pub.publish(msg)
+        self.enter_conflict_zone = enter
 
     def detect_inter_boundary_line(self, cv_hsv_img: Image):
         dis2bound = search_pattern.search_line(cv_hsv_img, self.inter_boundary_line_hsv, top_line=100)
@@ -250,7 +281,7 @@ class RobotVision:
             if self.cross_inter_boundary_line_count >= 2:
                 if self.boundary_detect_req_lock.acquire(blocking=False):
                     try:
-                        self.enter_conflict_zone = False
+                        self.update_enter_conflict_status(enter=False)
                         new_route = self.req_new_route()
                         new_route = [route for route in new_route]
                         self.curr_route = new_route
@@ -262,6 +293,15 @@ class RobotVision:
             if self.boundary_detect_req_lock.locked():
                 self.boundary_detect_req_lock.release()
 
+        return
+    
+
+    def detect_conflict_boundary_line(self, cv_hsv_img):
+        dis2conflict = search_pattern.search_stop_line(cv_hsv_img, self.stop_line_hsv, self.stop_line_hsv2)
+        
+        if dis2conflict > 30:
+            self.update_enter_conflict_status(enter=True)
+        
         return
 
     def req_new_route(self):
@@ -290,11 +330,10 @@ class RobotVision:
             rospy.logerr('%s: Request update inter info service call failed: %s', self.robot_name, e)
 
     def find_and_draw_target(self, cv_img, cv_hsv_img):
-        rospy.loginfo(f"current route is {self.curr_route}")
         target_x = 0
-        # --- BUFFER AREA ---
         
-        # NO TASK ==> STOP AT READY_LINE 
+        # --- BUFFER AREA ---
+        # NO TASK == STOP AT READY_LINE 
         if self.curr_route == [2, 6, 6]:
             self.current_zone = Zone.BUFFER_AREA
             dis2ready = search_pattern.search_line(cv_hsv_img, self.ready_line_hsv)
@@ -304,30 +343,24 @@ class RobotVision:
             else:
                 target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)         
             
-        # INIT TASK ==> FROM BUFFER TO INTERSECTION          
+        # INIT TASK == FROM BUFFER TO INTERSECTION          
         elif self.curr_route == [6, 6, 2]:
             self.current_zone = Zone.BUFFER_AREA
             target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
         # --- INTERSECTION AREA ---
-
         # DEFAULT FIRST ROUTE [6, 2, X]
         elif self.curr_route[0] == 6 and self.curr_route[1] == 2:
             self.current_zone = Zone.INTERSECTION
-            dis2red = search_pattern.search_line(cv_hsv_img, self.stop_line_hsv)
-            if dis2red > 25:
-                self.enter_conflict_zone = True
 
-            if not self.enter_conflict_zone:         
-                try:                 
-                    target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
-                except Exception as e:
-                    print(e)
+            # check if conflict zone
+            self.detect_conflict_boundary_line(cv_hsv_img=cv_hsv_img)
+            if not self.enter_conflict_zone:                   
+                target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
             else:
-                rospy.loginfo(f"Enter Conflict Zone")
+                # conflict zone
                 self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
-                rospy.loginfo(f"Next Action is {self.action_dic[self.next_action]}")               
                 target_x, cv_img = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=self.next_action)
 
         # GENERAL ROUTE
@@ -338,6 +371,7 @@ class RobotVision:
     
     def cross_intersection(self, cv_img, cv_hsv_img):
         self.current_zone = Zone.INTERSECTION
+
         # check if conflict zone
         self.detect_conflict_boundary_line(cv_hsv_img=cv_hsv_img)
         if not self.enter_conflict_zone:
@@ -345,18 +379,10 @@ class RobotVision:
             target_x, cv_img = self.find_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
         else:
             # conflict zone
-            rospy.loginfo(f"Enter Conflict Zone")
             self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
-            rospy.loginfo(f"Next Action is {self.action_dic[self.next_action]}") 
             target_x, cv_img = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=self.next_action)
 
         return target_x, cv_img
-
-    def detect_conflict_boundary_line(self, cv_hsv_img):
-        dis2conflict = search_pattern.search_stop_line(cv_hsv_img, self.stop_line_hsv, self.stop_line_hsv2)
-        # print(dis2conflict)
-        if dis2conflict > 30:
-            self.enter_conflict_zone = True
     
     def find_target_from_buffer_line(self, cv_img, cv_hsv_img):
         buffer_line_x, buffer_line_y = search_pattern.search_buffer_line(cv_hsv_img=cv_hsv_img, buffer_line_hsv=self.buffer_line_hsv)
@@ -371,7 +397,8 @@ class RobotVision:
             buffer_line_y = int(cv_hsv_img.shape[0] / 2)
         
         target_x = buffer_line_x         
-        cv2.circle(cv_img, (buffer_line_x, buffer_line_y), 5, (255, 100, 0), 5)       
+        cv2.circle(cv_img, (buffer_line_x, buffer_line_y), 5, (255, 100, 0), 5)  
+
         return target_x, cv_img
 
     def find_target_to_cross_lane(self, cv_img, cv_hsv_img):
@@ -379,6 +406,7 @@ class RobotVision:
         if target_x == None:
             target_x = self.image_width / 2
         cv2.circle(cv_img, (int(target_x), int(cv_hsv_img.shape[0]/2)), 5, (0, 255, 0), 5)
+
         return target_x, cv_img
     
     def find_target_to_cross_conflict(self, cv_img, cv_hsv_img, action):
@@ -387,6 +415,7 @@ class RobotVision:
         if target_x == None:
             target_x = self.image_width / 2
         cv2.circle(cv_img, (int(target_x), int(cv_hsv_img.shape[0]/2)), 5, (255, 255, 0), 5)
+
         return target_x, cv_img
     
     def calculate_velocity(self, target_x):
@@ -409,13 +438,22 @@ class RobotVision:
                 self.v_set.v_s_inter)
             
         return v_x, omega_z
-
-    def pub_cmd_vel_from_img(self, v_x, omega_z):
+    
+    def calc_vel_factor(self, v_x, acc_hsv_img):
         if self.acc_mode:
-            v_factor = 1
+            dis2frontcar = search_pattern.search_front_car(acc_hsv_img, self.acc_aux_hsv)
+            if not dis2frontcar == None:
+                delta_last_acc = rospy.get_time() - self.acc_update_time
+                dis_est  = self.distance_acc - delta_last_acc * v_x 
+                v_factor = pid_controller.acc_pi_control(0.5, dis_est)
+            else:
+                v_factor = 1
         else:
             v_factor = 1
+        
+        return v_factor
 
+    def pub_cmd_vel_from_img(self, v_x, omega_z, v_factor):
         cmd_msg = Twist()
         cmd_msg.linear.x = v_x * v_factor
         cmd_msg.angular.z = omega_z * v_factor
@@ -484,7 +522,7 @@ class RobotVision:
         
         target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
-        self.pub_cmd_vel_from_img(v_x, omega_z)  
+        self.pub_cmd_vel_from_img(v_x, omega_z, v_factor=1)  
 
         mask_img = self.buffer_line_hsv.apply_mask(cv_hsv_img)
            
@@ -501,11 +539,11 @@ class RobotVision:
 
         dis2red = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.stop_line_hsv)
         if dis2red > 30 and self.stop_timer is None:
-            self.stop_timer = rospy.Timer(rospy.Duration(1), self.stop_cb, oneshot=True)
+            self.stop_timer = rospy.Timer(rospy.Duration(1 / 2), self.stop_cb, oneshot=True)
 
         target_x, _ = self.find_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
-        self.pub_cmd_vel_from_img(v_x, omega_z)  
+        self.pub_cmd_vel_from_img(v_x, omega_z, v_factor=1)  
 
         hsv_image1 = cv_hsv_img
         hsv_image2 = cv_hsv_img
@@ -529,12 +567,12 @@ class RobotVision:
 
         dis2green = search_pattern.search_line(hsv_image=cv_hsv_img, hsv_space=self.inter_boundary_line_hsv)
         if dis2green > 30 and self.stop_timer is None:
-            self.stop_timer = rospy.Timer(rospy.Duration(1 / 3), self.stop_cb, oneshot=True)
+            self.stop_timer = rospy.Timer(rospy.Duration(1 / 2), self.stop_cb, oneshot=True)
        
         target_x, _ = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=action)
         # print(target_x)
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
-        self.pub_cmd_vel_from_img(v_x, omega_z)  
+        self.pub_cmd_vel_from_img(v_x, omega_z, v_factor=1) 
         mask_img = hsv_space.apply_mask(cv_hsv_img)
 
         start_point = (0, 110)
@@ -588,7 +626,7 @@ class RobotVision:
             v_x, omega_z = self.calculate_velocity(target_x=target_x)
             mask_img = self.right_guide_hsv.apply_mask(cv_hsv_img)
 
-        self.pub_cmd_vel_from_img(v_x, omega_z)             
+        self.pub_cmd_vel_from_img(v_x, omega_z, v_factor=1)             
         self.pub_cv_img(cv_img=cv_img)
         self.pub_mask_img(mask_img=mask_img)     
 
@@ -609,7 +647,7 @@ class RobotVision:
         # 
         if self.next_action == 3:
             self.stop = True
-            self.pub_cmd_vel_from_img(0, 0)
+            self.pub_cmd_vel_from_img(0, 0, 1)
             return
 
         # 检测绿色区域
@@ -637,7 +675,7 @@ class RobotVision:
             mask_img = self.inter_guide_line[self.next_action].apply_mask(cv_hsv_img)
 
         # 发布速度和图像
-        self.pub_cmd_vel_from_img(v_x, omega_z)             
+        self.pub_cmd_vel_from_img(v_x, omega_z, v_factor=1)            
         self.pub_cv_img(cv_img=cv_img)
         self.pub_mask_img(mask_img=mask_img)     
 
@@ -655,6 +693,13 @@ class RobotVision:
         cv_img_copy_msg.header.stamp = rospy.Time.now()
         self.cv_image_pub.publish(cv_img_copy_msg)
         return       
+    
+    def pub_acc_img(self, acc_img):
+        acc_img_copy = acc_img
+        acc_img_copy_msg = self.cv_bridge.cv2_to_imgmsg(acc_img_copy, encoding="bgr8")
+        acc_img_copy_msg.header.stamp = rospy.Time.now()
+        self.acc_image_pub.publish(acc_img_copy_msg)
+        return   
 
     def pub_mask_img(self, mask_img):
         mask_img_msg = self.cv_bridge.cv2_to_imgmsg(mask_img, encoding="passthrough")

@@ -115,10 +115,9 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
-
 source /opt/ros/noetic/setup.bash
 source /home/vpaadmin/catkin_ws/devel/setup.bash
 export ROS_IP=`hostname -I | awk '{print $1}'`
 export ROS_HOSTNAME=`hostname -I | awk '{print $1}'`
-export ROS_MASTER_URI=http://labpc:11311
-export robot_name=fiona
+export ROS_MASTER_URI=http://192.168.1.4:11311
+export robot_name=mingna

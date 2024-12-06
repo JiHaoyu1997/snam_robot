@@ -126,7 +126,7 @@ class TaskManager:
             self.task_list[self.curr_task_index], 
             self.task_list[self.curr_task_index + 1]
         ]
-        rospy.loginfo(f"Updated current route: {self.curr_route}")   
+        rospy.loginfo(f"{self.robot_name} updated current route: {self.curr_route}")   
         
         return AssignRouteResponse(route=self.curr_route)
     

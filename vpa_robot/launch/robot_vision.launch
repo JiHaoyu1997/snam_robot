@@ -1,6 +1,7 @@
 <launch>
     <arg name="robot_name"/>
     <arg name="test_mode"/>
+    <arg name="acc_on"/>
 
     <arg name="width"       default="320"/>
     <arg name="height"      default="240"/>
@@ -21,10 +22,13 @@
     </node>
 
     <node name="robot_vision" pkg="vpa_robot" type="visual_detector.py" output="screen">
+        <!--  -->
         <param name="robot_name"    value="$(arg robot_name)"/>
+        <param name="test_mode"     value="$(arg test_mode)"/>
+        <param name="acc_on"        value="$(arg acc_on)"/>
+        <!--  -->
         <param name="image_width"   value="$(arg width)"/>
         <param name="image_height"  value="$(arg height)"/>
-        <param name="test_mode"     value="$(arg test_mode)"/>
         <!-- lane detecting - yellow lane -->
         <param name="h_upper_1"            value="36"/>
         <param name="h_lower_1"            value="26"/>
