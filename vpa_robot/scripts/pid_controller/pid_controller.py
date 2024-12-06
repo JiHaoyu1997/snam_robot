@@ -36,7 +36,7 @@ def bufffer_pi_control(ref, sig, vf=0.3, vs=0.3):
         v_x = vs
         omega_z = err * kp + err_intergal_b * ki
 
-    return v_x,omega_z
+    return v_x, omega_z
 
 # INTERSECTION PID CONTROLLER
 err_intergal = 0
@@ -72,4 +72,40 @@ def inter_pi_control(ref, sig, vf=0.3, vs=0.3):
         v_x = vs
         omega_z = err * kp + err_intergal * ki
 
-    return v_x,omega_z
+    return v_x, omega_z
+
+# ACC PI CONTROLLER
+err_integral_acc = 0
+last_updated_acc = 0         
+
+def acc_pi_control(ref, sig):
+
+    global err_integral_acc
+    global last_updated_acc  # Declare the use of the global variable
+
+    kp = -10  # Proportional gain
+    ki = 0   # Integral gain
+
+    if last_updated_acc == 0:
+        # first call
+        last_updated_acc = rospy.get_time()
+
+    if sig > 0.5:
+        v_factor = 1
+        err_integral_acc = 0  # Reset the integral component when signal is high
+    else:
+        err = sig - ref
+        err_integral_acc += err * (rospy.get_time() - last_updated_acc)  # Update integral of error
+
+        # Calculate the velocity factor with PI control
+        v_factor = 1 - (err * kp + err_integral_acc * ki)
+
+    last_updated_acc = rospy.get_time()
+
+        # Clamp v_factor to be between 0.1 and 1
+    if v_factor > 1:
+        v_factor = 1
+    elif v_factor < 0.1:
+        v_factor = 0
+        
+    return v_factor

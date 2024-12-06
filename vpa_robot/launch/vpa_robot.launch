@@ -1,15 +1,19 @@
 <launch>
     <arg name="robot_name"      value="$(env robot_name)"/>
     <arg name="test_mode"       default="default"/> 
-    <arg name="acc_on"          default="false"/>
-    <arg name="publish_mask"    default="false"/>
+    <arg name="acc_on"          default="true"/>
     
     <group ns="$(arg robot_name)">
+        <group if="$(arg acc_on)"> 
+            <include file="$(find vpa_robot_interface)/launch/vpa_tof.launch"/>
+        </group>
+        
         <include file="$(find vpa_robot_interface)/launch/vpa_traction_start.launch"/>
 
         <include file="$(find vpa_robot)/launch/robot_vision.launch">
             <arg name="robot_name"  value="$(arg robot_name)" />
             <arg name="test_mode"   value="$(arg test_mode)"/> 
+            <arg name="acc_on"      value="$(arg acc_on)"/> 
         </include>
 
         <include file="$(find vpa_robot)/launch/robot_decision.launch">
@@ -20,6 +24,7 @@
         <include file="$(find vpa_robot)/launch/robot_task.launch">
             <arg name="robot_name" value="$(arg robot_name)" />
         </include>
+
 
         <node name="republish_result" pkg="image_transport" type="republish" args="raw in:=result_image compressed out:=result_image" />
     </group>  

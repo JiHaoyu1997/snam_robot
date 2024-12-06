@@ -33,7 +33,7 @@ class InterInfo:
     def __init__(self, inter=0):
         self.inter = inter  # Intersection ID
         self.robot_id_list = []  # List of robot names or IDs
-        self.robot_info = []  # List of RobotInfo instances
+        self.robot_info: List[RobotInfo] = []  # List of RobotInfo instances
 
 
 class FCFSModel:
