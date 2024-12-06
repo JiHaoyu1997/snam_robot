@@ -522,7 +522,7 @@ class RobotVision:
         
         target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
-        self.pub_cmd_vel_from_img(v_x, omega_z)  
+        self.pub_cmd_vel_from_img(v_x, omega_z, v_factor=1)  
 
         mask_img = self.buffer_line_hsv.apply_mask(cv_hsv_img)
            
@@ -543,7 +543,7 @@ class RobotVision:
 
         target_x, _ = self.find_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
-        self.pub_cmd_vel_from_img(v_x, omega_z)  
+        self.pub_cmd_vel_from_img(v_x, omega_z, v_factor=1)  
 
         hsv_image1 = cv_hsv_img
         hsv_image2 = cv_hsv_img
@@ -572,7 +572,7 @@ class RobotVision:
         target_x, _ = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=action)
         # print(target_x)
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
-        self.pub_cmd_vel_from_img(v_x, omega_z)  
+        self.pub_cmd_vel_from_img(v_x, omega_z, v_factor=1) 
         mask_img = hsv_space.apply_mask(cv_hsv_img)
 
         start_point = (0, 110)
@@ -626,7 +626,7 @@ class RobotVision:
             v_x, omega_z = self.calculate_velocity(target_x=target_x)
             mask_img = self.right_guide_hsv.apply_mask(cv_hsv_img)
 
-        self.pub_cmd_vel_from_img(v_x, omega_z)             
+        self.pub_cmd_vel_from_img(v_x, omega_z, v_factor=1)             
         self.pub_cv_img(cv_img=cv_img)
         self.pub_mask_img(mask_img=mask_img)     
 
@@ -647,7 +647,7 @@ class RobotVision:
         # 
         if self.next_action == 3:
             self.stop = True
-            self.pub_cmd_vel_from_img(0, 0)
+            self.pub_cmd_vel_from_img(0, 0, 1)
             return
 
         # 检测绿色区域
@@ -675,7 +675,7 @@ class RobotVision:
             mask_img = self.inter_guide_line[self.next_action].apply_mask(cv_hsv_img)
 
         # 发布速度和图像
-        self.pub_cmd_vel_from_img(v_x, omega_z)             
+        self.pub_cmd_vel_from_img(v_x, omega_z, v_factor=1)            
         self.pub_cv_img(cv_img=cv_img)
         self.pub_mask_img(mask_img=mask_img)     
 
