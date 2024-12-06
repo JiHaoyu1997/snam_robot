@@ -24,9 +24,9 @@ import math
 
 class RobotMotion:
 
-    def __init__(self, name="",id=0):
+    def __init__(self, name="",robot_id=0):
         self.robot_name = name
-        self.robot_id = id
+        self.robot_id = robot_id
 
         self.radius = 0.0318
         self.baseline = 0.1

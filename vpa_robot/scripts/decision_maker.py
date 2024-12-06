@@ -17,9 +17,9 @@ from vpa_robot.srv import NewRoute, NewRouteRequest, NewRouteResponse
 from vpa_robot.srv import ReadySignal, ReadySignalResponse
 
 class RobotInfo:
-    def __init__(self, name="", id=0, a=0.0, v=0.0, p=0.0, coordinate=(0.0, 0,0), enter_time=0.0, arrive_cp_time=0.0, exit_time=0.0):
+    def __init__(self, name="", robot_id=0, a=0.0, v=0.0, p=0.0, coordinate=(0.0, 0,0), enter_time=0.0, arrive_cp_time=0.0, exit_time=0.0):
         self.robot_name = name
-        self.robot_id = id
+        self.robot_id = robot_id
         self.robot_a = a  # Acceleration
         self.robot_v = v  # Velocity
         self.robot_p = p  # Position
@@ -86,7 +86,7 @@ class RobotDecision:
         self.robot_name = rospy.get_param('~robot_name', 'db19')
         self.robot_id = find_id_by_robot_name(robot_name=self.robot_name)
         self.decision_model = FCFSModel(robot_id=self.robot_id)
-        self.robot_motion_controller = RobotMotion(name=self.robot_name, id=self.robot_id) 
+        self.robot_motion_controller = RobotMotion(name=self.robot_name, robot_id=self.robot_id) 
 
         # Initialize route and intersection information
         self.robot_info = RobotInfo(name=self.robot_name)
@@ -151,7 +151,7 @@ class RobotDecision:
         try:
             self.robot_info = RobotInfo(
                 name=self.robot_name,
-                id=find_id_by_robot_name(robot_name=self.robot_name),
+                robot_id=find_id_by_robot_name(robot_name=self.robot_name),
             )
 
             req = InterMngRequest()
