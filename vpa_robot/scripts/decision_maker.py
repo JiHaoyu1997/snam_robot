@@ -46,8 +46,6 @@ class FCFSModel:
         if not robot_inter_info.robot_id_list:
             return twist_from_img
         
-        print(robot_inter_info.robot_id_list)
-
         self.pass_permssion = self.robot_id == robot_inter_info.robot_id_list[0]
 
         if self.enter_conflict_zone and not self.pass_permssion:
