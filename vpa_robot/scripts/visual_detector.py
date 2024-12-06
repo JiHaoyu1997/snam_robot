@@ -267,7 +267,7 @@ class RobotVision:
         """
         publish msg to req enter conflict zone
         """    
-        msg = Bool
+        msg = Bool()
         msg.data = enter
         self.inform_enter_conflict_pub.publish(msg)
         self.enter_conflict_zone = enter
