@@ -17,7 +17,7 @@ from vpa_robot.srv import NewRoute, NewRouteRequest, NewRouteResponse
 from vpa_robot.srv import ReadySignal, ReadySignalResponse
 
 class RobotInfo:
-    def __init__(self, name="", robot_id=0, a=0.0, v=0.0, p=0.0, coordinate=(0.0, 0,0), enter_time=0.0, arrive_cp_time=0.0, exit_time=0.0):
+    def __init__(self, name="", robot_id=0, a=0.0, v=0.0, p=0.0, coordinate=(0.0, 0.0), enter_time=0.0, arrive_cp_time=0.0, exit_time=0.0):
         self.robot_name = name
         self.robot_id = robot_id
         self.robot_a = a  # Acceleration
