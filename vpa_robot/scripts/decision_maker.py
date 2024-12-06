@@ -122,6 +122,7 @@ class RobotDecision:
             if response.success:
                 rospy.loginfo(f"{self.robot_name}: Decision Maker is Online")
                 self.curr_route = [6, 6, 2]   
+                self.local_inter_id = 6
         except rospy.ServiceException as e:
             rospy.logerr(f"service call failed: {e}")
 
@@ -172,7 +173,7 @@ class RobotDecision:
         if hasattr(self, 'inter_info_sub'):
             self.inter_info_sub.unregister()
 
-        self.local_inter_info_topic = f'inter_info/{self.local_inter_id}'
+        self.local_inter_info_topic = f'/inter_info/{self.local_inter_id}'
         self.inter_info_sub = rospy.Subscriber(
             self.local_inter_info_topic,
             InterInfoMsg,
@@ -204,7 +205,6 @@ class RobotDecision:
         """
         Receive Twist messages from the vision system.
         """
-        print(self.local_inter_id)
         cmd_vel = self.make_decision(twist_from_img=msg, robot_inter_info=self.local_inter_info)
         self.cmd_vel_pub.publish(cmd_vel)
 
