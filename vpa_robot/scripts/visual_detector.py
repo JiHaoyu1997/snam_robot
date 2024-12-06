@@ -202,7 +202,7 @@ class RobotVision:
             v_l=int(rospy.get_param('~v_lower_s', 0))
         )
 
-        # 
+        # HSV space for Red2 (stop line)
         self.stop_line_hsv2 = hsv.HSV_RANGES['red2'] 
 
         # Buffer Line HSV - Pink
@@ -223,8 +223,8 @@ class RobotVision:
         self.right_guide_hsv = hsv.HSV_RANGES['orange']
         self.inter_guide_line = [self.thur_guide_hsv, self.left_guide_hsv, self.right_guide_hsv]
 
-        # 
-        self.acc_aux_hsv = hsv.HSV_RANGES['red']       
+        # ACC HSV - RED
+        self.acc_aux_hsv = hsv.HSV_RANGES['red_acc']       
 
     def image_raw_sub_cb(self, data: Image):
         """
