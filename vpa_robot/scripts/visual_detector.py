@@ -273,7 +273,7 @@ class RobotVision:
                         self.curr_route = new_route
                         threading.Thread(target=self.req_update_new_route, args=(new_route,)).start()
                     finally:
-                        self.inter_boundary_detect_lock.release()
+                        pass
         else:
             self.cross_inter_boundary_line_count = 0
             if self.inter_boundary_detect_lock.locked():
