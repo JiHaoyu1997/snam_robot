@@ -501,7 +501,7 @@ class RobotVision:
 
         # Apply the mask and publish the masked image
         mask_img = self.center_line_hsv.apply_mask(cv_hsv_img)
-        _line_center1 = search_pattern._search_lane_linecenter(mask_img, -20, 50, 10, int(cv_hsv_img.shape[0]/2), 0, int(cv_hsv_img.shape[1]))
+        _line_center1 = search_pattern._search_lane_linecenter(mask_img, int(cv_hsv_img.shape[0]/2), 0, int(cv_hsv_img.shape[1]))
         self.pub_mask_img(mask_img=mask_img)
 
         # self.find_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
