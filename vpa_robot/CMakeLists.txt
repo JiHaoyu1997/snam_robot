@@ -64,6 +64,7 @@ add_service_files(
   AssignTask.srv
   InterMng.srv
   NewRoute.srv
+  NewTaskList.srv
   ReadySignal.srv
 )
 

@@ -4,10 +4,13 @@ import rospy
 
 import time
 
+from robot.robot import robot_dict
+
 from std_msgs.msg import Bool, Int8MultiArray
 
 from vpa_robot.srv import AssignRoute, AssignRouteRequest, AssignRouteResponse
 from vpa_robot.srv import AssignTask, AssignTaskRequest, AssignTaskResponse
+from vpa_robot.srv import NewTaskList, NewTaskListRequest, NewTaskListResponse
 from vpa_robot.srv import ReadySignal, ReadySignalRequest, ReadySignalResponse
 
 class TaskManager:
@@ -42,6 +45,7 @@ class TaskManager:
         # Servers
         self.node_ready_handle_server = rospy.Service('ready_signal', ReadySignal, self.ready_signal_cb)
         self.assign_route_server = rospy.Service('assign_route_srv', AssignRoute, self.assign_route_cb)
+        self.new_task_list_server = rospy.ServiceProxy('new_task_list_srv', NewTaskList, self.req_new_task_list_cb)
 
         # Clients
         self.assign_task_client = rospy.ServiceProxy('/assign_task_srv', AssignTask)
@@ -136,6 +140,17 @@ class TaskManager:
         
         return AssignRouteResponse(route=self.curr_route)
     
+    def req_new_task_list_cb(self, req: NewTaskListRequest):
+        robot_id = req.robot_id
+        robot_name =robot_dict[robot_id]
+        try:
+            resp: AssignTaskResponse = self.assign_task_client.call(robot_name)
+            self.task_list = resp.task_list
+            return NewTaskListResponse(success=True, message=f"{self.robot_name} req new task list successfully: {self.task_list}")
+        except rospy.ServiceException as e:
+            rospy.logerr('%s: Service call failed: %s', self.robot_name, e)
+            return NewTaskListResponse(success=False, message=f"{self.robot_name} req new task list failed")
+        
     def pub_curr_route(self, event):
         route_msg = Int8MultiArray(data=self.curr_route)
         self.curr_route_pub.publish(route_msg)

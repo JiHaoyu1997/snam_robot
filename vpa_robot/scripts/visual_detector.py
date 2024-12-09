@@ -9,6 +9,7 @@ from enum import Enum
 import cv2
 from cv_bridge import CvBridge
 
+from robot.robot import find_id_by_robot_name
 from map import map
 from hsv import hsv, search_pattern
 from pid_controller import pid_controller
@@ -23,8 +24,9 @@ from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Image, Range
 
 # Srv
-from vpa_robot.srv import NewRoute, NewRouteRequest, NewRouteResponse
 from vpa_robot.srv import AssignRoute, AssignRouteRequest, AssignRouteResponse
+from vpa_robot.srv import NewRoute, NewRouteRequest, NewRouteResponse
+from vpa_robot.srv import NewTaskList, NewTaskListRequest, NewTaskListResponse
 from vpa_robot.srv import ReadySignal, ReadySignalResponse
 
 class Zone(Enum):
@@ -52,6 +54,7 @@ class RobotVision:
 
         # Robot name
         self.robot_name = rospy.get_param('~robot_name', 'db19')
+        self.robot_id = find_id_by_robot_name(robot_name=self.robot_name)
 
         # Simple ACC Function: on or off, default on
         self.acc_mode = bool(rospy.get_param('~acc_on', True))
@@ -85,12 +88,14 @@ class RobotVision:
         # Subscribers
         self.image_raw_sub = rospy.Subscriber("robot_cam/image_raw", Image, self.image_raw_sub_cb)
         self.shutdown_sub = rospy.Subscriber("robot_interface_shutdown", Bool, self.signal_shutdown)
+        
         # Servers
         self.srv_color = Server(color_hsvConfig, self.dynamic_reconfigure_callback_hsv)
 
         # Clients
         self.assign_route_client = rospy.ServiceProxy('assign_route_srv', AssignRoute)
         self.update_route_client = rospy.ServiceProxy('update_route_srv', NewRoute)
+        self.new_task_list_client = rospy.ServiceProxy('new_task_list_srv', NewTaskList)
 
         self.send_ready_signal()
     
@@ -125,6 +130,7 @@ class RobotVision:
         self.left_inter_time  = 0
 
         # Task
+        self.req_new_task_list_lock  = False
         self.find_task_line = False     # did the robot find the task_line already
         self.task_counter   = 0         # this is to count how many tasks has this specific robot conducted
         self.task_list      = []        # a list of intersections to travel through
@@ -333,6 +339,14 @@ class RobotVision:
             dis2ready = search_pattern.search_line(cv_hsv_img, self.ready_line_hsv)
             if dis2ready > 25:
                 self.stop = True
+                if not self.req_new_task_list_lock:
+                    self.req_new_task_list_lock = True
+                    req = NewTaskListRequest(robot_id=self.robot_id)
+                    resp: NewTaskListResponse = self.new_task_list_client.call(req)
+                    if resp.success:
+                        rospy.loginfo(f'{resp.message}')
+                        self.curr_route = [6, 6, 2]
+                        self.stop = False
                 return target_x, cv_img
             else:
                 target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)         
@@ -340,6 +354,7 @@ class RobotVision:
         # INIT TASK == FROM BUFFER TO INTERSECTION          
         elif self.curr_route == [6, 6, 2]:
             self.current_zone = Zone.BUFFER_AREA
+            self.req_new_task_list_lock = False
             target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
         # --- INTERSECTION AREA ---
