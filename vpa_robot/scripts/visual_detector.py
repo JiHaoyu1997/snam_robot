@@ -298,13 +298,16 @@ class RobotVision:
 
     def req_new_route(self):
         try:
-            route = [0, 0, 0]
+            if self.curr_route == [2, 6 ,6]:
+                rospy.logerr('[2, 6, 6] Still Req')
+                return [0, 0, 0]
+            
             req = AssignRouteRequest()
             req.last_inter_id = self.curr_route[1]
             req.next_inter_id = self.curr_route[2]
             resp: AssignRouteResponse = self.assign_route_client.call(req)
             rospy.loginfo(f'{self.robot_name} cross the boundary line between inter{self.curr_route[1]} and inter{self.curr_route[2]}')
-            return resp.route if resp.route else route
+            return resp.route if resp.route else [0, 0, 0]
         except rospy.ServiceException as e:
             rospy.logerr('%s: Request New Route Service Call Failed: %s', self.robot_name, e)
             return [0, 0, 0]

@@ -124,7 +124,7 @@ class TaskManager:
             self.curr_task_index = 0
             self.curr_route = [2, 6, 6]
             return AssignRouteResponse(route=self.curr_route)
-
+        
         # Update current route
         self.curr_task_index += 1      
         self.curr_route = [

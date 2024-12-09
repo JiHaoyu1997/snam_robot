@@ -131,6 +131,9 @@ class RobotDecision:
         if len(new_route) != 3:
             rospy.logerr("Route message does not contain 3 elements.")
             return NewRouteResponse(success=False, message='Update Error')
+        
+        if new_route[1] == 6 and new_route[2] == 6:
+            return NewRouteResponse(success=True, message=f"{self.robot_name} travel end")
              
         if self.curr_route[1] == new_route[0] and self.curr_route[2] == new_route[1]:
             last_inter_id = new_route[0]
