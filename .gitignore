@@ -2,3 +2,5 @@
 /devel/
 .vscode/
 __pycache__/
+.bashrc
+kinematics.py
