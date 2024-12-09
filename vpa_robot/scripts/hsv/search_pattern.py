@@ -307,7 +307,7 @@ def search_inter_guide_line2(hsv_space: HSVSpace, hsv_image, action: int, recurs
           
     elif action == 2:
         # right turn
-        for i in range(90, 140, 10):
+        for i in [110, 120, 100, 130, 90]:
             y = i
             line = np.nonzero(mask[y, 80 : ])[0]
             line = line + 80
