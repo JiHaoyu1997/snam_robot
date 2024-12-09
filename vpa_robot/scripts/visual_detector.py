@@ -264,6 +264,7 @@ class RobotVision:
 
         if cross_inter_boundary:
             self.cross_inter_boundary_line_count += 1
+            print(self.cross_inter_boundary_line_count)
             if self.cross_inter_boundary_line_count >= 2:
                 if self.inter_boundary_detect_lock.acquire(blocking=False):
                     try:
