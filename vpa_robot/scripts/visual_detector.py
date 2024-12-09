@@ -260,7 +260,6 @@ class RobotVision:
 
     def detect_inter_boundary_line(self, cv_hsv_img: Image):
         dis2bound = search_pattern.search_line(cv_hsv_img, self.inter_boundary_line_hsv, top_line=100)
-        print(dis2bound)
         cross_inter_boundary = dis2bound > 25
 
         if cross_inter_boundary:
@@ -274,7 +273,7 @@ class RobotVision:
                         self.curr_route = new_route
                         threading.Thread(target=self.req_update_new_route, args=(new_route,)).start()
                     finally:
-                        pass
+                        self.inter_boundary_detect_lock.release()
         else:
             self.cross_inter_boundary_line_count = 0
             if self.inter_boundary_detect_lock.locked():
