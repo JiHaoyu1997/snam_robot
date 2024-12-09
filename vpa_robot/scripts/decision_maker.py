@@ -132,8 +132,7 @@ class RobotDecision:
             rospy.logerr("Route message does not contain 3 elements.")
             return NewRouteResponse(success=False, message='Update Error')
         
-        if new_route[1] == 6 and new_route[2] == 6:
-            return NewRouteResponse(success=True, message=f"{self.robot_name} travel end")
+
              
         if self.curr_route[1] == new_route[0] and self.curr_route[2] == new_route[1]:
             last_inter_id = new_route[0]
@@ -142,7 +141,10 @@ class RobotDecision:
             self.curr_route = new_route
             self.local_inter_id = curr_inter_id
             self.update_inter_sub()
-            return NewRouteResponse(success=True, message=f"{self.robot_name} updated new inter info")
+            if new_route[1] == 6 and new_route[2] == 6:
+                return NewRouteResponse(success=True, message=f"{self.robot_name} travel end")
+            else:
+                return NewRouteResponse(success=True, message=f"{self.robot_name} updated new inter info")
         else:
             rospy.logerr(f"Route update sequence mismatch: {self.curr_route} and {new_route}.")       
 

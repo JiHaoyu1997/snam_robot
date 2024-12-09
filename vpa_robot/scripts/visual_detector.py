@@ -279,8 +279,7 @@ class RobotVision:
             if self.inter_boundary_detect_lock.locked():
                 self.inter_boundary_detect_lock.release()
 
-        return
-    
+        return    
 
     def detect_conflict_boundary_line(self, cv_hsv_img):
         dis2conflict = search_pattern.search_stop_line(cv_hsv_img, self.stop_line_hsv, self.stop_line_hsv2)
