@@ -45,7 +45,7 @@ class TaskManager:
         # Servers
         self.node_ready_handle_server = rospy.Service('ready_signal', ReadySignal, self.ready_signal_cb)
         self.assign_route_server = rospy.Service('assign_route_srv', AssignRoute, self.assign_route_cb)
-        self.new_task_list_server = rospy.ServiceProxy('new_task_list_srv', NewTaskList, self.req_new_task_list_cb)
+        self.new_task_list_server = rospy.Service('new_task_list_srv', NewTaskList, self.req_new_task_list_cb)
 
         # Clients
         self.assign_task_client = rospy.ServiceProxy('/assign_task_srv', AssignTask)

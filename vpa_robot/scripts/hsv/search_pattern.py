@@ -313,6 +313,7 @@ def search_inter_guide_line2(hsv_space: HSVSpace, hsv_image, action: int, recurs
             line = line + 80
             seg = _break_segs(line)
             # print(seg)
+
             if len(seg) == 1:
                 result = min(max(RIGHT_TURN_L,int(np.mean(seg[0]))),RIGHT_TURN_R)
                 # print(y ,result)
@@ -328,6 +329,7 @@ def search_inter_guide_line2(hsv_space: HSVSpace, hsv_image, action: int, recurs
                 else:
                     res = int(np.mean(seg[1]))
                 result = min(max(RIGHT_TURN_L, res), RIGHT_TURN_R)
+                # print(y ,result)
                 return result
                     
         return int(hsv_image.shape[1] * 0.75)

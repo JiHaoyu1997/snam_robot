@@ -88,7 +88,7 @@ class RobotVision:
         # Subscribers
         self.image_raw_sub = rospy.Subscriber("robot_cam/image_raw", Image, self.image_raw_sub_cb)
         self.shutdown_sub = rospy.Subscriber("robot_interface_shutdown", Bool, self.signal_shutdown)
-        
+
         # Servers
         self.srv_color = Server(color_hsvConfig, self.dynamic_reconfigure_callback_hsv)
 
@@ -340,6 +340,7 @@ class RobotVision:
             if dis2ready > 25:
                 self.stop = True
                 if not self.req_new_task_list_lock:
+                    rospy.wait_for_service("new_task_list_srv")
                     self.req_new_task_list_lock = True
                     req = NewTaskListRequest(robot_id=self.robot_id)
                     resp: NewTaskListResponse = self.new_task_list_client.call(req)
