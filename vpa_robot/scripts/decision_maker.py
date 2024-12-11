@@ -309,7 +309,7 @@ class RobotDecision:
         """
         return self.robot_motion_controller.tick_recorder(msg=wheel_omega_msg)    
 
-    def pub_robot_info(self):
+    def pub_robot_info(self, event):
         """
         Publisch self robot_info.
         """
