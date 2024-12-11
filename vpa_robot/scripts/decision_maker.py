@@ -48,37 +48,46 @@ class RobotInfo:
 
 
 class InterInfo:
-    def __init__(self, inter=0):
-        self.inter = inter  # Intersection ID
-        self.robot_id_list = []  # List of robot names or IDs
-        self.robot_info: List[RobotInfo] = []  # List of RobotInfo instances
+    def __init__(self, inter_id=0):
+        self.inter_id = inter_id                # 交叉路口ID
+        self.robot_id_list = []                 # 机器人ID列表
+        self.robot_info: List[RobotInfo] = []   # RobotInfo实例列表
 
 
 class FCFSModel:
     def __init__(self, robot_id=0) -> None:
         self.robot_id = robot_id
-        self.enter_conflict_zone = False
-        self.pass_permssion = False
+        self.want_to_enter_conflict = False
+        self.enter_permission = False
 
-    def decision_maker(self, twist_from_img: Twist, robot_inter_info: InterInfo):
-        if not robot_inter_info.robot_id_list:
+    def decision_maker(self, twist_from_img: Twist, inter_info: InterInfo):
+        """
+        Decision logic:
+        """
+        # If not yet in the conflict zone, return the original control command
+        if not self.want_to_enter_conflict:
             return twist_from_img
         
-        if not self.enter_conflict_zone:
-            return twist_from_img             
+        if not self.enter_permission:
+            return Twist()
         else:
-            if self.robot_id == robot_inter_info.robot_id_list[0]:
-                return twist_from_img
-            else:
-                self.pass_permssion = self.req_pass_permission(robot_info_list=robot_inter_info.robot_info)
-                if self.pass_permssion:
-                    return twist_from_img
-                else:
-                    return Twist()
-                
-    def req_pass_permission(self, robot_info_list):
+            return twist_from_img
+
+    def check_enter_permission(self, robot_info_list: List[RobotInfo]):
+        """
+        Check the status of robots in the queue:
+        """
         for robot_info in robot_info_list:
-            pass
+            # skip self
+            if robot_info.robot_id == self.robot_id:
+                continue
+
+            # A robot has already entered the conflict zone; this robot cannot pass
+            if robot_info.robot_enter_conflict:
+                return False 
+            
+        # No robots have entered the conflict zone; this robot can pass
+        return True 
     
 
 class CBAAandDMPC:
@@ -117,7 +126,7 @@ class RobotDecision:
         self.curr_route = [0, 0, 0]
         self.local_inter_id = 0
         self.local_inter_info = InterInfo()
-        self.local_inter_info_topic = f'inter_info/{self.local_inter_id}'
+        self.local_inter_info_topic = f'/inter_info/{self.local_inter_id}'
 
         # Publishers
         self.cmd_vel_pub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
@@ -138,6 +147,8 @@ class RobotDecision:
         self.inter_mng_client = rospy.ServiceProxy('/inter_mng_srv', InterMng)
 
         self.send_ready_signal()
+
+        self.timer = rospy.Timer(rospy.Duration(1 / 10), self.pub_robot_info)
     
     # Methods
     def send_ready_signal(self):
@@ -225,11 +236,7 @@ class RobotDecision:
             return
 
         self.local_inter_info_topic = f'/inter_info/{self.local_inter_id}'
-        self.inter_info_sub = rospy.Subscriber(
-            self.local_inter_info_topic,
-            InterInfoMsg,
-            self.inter_info_cb
-        )
+        self.inter_info_sub = rospy.Subscriber(self.local_inter_info_topic, InterInfoMsg, self.inter_info_cb)
         rospy.loginfo(f"{self.robot_name} updated inter_info_sub to {self.local_inter_info_topic}")
         return
 
@@ -237,7 +244,7 @@ class RobotDecision:
         """
         Updates local intersection information.
         """
-        self.local_inter_info.inter = inter_info_msg.inter_id
+        self.local_inter_info.inter_id = inter_info_msg.inter_id
         self.local_inter_info.robot_id_list = inter_info_msg.robot_id_list
         robot_info: List[RobotInfoMsg] = inter_info_msg.robot_info
         self.local_inter_info.robot_info = [
@@ -260,24 +267,24 @@ class RobotDecision:
         """
         Receive Twist messages from the vision system.
         """
-        cmd_vel = self.make_decision(twist_from_img=msg, robot_inter_info=self.local_inter_info)
+        cmd_vel = self.make_decision(twist_from_img=msg, inter_info=self.local_inter_info)
         self.cmd_vel_pub.publish(cmd_vel)
         return
 
-    def make_decision(self, twist_from_img: Twist, robot_inter_info: InterInfo) -> Twist:
+    def make_decision(self, twist_from_img: Twist, inter_info: InterInfo) -> Twist:
         """
         Decision-making process based on the robot's current info.
         """
-        twist_from_decision = self.decision_model.decision_maker(twist_from_img, robot_inter_info)
+        twist_from_decision = self.decision_model.decision_maker(twist_from_img, inter_info)
         return twist_from_decision
 
     def inform_enter_conflict_cb(self, msg: Bool):
         """
-        Update self enter conflict zone state.
+        Update the robot's conflict zone entry state based on the received message.
         """
-        if msg:
-            self.robot_info.robot_enter_conflict = msg.data
-            self.decision_model.enter_conflict_zone = msg.data
+        self.decision_model.want_to_enter_conflict = msg.data
+        self.decision_model.enter_permission = msg.data and self.decision_model.check_enter_permission()
+        self.robot_info.robot_enter_conflict = self.decision_model.enter_permission
         return
 
     def kinematic_info_cb(self, kinematic_data_msg: KinematicDataArray):
