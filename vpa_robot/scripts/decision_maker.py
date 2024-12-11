@@ -60,7 +60,7 @@ class FCFSModel:
         self.want_to_enter_conflict = False
         self.enter_permission = False
 
-    def decision_maker(self, twist_from_img: Twist, inter_info: InterInfo):
+    def decision_maker(self, twist_from_img: Twist):
         """
         Decision logic:
         """
@@ -283,7 +283,7 @@ class RobotDecision:
         Update the robot's conflict zone entry state based on the received message.
         """
         self.decision_model.want_to_enter_conflict = msg.data
-        self.decision_model.enter_permission = msg.data and self.decision_model.check_enter_permission()
+        self.decision_model.enter_permission = msg.data and self.decision_model.check_enter_permission(self.local_inter_info.robot_info)
         self.robot_info.robot_enter_conflict = self.decision_model.enter_permission
         return
 
