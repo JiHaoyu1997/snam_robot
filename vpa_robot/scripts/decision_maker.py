@@ -297,6 +297,7 @@ class RobotDecision:
                 curr_vel = data.vel
 
                 # update local info
+                print(curr_pose)
                 self.robot_motion_controller.kinematic_recoder(pose=curr_pose, vel=curr_vel)
                 self.robot_info.robot_v = curr_vel[0]
                 self.robot_info.robot_p = self.robot_motion_controller.total_distance_apriltag
