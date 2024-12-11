@@ -301,7 +301,7 @@ class RobotDecision:
                 self.robot_info.robot_v = curr_vel[0]
                 self.robot_info.robot_p = self.robot_motion_controller.total_distance_apriltag
                 x, y = round(curr_pose[1], 3), round(curr_pose[2], 3)
-                self.robot_info.robot_coordinate = [x, y]
+                self.robot_info.robot_coordinate = (x, y)
         return
     
     def wheel_omega_cb(self, wheel_omega_msg: WheelsEncoder):
