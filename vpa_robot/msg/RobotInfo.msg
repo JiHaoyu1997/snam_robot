@@ -1,9 +1,10 @@
-string  robot_name
-int8    robot_id
-float32 robot_a  # Acceleration
-float32 robot_v  # Velocity
-float32 robot_p  # Position
-float32[] robot_coordinate # Coodinate
-float32 robot_enter_time
-float32 robot_arrive_cp_time
-float32 robot_exit_time
+string      robot_name
+int8        robot_id
+int8[]      robot_route
+float32     robot_v
+float32     robot_p
+float32[]   robot_coordinate
+float32     robot_enter_time
+bool        robot_enter_conflict
+float32     robot_arrive_cp_time
+float32     robot_exit_time

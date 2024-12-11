@@ -31,16 +31,17 @@ from vpa_robot.srv import ReadySignal, ReadySignalResponse
 
 class Zone(Enum):
     BUFFER_AREA     = 0 # this is queuing area outside the intersections 
-    INTERSECTION    = 1
+    LANE            = 1
+    CONFLICT        = 2
 
 class VelocitySet():    
     def __init__(self) -> None:
+        self.v_f_buffer = 0.3
+        self.v_s_buffer = 0.3 
         self.v_f_lane   = 0.3
         self.v_s_lane   = 0.3
         self.v_f_inter  = 0.3
         self.v_s_inter  = 0.3
-        self.v_f_buffer = 0.3
-        self.v_s_buffer = 0.3 
 
 class RobotVision:
     # Initialization
@@ -361,15 +362,15 @@ class RobotVision:
         # --- INTERSECTION AREA ---
         # DEFAULT FIRST ROUTE [6, 2, X]
         elif self.curr_route[0] == 6 and self.curr_route[1] == 2:
-            self.current_zone = Zone.INTERSECTION
-
             # check if conflict zone
             self.detect_conflict_boundary_line(cv_hsv_img=cv_hsv_img)
-            if not self.enter_conflict_zone:                   
+            if not self.enter_conflict_zone:  
+                self.current_zone = Zone.BUFFER_AREA                 
                 target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
             else:
                 # conflict zone
+                self.current_zone = Zone.CONFLICT
                 self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
                 target_x, cv_img = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=self.next_action)
 
@@ -380,15 +381,15 @@ class RobotVision:
         return target_x, cv_img
     
     def cross_intersection(self, cv_img, cv_hsv_img):
-        self.current_zone = Zone.INTERSECTION
-
         # check if conflict zone
         self.detect_conflict_boundary_line(cv_hsv_img=cv_hsv_img)
         if not self.enter_conflict_zone:
             # lane
+            self.current_zone = Zone.LANE
             target_x, cv_img = self.find_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
         else:
             # conflict zone
+            self.current_zone = Zone.CONFLICT
             self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
             target_x, cv_img = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=self.next_action)
 
@@ -440,7 +441,14 @@ class RobotVision:
                 self.v_set.v_f_buffer, 
                 self.v_set.v_s_buffer) 
                
-        elif self.current_zone == Zone.INTERSECTION:
+        elif self.current_zone == Zone.LANE:
+            v_x, omega_z = pid_controller.inter_pi_control(
+                int(self.image_width / 2), 
+                target_x, 
+                self.v_set.v_f_lane, 
+                self.v_set.v_s_lane)
+            
+        elif self.current_zone == Zone.CONFLICT:
             v_x, omega_z = pid_controller.inter_pi_control(
                 int(self.image_width / 2), 
                 target_x, 

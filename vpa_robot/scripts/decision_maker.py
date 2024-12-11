@@ -17,16 +17,34 @@ from vpa_robot.srv import NewRoute, NewRouteRequest, NewRouteResponse
 from vpa_robot.srv import ReadySignal, ReadySignalResponse
 
 class RobotInfo:
-    def __init__(self, name="", robot_id=0, a=0.0, v=0.0, p=0.0, coordinate=(0.0, 0.0), enter_time=0.0, arrive_cp_time=0.0, exit_time=0.0):
+    def __init__(self, name="", robot_id=0, robot_route=[0, 0, 0], v=0.0, p=0.0, coordinate=(0.0, 0.0), enter_time=0.0, enter_conflict=False, arrive_cp_time=0.0, exit_time=0.0):
         self.robot_name = name
         self.robot_id = robot_id
-        self.robot_a = a  # Acceleration
-        self.robot_v = v  # Velocity
-        self.robot_p = p  # Position
-        self.robot_coordinate = coordinate # Coordinate
+        self.robot_route = robot_route
+        self.robot_v = v
+        self.robot_p = p
+        self.robot_coordinate = coordinate
         self.robot_enter_time = enter_time
+        self.robot_enter_conflict = enter_conflict
         self.robot_arrive_cp_time = arrive_cp_time
         self.robot_exit_time = exit_time
+
+    def to_robot_info_msg(self):
+        """
+        Annotation
+        """
+        msg = RobotInfoMsg()
+        msg.robot_name = self.robot_name
+        msg.robot_id = self.robot_id
+        msg.robot_route = self.robot_route
+        msg.robot_v = self.robot_v
+        msg.robot_p = self.robot_p
+        msg.robot_coordinate = self.robot_coordinate
+        msg.robot_enter_time = self.robot_enter_time
+        msg.robot_enter_conflict = self.robot_enter_conflict
+        msg.robot_arrive_cp_time = self.robot_arrive_cp_time
+        msg.robot_exit_time = self.robot_exit_time
+        return msg
 
 
 class InterInfo:
@@ -40,20 +58,29 @@ class FCFSModel:
     def __init__(self, robot_id=0) -> None:
         self.robot_id = robot_id
         self.enter_conflict_zone = False
-
+        self.pass_permssion = False
 
     def decision_maker(self, twist_from_img: Twist, robot_inter_info: InterInfo):
         if not robot_inter_info.robot_id_list:
             return twist_from_img
         
-        self.pass_permssion = self.robot_id == robot_inter_info.robot_id_list[0]
-
-        if self.enter_conflict_zone and not self.pass_permssion:
-            return Twist()  # Stop the robot if it doesn't have permission
-
-        return twist_from_img
+        if not self.enter_conflict_zone:
+            return twist_from_img             
+        else:
+            if self.robot_id == robot_inter_info.robot_id_list[0]:
+                return twist_from_img
+            else:
+                self.pass_permssion = self.req_pass_permission(robot_info_list=robot_inter_info.robot_info)
+                if self.pass_permssion:
+                    return twist_from_img
+                else:
+                    return Twist()
+                
+    def req_pass_permission(self, robot_info_list):
+        for robot_info in robot_info_list:
+            pass
     
-    
+
 class CBAAandDMPC:
     def __init__(self, robot_id=0) -> None:
         self.robot_id = robot_id
@@ -82,11 +109,11 @@ class RobotDecision:
         # Robot name
         self.robot_name = rospy.get_param('~robot_name', 'db19')
         self.robot_id = find_id_by_robot_name(robot_name=self.robot_name)
+        self.robot_info = RobotInfo(name=self.robot_name, robot_id=self.robot_id)
         self.decision_model = FCFSModel(robot_id=self.robot_id)
         self.robot_motion_controller = RobotMotion(name=self.robot_name, robot_id=self.robot_id) 
 
         # Initialize route and intersection information
-        self.robot_info = RobotInfo(name=self.robot_name)
         self.curr_route = [0, 0, 0]
         self.local_inter_id = 0
         self.local_inter_info = InterInfo()
@@ -94,6 +121,7 @@ class RobotDecision:
 
         # Publishers
         self.cmd_vel_pub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
+        self.robot_info_pub = rospy.Publisher('robot_info', RobotInfoMsg, queue_size=1)
 
         # Subscribers
         self.inform_enter_conflict_sub = rospy.Subscriber('inform_enter_conflict', Bool, self.inform_enter_conflict_cb)
@@ -113,6 +141,9 @@ class RobotDecision:
     
     # Methods
     def send_ready_signal(self):
+        """
+        Send ready_signal to task_manager.
+        """
         rospy.wait_for_service('ready_signal')
         try:
             ready_signal_client = rospy.ServiceProxy('ready_signal', ReadySignal)
@@ -121,58 +152,71 @@ class RobotDecision:
                 rospy.loginfo(f"{self.robot_name}: Decision Maker is Online")
                 self.curr_route = [6, 6, 2]   
                 self.local_inter_id = 6
+            return
         except rospy.ServiceException as e:
             rospy.logerr(f"service call failed: {e}")
+            return
 
     def update_route_cb(self, req: NewRouteRequest):
-        """Callback for updating route if conditions are met."""
+        """
+        Update curr_route.
+        """
         new_route = [route for route in req.new_route]
 
+        # Abnormal Detection
         if len(new_route) != 3:
             rospy.logerr("Route message does not contain 3 elements.")
-            return NewRouteResponse(success=False, message='Update Error')
+            return NewRouteResponse(success=False, message='Update Error') 
         
-
-             
+        # Condition Match             
         if self.curr_route[1] == new_route[0] and self.curr_route[2] == new_route[1]:
-            last_inter_id = new_route[0]
-            curr_inter_id = new_route[1]
-            self.update_global_inter_info(last_inter_id, curr_inter_id)
+            # update local info
             self.curr_route = new_route
-            self.local_inter_id = curr_inter_id
+            self.local_inter_id = new_route[1]
+            self.robot_info.robot_route = self.curr_route
+            self.robot_info.robot_p = 0.0
+            self.robot_info.robot_enter_time = rospy.get_time()
+            self.robot_motion_controller.total_distance_apriltag = 0.0
+
+            # update global info
+            self.update_global_inter_info()
             self.update_inter_sub()
+
+            # response
             if new_route[1] == 6 and new_route[2] == 6:
                 return NewRouteResponse(success=True, message=f"{self.robot_name} travel end")
             else:
                 return NewRouteResponse(success=True, message=f"{self.robot_name} updated new inter info")
         else:
-            rospy.logerr(f"Route update sequence mismatch: {self.curr_route} and {new_route}.")       
+            rospy.logerr(f"Route update sequence mismatch: {self.curr_route} and {new_route}.") 
+            return      
 
-    def update_global_inter_info(self, last_inter_id, curr_inter_id):
-        """Update global intersection info by calling the service."""
+    def update_global_inter_info(self):
+        """
+        Request to update global inter_info.
+        """
         rospy.wait_for_service('/inter_mng_srv')
         try:
-            self.robot_info = RobotInfo(
-                name=self.robot_name,
-                robot_id=find_id_by_robot_name(robot_name=self.robot_name),
-            )
-
             req = InterMngRequest()
             req.header.stamp = rospy.Time.now()
-            req.robot_name = self.robot_name
-            req.last_inter_id = last_inter_id
-            req.curr_inter_id = curr_inter_id
-            req.robot_info = self.robot_info
-
+            req.robot_id = self.robot_id
+            req.last_inter_id = self.curr_route[0]
+            req.curr_inter_id = self.curr_route[1]
             resp: InterMngResponse = self.inter_mng_client.call(req)
             if resp.success:
                 rospy.loginfo(f'{self.robot_name} - {resp.message}')
             else:
                 rospy.logwarn(f'{self.robot_name} - Service response not successful: {resp.message}')
+            return
         except rospy.ServiceException as e:
             rospy.logerr(f'{self.robot_name}: Service call failed - {e}')
+            return
 
     def update_inter_sub(self):
+        """
+        Update local subscribed inter_info/x.
+        """
+
         if hasattr(self, 'inter_info_sub'):
             self.inter_info_sub.unregister()
         
@@ -187,9 +231,12 @@ class RobotDecision:
             self.inter_info_cb
         )
         rospy.loginfo(f"{self.robot_name} updated inter_info_sub to {self.local_inter_info_topic}")
+        return
 
     def inter_info_cb(self, inter_info_msg: InterInfoMsg):
-        """Updates local intersection information based on the message."""
+        """
+        Updates local intersection information.
+        """
         self.local_inter_info.inter = inter_info_msg.inter_id
         self.local_inter_info.robot_id_list = inter_info_msg.robot_id_list
         robot_info: List[RobotInfoMsg] = inter_info_msg.robot_info
@@ -197,16 +244,17 @@ class RobotDecision:
             RobotInfo(
                 name=info.robot_name,
                 robot_id=info.robot_id,
-                a=info.robot_a,
+                robot_route=info.robot_route,
                 v=info.robot_v,
                 p=info.robot_p,
                 coordinate=info.robot_coordinate,
                 enter_time=info.robot_enter_time,
+                enter_conflict=info.robot_enter_conflict,
                 arrive_cp_time=info.robot_arrive_cp_time,
                 exit_time=info.robot_exit_time
             ) for info in robot_info
         ]
-
+        return
 
     def cmd_vel_from_img_cb(self, msg: Twist):
         """
@@ -214,36 +262,64 @@ class RobotDecision:
         """
         cmd_vel = self.make_decision(twist_from_img=msg, robot_inter_info=self.local_inter_info)
         self.cmd_vel_pub.publish(cmd_vel)
+        return
 
     def make_decision(self, twist_from_img: Twist, robot_inter_info: InterInfo) -> Twist:
         """
-        Decision-making process based on the robot's current state and received command.
+        Decision-making process based on the robot's current info.
         """
         twist_from_decision = self.decision_model.decision_maker(twist_from_img, robot_inter_info)
         return twist_from_decision
 
+    def inform_enter_conflict_cb(self, msg: Bool):
+        """
+        Update self enter conflict zone state.
+        """
+        if msg:
+            self.robot_info.robot_enter_conflict = msg.data
+            self.decision_model.enter_conflict_zone = msg.data
+        return
+
     def kinematic_info_cb(self, kinematic_data_msg: KinematicDataArray):
+        """
+        Receive self kinematics data and update local info.
+        """
         for data in kinematic_data_msg.data:
             if self.robot_id == data.robot_id:
                 curr_pose = data.pose
                 curr_vel = data.vel
+
+                # update local info
                 self.robot_motion_controller.kinematic_recoder(pose=curr_pose, vel=curr_vel)
+                self.robot_info.robot_v = curr_vel[0]
+                self.robot_info.robot_p = self.robot_motion_controller.total_distance_apriltag
+                self.robot_info.robot_coordinate = [curr_pose[1], curr_pose[2]]
         return
     
     def wheel_omega_cb(self, wheel_omega_msg: WheelsEncoder):
-        return self.robot_motion_controller.tick_recorder(msg=wheel_omega_msg)
-    
-    def inform_enter_conflict_cb(self, msg: Bool):
-        if msg:
-            self.decision_model.enter_conflict_zone = msg.data
+        """
+        Through wheel encoder to calc travel time.
+        """
+        return self.robot_motion_controller.tick_recorder(msg=wheel_omega_msg)    
+
+    def pub_robot_info(self):
+        """
+        Publisch self robot_info.
+        """
+        # TODO: update expected robot_arrive_cp_time & robot_exit_time
+        robot_info_msg = self.robot_info.to_robot_info_msg()
+        self.robot_info_pub.publish(robot_info_msg)
+        return
     
     def shutdown_handler(self):
         cmd_vel = Twist()
         self.cmd_vel_pub.publish(cmd_vel)
+        return
 
-    def signal_shutdown(self,msg:Bool):
+    def signal_shutdown(self, msg: Bool):
         if msg.data:
             rospy.signal_shutdown('decision maker node shutdown')
+        return
 
 
 if __name__ == '__main__':
