@@ -275,7 +275,7 @@ class RobotDecision:
         """
         Decision-making process based on the robot's current info.
         """
-        twist_from_decision = self.decision_model.decision_maker(twist_from_img, inter_info)
+        twist_from_decision = self.decision_model.decision_maker(twist_from_img)
         return twist_from_decision
 
     def inform_enter_conflict_cb(self, msg: Bool):
