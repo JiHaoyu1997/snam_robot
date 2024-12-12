@@ -312,6 +312,8 @@ class RobotVision:
                 self.cross_conflict_boundary_timer = None
             finally:
                 pass 
+        else:
+            rospy.logwarn(f"{self.robot_name} can not get cross conflict boundary line lock")
 
     def update_enter_conflict_status(self, enter: bool = True):
         """
