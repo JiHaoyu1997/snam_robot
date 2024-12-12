@@ -273,6 +273,7 @@ class RobotVision:
             self.cross_inter_boundary_line_count += 1
             if self.cross_inter_boundary_line_count >= 2:
                 if self.inter_boundary_detect_lock.acquire(blocking=False):
+                    rospy.sleep(1 / 2)
                     try:
                         self.update_enter_conflict_status(enter=False)
                         new_route = self.req_new_route()
@@ -295,6 +296,7 @@ class RobotVision:
         if cross_conflict_boundary:
             self.cross_conflict_boundary_line_count += 1
             if self.cross_conflict_boundary_line_count >= 2:
+                rospy.sleep(1 / 2)
                 self.update_enter_conflict_status(enter=True)
 
         else:
@@ -340,6 +342,7 @@ class RobotVision:
             dis2ready = search_pattern.search_line(cv_hsv_img, self.ready_line_hsv)
             if dis2ready > 25:
                 self.stop = True
+                return target_x, cv_img
                 if not self.req_new_task_list_lock:
                     rospy.wait_for_service("new_task_list_srv")
                     self.req_new_task_list_lock = True
@@ -350,7 +353,6 @@ class RobotVision:
                         self.curr_route = [6, 6, 2]
                         self.req_update_new_route(self.curr_route)
                         self.stop = False
-                return target_x, cv_img
             else:
                 target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)         
             
