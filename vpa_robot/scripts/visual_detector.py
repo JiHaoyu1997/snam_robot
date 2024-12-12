@@ -131,7 +131,7 @@ class RobotVision:
         self.left_inter_time  = 0
 
         # Task
-        self.req_new_task_list_lock  = False
+        self.req_new_task_list_lock  = True
         self.find_task_line = False     # did the robot find the task_line already
         self.task_counter   = 0         # this is to count how many tasks has this specific robot conducted
         self.task_list      = []        # a list of intersections to travel through
@@ -357,7 +357,6 @@ class RobotVision:
         # INIT TASK == FROM BUFFER TO INTERSECTION          
         elif self.curr_route == [6, 6, 2]:
             self.current_zone = Zone.BUFFER_AREA
-            self.req_new_task_list_lock = False
             target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
         # --- INTERSECTION AREA ---
@@ -367,6 +366,7 @@ class RobotVision:
             self.detect_conflict_boundary_line(cv_hsv_img=cv_hsv_img)
             if not self.enter_conflict_zone:  
                 self.current_zone = Zone.BUFFER_AREA                 
+                self.req_new_task_list_lock = False
                 target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
             else:
