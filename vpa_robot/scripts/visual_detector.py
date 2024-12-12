@@ -254,16 +254,7 @@ class RobotVision:
         self.pub_cv_img(cv_img=result_cv_img)
         self.pub_acc_img(acc_img=acc_img)
 
-        return
-    
-    def update_enter_conflict_status(self, enter: bool = True):
-        """
-        publish msg to req enter conflict zone
-        """    
-        msg = Bool()
-        msg.data = enter
-        self.inform_enter_conflict_pub.publish(msg)
-        self.enter_conflict_zone = enter
+        return    
 
     def detect_inter_boundary_line(self, cv_hsv_img: Image):
         dis2bound = search_pattern.search_line(cv_hsv_img, self.inter_boundary_line_hsv, top_line=100)
@@ -304,6 +295,16 @@ class RobotVision:
 
         return
 
+    def update_enter_conflict_status(self, enter: bool = True):
+        """
+        publish msg to req enter conflict zone
+        """    
+        msg = Bool()
+        msg.data = enter
+        self.inform_enter_conflict_pub.publish(msg)
+        self.enter_conflict_zone = enter
+        return
+    
     def req_new_route(self):
         try:
             if self.curr_route == [2, 6 ,6]:
