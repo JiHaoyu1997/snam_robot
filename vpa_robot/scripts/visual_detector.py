@@ -348,6 +348,7 @@ class RobotVision:
                     if resp.success:
                         rospy.loginfo(f'{resp.message}')
                         self.curr_route = [6, 6, 2]
+                        self.req_update_new_route(self.curr_route)
                         self.stop = False
                 return target_x, cv_img
             else:

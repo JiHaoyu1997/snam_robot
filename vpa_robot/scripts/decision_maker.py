@@ -179,6 +179,11 @@ class RobotDecision:
             rospy.logerr("Route message does not contain 3 elements.")
             return NewRouteResponse(success=False, message='Update Error') 
         
+        # Init
+        if new_route == [6, 6, 2]:
+            self.curr_route == [6, 6, 2]
+            return NewRouteResponse(success=True, message=f"{self.robot_name} start new travel")
+        
         # Condition Match             
         if self.curr_route[1] == new_route[0] and self.curr_route[2] == new_route[1]:
             # update local info
@@ -244,6 +249,7 @@ class RobotDecision:
         """
         Updates local intersection information.
         """
+        print(inter_info_msg.robot_id_list)
         self.local_inter_info.inter_id = inter_info_msg.inter_id
         self.local_inter_info.robot_id_list = inter_info_msg.robot_id_list
         robot_info: List[RobotInfoMsg] = inter_info_msg.robot_info

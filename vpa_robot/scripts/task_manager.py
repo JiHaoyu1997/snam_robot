@@ -35,7 +35,7 @@ class TaskManager:
         self.curr_task_index = 0
 
         # Current route (three intersections: last, current and next)
-        self.curr_route = [6, 6, 2]
+        self.curr_route = [0, 0, 0]
 
         # Publishers
         self.curr_route_pub = rospy.Publisher('curr_route', Int8MultiArray, queue_size=1)
@@ -65,6 +65,7 @@ class TaskManager:
         rospy.loginfo("All nodes are ready! Task Manager is Online")
 
         if self.request_task():
+            self.curr_route = [6, 6, 2]
             rospy.loginfo(f"{self.robot_name}: Task List confirmed: {self.task_list}")
             
         else:
@@ -146,6 +147,7 @@ class TaskManager:
         try:
             resp: AssignTaskResponse = self.assign_task_client.call(robot_name)
             self.task_list = resp.task_list
+            self.curr_route = [6, 6, 2]
             return NewTaskListResponse(success=True, message=f"{self.robot_name} req new task list successfully: {self.task_list}")
         except rospy.ServiceException as e:
             rospy.logerr('%s: Service call failed: %s', self.robot_name, e)
