@@ -119,11 +119,12 @@ class RobotVision:
 
         self.cross_inter_boundary_timer = None
         self.cross_inter_boundary_line_count = 0
+        self.inter_boundary_detect_lock = threading.Lock()
 
         self.enter_conflict_zone = False
         self.cross_conflict_boundary_timer = None
         self.cross_conflict_boundary_line_count = 0
-        self.inter_boundary_detect_lock = threading.Lock()
+        self.conflict_boundary_detect_lock = threading.Lock()
 
         self.stop = False
         self.stop_timer = None
@@ -297,13 +298,19 @@ class RobotVision:
                 self.cross_conflict_boundary_timer = rospy.Timer(rospy.Duration(1 / 3), self.cross_conflict_boundary_timer_cb, oneshot=True)
         else:
             self.cross_conflict_boundary_line_count = 0
+            if self.conflict_boundary_detect_lock.locked():
+                self.conflict_boundary_detect_lock.release()
 
         return
     
     def cross_conflict_boundary_timer_cb(self, event):
-        rospy.logwarn(f"{self.robot_name} cross conflict boundary line")
-        self.update_enter_conflict_status(enter=True)
-        self.cross_conflict_boundary_timer = None
+        if self.conflict_boundary_detect_lock.acquire(blocking=False):
+            try:
+                rospy.logwarn(f"{self.robot_name} cross conflict boundary line")
+                self.update_enter_conflict_status(enter=True)
+                self.cross_conflict_boundary_timer = None
+            finally:
+                pass 
 
     def update_enter_conflict_status(self, enter: bool = True):
         """
