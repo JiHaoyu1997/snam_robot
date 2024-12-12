@@ -524,6 +524,9 @@ class RobotVision:
         elif self.test_mode == 'straight':
             self.go_straight()
 
+        elif self.test_mode == 'stop':
+            self.go_stop(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+
         else:
             self.go_thur_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
@@ -731,6 +734,16 @@ class RobotVision:
     def go_straight(self):
         self.pub_cmd_vel_from_img(v_x=0.3, omega_z=0, v_factor=1) 
         return
+    
+    def go_stop(self, cv_img, cv_hsv_img):
+        hsv_image1 = cv_hsv_img
+        hsv_image2 = cv_hsv_img
+        mask1 = self.stop_line_hsv.apply_mask(hsv_image1)
+        mask2 = self.stop_line_hsv2.apply_mask(hsv_image2)
+        mask_img = mask1 + mask2
+
+        self.pub_cv_img(cv_img=cv_img)
+        self.pub_mask_img(mask_img=mask_img)
     
     def stop_cb(self, event):
         self.stop = True
