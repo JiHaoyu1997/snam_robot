@@ -6,7 +6,7 @@ import subprocess
 def setup_v4l2():
     commands = [
         "v4l2-ctl -d /dev/video0 --set-ctrl saturation=0",
-        "v4l2-ctl -d /dev/video0 --set-ctrl contrast=30",
+        "v4l2-ctl -d /dev/video0 --set-ctrl contrast=50",
         "v4l2-ctl -d /dev/video0 --set-ctrl white_balance_auto_preset=7",
         "v4l2-ctl -d /dev/video0 --set-ctrl scene_mode=0",
     ]
