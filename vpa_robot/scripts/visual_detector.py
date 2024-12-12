@@ -117,8 +117,11 @@ class RobotVision:
         self.curr_route = [0, 0, 0]
         self.current_zone = Zone.BUFFER_AREA
 
-        self.enter_conflict_zone = False
+        self.cross_inter_boundary_timer = None
         self.cross_inter_boundary_line_count = 0
+
+        self.enter_conflict_zone = False
+        self.cross_conflict_boundary_timer = None
         self.cross_conflict_boundary_line_count = 0
         self.inter_boundary_detect_lock = threading.Lock()
 
@@ -262,23 +265,26 @@ class RobotVision:
 
         if cross_inter_boundary:
             self.cross_inter_boundary_line_count += 1
-            if self.cross_inter_boundary_line_count >= 2:
-                if self.inter_boundary_detect_lock.acquire(blocking=False):
-                    rospy.sleep(1 / 2)
-                    try:
-                        self.update_enter_conflict_status(enter=False)
-                        new_route = self.req_new_route()
-                        new_route = [route for route in new_route]
-                        self.curr_route = new_route
-                        threading.Thread(target=self.req_update_new_route, args=(new_route,)).start()
-                    finally:
-                        pass
+            if self.cross_inter_boundary_line_count >= 2 and self.cross_inter_boundary_timer is None:                
+                self.cross_inter_boundary_timer = rospy.Timer(rospy.Duration(1 / 2), self.cross_inter_boundary_timer_cb, oneshot=True)
         else:
             self.cross_inter_boundary_line_count = 0
             if self.inter_boundary_detect_lock.locked():
                 self.inter_boundary_detect_lock.release()
 
         return    
+    
+    def cross_inter_boundary_timer_cb(self, event):
+        if self.inter_boundary_detect_lock.acquire(blocking=False):
+            try:
+                self.update_enter_conflict_status(enter=False)
+                new_route = self.req_new_route()
+                new_route = [route for route in new_route]
+                self.curr_route = new_route
+                threading.Thread(target=self.req_update_new_route, args=(new_route,)).start()
+                self.cross_inter_boundary_timer = None
+            finally:
+                pass 
 
     def detect_conflict_boundary_line(self, cv_hsv_img):
         dis2conflict = search_pattern.search_stop_line(cv_hsv_img, self.stop_line_hsv, self.stop_line_hsv2)
@@ -286,14 +292,16 @@ class RobotVision:
 
         if cross_conflict_boundary:
             self.cross_conflict_boundary_line_count += 1
-            if self.cross_conflict_boundary_line_count >= 2:
-                rospy.sleep(1 / 2)
-                self.update_enter_conflict_status(enter=True)
-
+            if self.cross_conflict_boundary_line_count >= 2 and self.cross_conflict_boundary_timer is None:
+                self.cross_conflict_boundary_timer = rospy.Timer(rospy.Duration(1 / 2), self.cross_conflict_boundary_timer_cb, oneshot=True)
         else:
             self.cross_conflict_boundary_line_count = 0
 
         return
+    
+    def cross_conflict_boundary_timer_cb(self, event):
+        self.update_enter_conflict_status(enter=True)
+        self.cross_conflict_boundary_timer = None
 
     def update_enter_conflict_status(self, enter: bool = True):
         """
