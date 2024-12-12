@@ -163,6 +163,7 @@ class RobotDecision:
                 rospy.loginfo(f"{self.robot_name}: Decision Maker is Online")
                 self.curr_route = [6, 6, 2]   
                 self.local_inter_id = 6
+                self.robot_info.robot_route = self.curr_route
             return
         except rospy.ServiceException as e:
             rospy.logerr(f"service call failed: {e}")
@@ -181,7 +182,7 @@ class RobotDecision:
         
         # Init
         if new_route == [6, 6, 2]:
-            self.curr_route == [6, 6, 2]
+            self.curr_route = [6, 6, 2]
             return NewRouteResponse(success=True, message=f"{self.robot_name} start new travel")
         
         # Condition Match             
