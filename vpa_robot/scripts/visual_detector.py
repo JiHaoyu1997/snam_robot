@@ -277,6 +277,7 @@ class RobotVision:
     def cross_inter_boundary_timer_cb(self, event):
         if self.inter_boundary_detect_lock.acquire(blocking=False):
             try:
+                rospy.logwarn(f"{self.robot_name} cross inter boundary line")
                 self.update_enter_conflict_status(enter=False)
                 new_route = self.req_new_route()
                 new_route = [route for route in new_route]
@@ -300,6 +301,7 @@ class RobotVision:
         return
     
     def cross_conflict_boundary_timer_cb(self, event):
+        rospy.logwarn(f"{self.robot_name} cross conflict boundary line")
         self.update_enter_conflict_status(enter=True)
         self.cross_conflict_boundary_timer = None
 
