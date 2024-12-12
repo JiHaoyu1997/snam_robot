@@ -249,7 +249,6 @@ class RobotDecision:
         """
         Updates local intersection information.
         """
-        print(inter_info_msg.robot_id_list)
         self.local_inter_info.inter_id = inter_info_msg.inter_id
         self.local_inter_info.robot_id_list = inter_info_msg.robot_id_list
         robot_info: List[RobotInfoMsg] = inter_info_msg.robot_info
