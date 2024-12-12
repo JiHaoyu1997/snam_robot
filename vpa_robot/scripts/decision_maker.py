@@ -280,6 +280,9 @@ class RobotDecision:
         """
         Decision-making process based on the robot's current info.
         """
+        if self.decision_model.want_to_enter_conflict:
+                self.decision_model.enter_permission = self.decision_model.check_enter_permission(self.local_inter_info.robot_info)
+                self.robot_info.robot_enter_conflict = self.decision_model.enter_permission
         twist_from_decision = self.decision_model.decision_maker(twist_from_img)
         return twist_from_decision
 
@@ -288,10 +291,11 @@ class RobotDecision:
         Update the robot's conflict zone entry state based on the received message.
         """
         self.decision_model.want_to_enter_conflict = msg.data
-        self.decision_model.enter_permission = msg.data and self.decision_model.check_enter_permission(self.local_inter_info.robot_info)
-        self.robot_info.robot_enter_conflict = self.decision_model.enter_permission
+        if not self.decision_model.want_to_enter_conflict:
+            self.decision_model.enter_permission = False
+            self.robot_info.robot_enter_conflict = False
         return
-
+    
     def kinematic_info_cb(self, kinematic_data_msg: KinematicDataArray):
         """
         Receive self kinematics data and update local info.
