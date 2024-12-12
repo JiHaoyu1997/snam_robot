@@ -254,8 +254,8 @@ class RobotVision:
         self.pub_cmd_vel_from_img(v_x, omega_z, v_factor)
 
         # Step9 PUB IMAGE MESSAGES       
-        self.pub_cv_img(cv_img=result_cv_img)
-        self.pub_acc_img(acc_img=acc_img)
+        # self.pub_cv_img(cv_img=result_cv_img)
+        # self.pub_acc_img(acc_img=acc_img)
 
         return    
 
@@ -309,10 +309,10 @@ class RobotVision:
         """
         publish msg to req enter conflict zone
         """    
+        self.enter_conflict_zone = enter
         msg = Bool()
         msg.data = enter
         self.inform_enter_conflict_pub.publish(msg)
-        self.enter_conflict_zone = enter
         return
     
     def req_new_route(self):
