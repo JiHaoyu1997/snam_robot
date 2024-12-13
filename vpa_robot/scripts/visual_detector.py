@@ -243,6 +243,8 @@ class RobotVision:
 
         # Step5 FROM HSV IMAGE TO TARGET COORDINATE
         target_x, result_cv_img = self.find_and_draw_target(cv_img=cv_img, cv_hsv_img=cv_hsv_img)  
+
+        target_x = self.image_width * 0.75
                 
         # Step6 FROM TARGET COORDINATE TO TWIST
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
@@ -392,12 +394,34 @@ class RobotVision:
                 self.next_action = map.local_mapper(last=self.curr_route[0], current=self.curr_route[1], next=self.curr_route[2])
                 target_x, cv_img = self.find_target_to_cross_conflict(cv_img=cv_img, cv_hsv_img=cv_hsv_img, action=self.next_action)
 
+        # SPECIAL ROUTE
+        elif self.curr_route == [3, 5, 2]:
+            target_x, cv_img = self.go_thur_352(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+
         # GENERAL ROUTE
         else:
             target_x, cv_img = self.cross_intersection(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
         
         return target_x, cv_img
     
+    def go_thur_352(self, cv_img, cv_hsv_img):
+        rospy.logwarn("enter 352 route")
+        # check if conflict zone
+        self.detect_conflict_boundary_line(cv_hsv_img=cv_hsv_img)
+        if not self.enter_conflict_zone:
+            # lane
+            self.current_zone = Zone.LANE
+            target_x, cv_img = self.find_target_to_cross_lane(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
+        else:
+            # conflict zone
+            self.current_zone = Zone.CONFLICT
+            target_x = search_pattern.search_inter_guide_line2(self.right_guide_hsv, cv_hsv_img, 2)
+            if target_x == None:
+                target_x = self.image_width * 0.75
+        cv2.circle(cv_img, (int(target_x), int(cv_hsv_img.shape[0]/2)), 5, (255, 255, 0), 5)
+
+        return target_x, cv_img
+        
     def cross_intersection(self, cv_img, cv_hsv_img):
         # check if conflict zone
         self.detect_conflict_boundary_line(cv_hsv_img=cv_hsv_img)

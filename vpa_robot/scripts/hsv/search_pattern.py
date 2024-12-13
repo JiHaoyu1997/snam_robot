@@ -278,18 +278,23 @@ def search_inter_guide_line2(hsv_space: HSVSpace, hsv_image, action: int, recurs
                     res = int() 
 
                 avg_positions = [np.mean(segment) for segment in seg2.values() if 40 < np.mean(segment) < 280]
-                avg_pos = int(np.mean(avg_positions))
-                # print(avg_pos, recursion_depth)
-                if avg_pos < width // 2:
-                    cropped_hsv_image = hsv_image[ : , : width // 2]
-                    # print('Left Half', recursion_depth)
-                    res = search_inter_guide_line2(hsv_space=hsv_space, hsv_image=cropped_hsv_image, action=action, recursion_depth=recursion_depth+1)
-                else:
-                    cropped_hsv_image = hsv_image[ : , width //2 :]
-                    # print('Right Half', recursion_depth)
-                    res = search_inter_guide_line2(hsv_space=hsv_space, hsv_image=cropped_hsv_image, action=action, recursion_depth=recursion_depth+1)
-                    if res is not None:
-                        res += width // 2
+                
+                # Check if avg_positions is empty or contains NaN
+                if not avg_positions or np.isnan(np.mean(avg_positions)):
+                    res = None
+                else:                                
+                    avg_pos = int(np.mean(avg_positions))
+                    # print(avg_pos, recursion_depth)
+                    if avg_pos < width // 2:
+                        cropped_hsv_image = hsv_image[ : , : width // 2]
+                        # print('Left Half', recursion_depth)
+                        res = search_inter_guide_line2(hsv_space=hsv_space, hsv_image=cropped_hsv_image, action=action, recursion_depth=recursion_depth+1)
+                    else:
+                        cropped_hsv_image = hsv_image[ : , width //2 :]
+                        # print('Right Half', recursion_depth)
+                        res = search_inter_guide_line2(hsv_space=hsv_space, hsv_image=cropped_hsv_image, action=action, recursion_depth=recursion_depth+1)
+                        if res is not None:
+                            res += width // 2
 
             # print(y, len(seg1), len(seg2), res, recursion_depth)
             
