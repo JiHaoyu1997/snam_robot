@@ -281,6 +281,7 @@ class RobotVision:
             self.enter_conflict_zone = False
             threading.Thread(target=self.req_update_new_route, args=(new_route,)).start()
             self.cross_inter_boundary_timer = None
+            return
         except Exception as e:
             rospy.logerr(f"Error in timer callback: {e}")
         finally:
@@ -303,7 +304,8 @@ class RobotVision:
         rospy.logwarn(f"{self.robot_name} cross conflict boundary")
         self.enter_conflict_zone = True
         self.update_enter_conflict_status()
-        self.cross_inter_boundary_timer = None
+        self.cross_conflict_boundary_timer = None
+        return
     
     def req_new_route(self):
         try:
