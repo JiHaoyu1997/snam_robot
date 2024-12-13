@@ -291,7 +291,7 @@ class RobotDecision:
         twist_from_decision = self.decision_model.decision_maker(twist_from_img)
         return twist_from_decision
 
-    def enter_conflict_cb(self):
+    def enter_conflict_cb(self, req):
         """
         Update the robot's conflict zone entry state based on the received message.
         """
