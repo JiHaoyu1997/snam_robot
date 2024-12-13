@@ -296,7 +296,7 @@ class RobotDecision:
         Update the robot's conflict zone entry state based on the received message.
         """
         self.decision_model.want_to_enter_conflict = True
-        response = TriggerResponse
+        response = TriggerResponse()
         response.success = True
         response.message = f"{self.robot_name} want to enter conflict zone"
         return response
