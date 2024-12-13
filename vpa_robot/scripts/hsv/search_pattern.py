@@ -172,7 +172,7 @@ def search_inter_guide_line(hsv_space:HSVSpace,hsv_image,action:int):
             seg = _break_segs(line)
             if len(seg) == 1:
                 return min(max(RIGHT_TURN_L,int(np.mean(seg[0]))),RIGHT_TURN_R)
-        return None
+        return int(hsv_image.shape[1] * 0.6)
     
     else: # thur
         width = hsv_image.shape[1]
