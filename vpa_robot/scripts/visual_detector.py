@@ -120,12 +120,10 @@ class RobotVision:
 
         self.cross_inter_boundary_timer = None
         self.cross_inter_boundary_line_count = 0
-        self.inter_boundary_detect_lock = threading.Lock()
 
         self.enter_conflict_zone = False
         self.cross_conflict_boundary_timer = None
         self.cross_conflict_boundary_line_count = 0
-        self.conflict_boundary_detect_lock = threading.Lock()
 
         self.stop = False
         self.stop_timer = None
@@ -256,14 +254,14 @@ class RobotVision:
         self.pub_cmd_vel_from_img(v_x, omega_z, v_factor)
 
         # Step9 PUB IMAGE MESSAGES       
-        # self.pub_cv_img(cv_img=result_cv_img)
-        # self.pub_acc_img(acc_img=acc_img)
+        self.pub_cv_img(cv_img=result_cv_img)
+        self.pub_acc_img(acc_img=acc_img)
 
         return    
 
     def detect_inter_boundary_line(self, cv_hsv_img: Image):
-        dis2bound = search_pattern.search_line(cv_hsv_img, self.inter_boundary_line_hsv, top_line=100)
-        cross_inter_boundary = dis2bound > 25
+        dis2inter = search_pattern.search_line(cv_hsv_img, self.inter_boundary_line_hsv, top_line=100)
+        cross_inter_boundary = dis2inter > 25
 
         if cross_inter_boundary:
             self.cross_inter_boundary_line_count += 1
@@ -271,23 +269,20 @@ class RobotVision:
                 self.cross_inter_boundary_timer = rospy.Timer(rospy.Duration(1 / 3), self.cross_inter_boundary_timer_cb, oneshot=True)
         else:
             self.cross_inter_boundary_line_count = 0
-            if self.inter_boundary_detect_lock.locked():
-                self.inter_boundary_detect_lock.release()
+            if self.cross_inter_boundary_timer:
+                self.cross_inter_boundary_timer.shutdown()
+                self.cross_inter_boundary_timer = None
 
         return    
     
     def cross_inter_boundary_timer_cb(self, event):
-        if self.inter_boundary_detect_lock.acquire(blocking=False):
-            try:
-                rospy.logwarn(f"{self.robot_name} cross inter boundary")
-                new_route = self.req_new_route()
-                new_route = [route for route in new_route]
-                self.curr_route = new_route
-                self.enter_conflict_zone = False
-                threading.Thread(target=self.req_update_new_route, args=(new_route,)).start()
-                self.cross_inter_boundary_timer = None
-            finally:
-                pass 
+        rospy.logwarn(f"{self.robot_name} cross inter boundary")
+        new_route = self.req_new_route()
+        new_route = [route for route in new_route]
+        self.curr_route = new_route
+        self.enter_conflict_zone = False
+        threading.Thread(target=self.req_update_new_route, args=(new_route,)).start()
+        self.cross_inter_boundary_timer = None
 
     def detect_conflict_boundary_line(self, cv_hsv_img):
         dis2conflict = search_pattern.search_stop_line(cv_hsv_img, self.stop_line_hsv, self.stop_line_hsv2)
@@ -300,22 +295,15 @@ class RobotVision:
                 self.cross_conflict_boundary_timer = rospy.Timer(rospy.Duration(1 / 3), self.cross_conflict_boundary_timer_cb, oneshot=True)
         else:
             self.cross_conflict_boundary_line_count = 0
-            if self.conflict_boundary_detect_lock.locked():
-                self.conflict_boundary_detect_lock.release()
-                rospy.logwarn(f"{self.robot_name} cross conflict boundary lock release")
+            if self.cross_conflict_boundary_timer:
+                self.cross_conflict_boundary_timer.shutdown()
+                self.cross_conflict_boundary_timer = None
 
         return
     
     def cross_conflict_boundary_timer_cb(self, event):
-        if self.conflict_boundary_detect_lock.acquire(blocking=False):
-            try:
-                rospy.logwarn(f"{self.robot_name} cross conflict boundary")
-                self.update_enter_conflict_status()
-                self.cross_conflict_boundary_timer = None
-            finally:
-                pass
-        else:
-            rospy.logwarn(f"{self.robot_name} can not get cross conflict boundary lock")
+        rospy.logwarn(f"{self.robot_name} cross conflict boundary")
+        self.update_enter_conflict_status()
     
     def req_new_route(self):
         try:
