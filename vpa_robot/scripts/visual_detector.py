@@ -265,7 +265,7 @@ class RobotVision:
 
         if cross_inter_boundary:
             self.cross_inter_boundary_line_count += 1
-            print(cross_inter_boundary_line_count, self.cross_inter_boundary_timer)
+            print(self.cross_inter_boundary_line_count, self.cross_inter_boundary_timer)
             if self.cross_inter_boundary_line_count >= 2 and self.cross_inter_boundary_timer is None:                
                 self.cross_inter_boundary_timer = rospy.Timer(rospy.Duration(1 / 3), self.cross_inter_boundary_timer_cb, oneshot=True)
         else:
