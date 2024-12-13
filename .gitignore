@@ -4,3 +4,4 @@
 __pycache__/
 .bashrc
 kinematics.py
+vpa_robot/scripts/setup_v4l2.py
