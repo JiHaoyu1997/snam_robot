@@ -125,7 +125,7 @@ def search_lane_center(space1: HSVSpace, space2: HSVSpace, hsv_image, is_yellow_
         
     # search the while line, but limited area
     if is_yellow_left:
-        _line_center2 = _search_lane_linecenter(mask2, height_center, _line_center1, int(hsv_image.shape[1]), False)
+        _line_center2 = _search_lane_linecenter(mask2, height_center, _line_center1 + 40, int(hsv_image.shape[1]), False)
         if _line_center2 == 0:
             _line_center2 = hsv_image.shape[1]   
     
