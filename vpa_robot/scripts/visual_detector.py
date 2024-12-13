@@ -24,6 +24,7 @@ from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Image, Range
 
 # Srv
+from std_srvs.srv import Trigger, TriggerResponse
 from vpa_robot.srv import AssignRoute, AssignRouteRequest, AssignRouteResponse
 from vpa_robot.srv import NewRoute, NewRouteRequest, NewRouteResponse
 from vpa_robot.srv import NewTaskList, NewTaskListRequest, NewTaskListResponse
@@ -84,7 +85,6 @@ class RobotVision:
         self.acc_image_pub = rospy.Publisher('acc_image', Image, queue_size=1)
         self.mask_image_pub = rospy.Publisher('mask_image', Image, queue_size=1)
         self.cmd_vel_from_img_pub = rospy.Publisher('cmd_vel_from_img', Twist, queue_size=1)
-        self.inform_enter_conflict_pub = rospy.Publisher('inform_enter_conflict', Bool, queue_size=1)
  
         # Subscribers
         self.image_raw_sub = rospy.Subscriber("robot_cam/image_raw", Image, self.image_raw_sub_cb)
@@ -97,6 +97,7 @@ class RobotVision:
         self.assign_route_client = rospy.ServiceProxy('assign_route_srv', AssignRoute)
         self.update_route_client = rospy.ServiceProxy('update_route_srv', NewRoute)
         self.new_task_list_client = rospy.ServiceProxy('new_task_list_srv', NewTaskList)
+        self.enter_conflict_client = rospy.ServiceProxy('enter_conflict_srv', Trigger)
 
         self.send_ready_signal()
     
@@ -279,10 +280,10 @@ class RobotVision:
         if self.inter_boundary_detect_lock.acquire(blocking=False):
             try:
                 rospy.logwarn(f"{self.robot_name} cross inter boundary line")
-                self.update_enter_conflict_status(enter=False)
                 new_route = self.req_new_route()
                 new_route = [route for route in new_route]
                 self.curr_route = new_route
+                self.enter_conflict_zone = False
                 threading.Thread(target=self.req_update_new_route, args=(new_route,)).start()
                 self.cross_inter_boundary_timer = None
             finally:
@@ -308,22 +309,12 @@ class RobotVision:
         if self.conflict_boundary_detect_lock.acquire(blocking=False):
             try:
                 rospy.logwarn(f"{self.robot_name} cross conflict boundary line")
-                self.update_enter_conflict_status(enter=True)
+                self.update_enter_conflict_status()
                 self.cross_conflict_boundary_timer = None
             finally:
                 self.conflict_boundary_detect_lock.release()
         else:
             rospy.logwarn(f"{self.robot_name} can not get cross conflict boundary line lock")
-
-    def update_enter_conflict_status(self, enter: bool = True):
-        """
-        publish msg to req enter conflict zone
-        """    
-        self.enter_conflict_zone = enter
-        msg = Bool()
-        msg.data = enter
-        self.inform_enter_conflict_pub.publish(msg)
-        return
     
     def req_new_route(self):
         try:
@@ -353,6 +344,18 @@ class RobotVision:
         except rospy.ServiceException as e:
             rospy.logerr('%s: Request update inter info service call failed: %s', self.robot_name, e)
 
+    def update_enter_conflict_status(self):
+        """
+        service to req enter conflict zone
+        """    
+        rospy.wait_for_service('enter_conflict_srv')
+        try:
+            response: TriggerResponse = self.enter_conflict_client()
+            rospy.loginfo(f"{response.message}")
+        except rospy.ServiceException as e:
+            rospy.logerr(f"service call failed: {e}")
+        return
+    
     def find_and_draw_target(self, cv_img, cv_hsv_img):
         target_x = 0
         

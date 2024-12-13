@@ -7,6 +7,7 @@ from robot.robot import find_id_by_robot_name, RobotMotion
 
 from std_msgs.msg import Bool
 from geometry_msgs.msg import Twist
+from std_srvs.srv import Trigger, TriggerResponse
 
 from vpa_robot.msg import RobotInfo as RobotInfoMsg
 from vpa_robot.msg import InterInfo as InterInfoMsg
@@ -133,7 +134,6 @@ class RobotDecision:
         self.robot_info_pub = rospy.Publisher('robot_info', RobotInfoMsg, queue_size=1)
 
         # Subscribers
-        self.inform_enter_conflict_sub = rospy.Subscriber('inform_enter_conflict', Bool, self.inform_enter_conflict_cb)
         self.cmd_vel_from_img_sub = rospy.Subscriber('cmd_vel_from_img', Twist, self.cmd_vel_from_img_cb)
         self.kinematic_info_sub = rospy.Subscriber('/kinematic_info', KinematicDataArray, self.kinematic_info_cb)
         self.wheel_omega_sub = rospy.Subscriber('wheel_omega', WheelsEncoder, self.wheel_omega_cb)
@@ -142,6 +142,7 @@ class RobotDecision:
         
         # Servers
         self.update_route_server = rospy.Service('update_route_srv', NewRoute, self.update_route_cb)
+        self.enter_conflict_server = rospy.Service('enter_conflict_srv', Trigger, self.enter_conflict_cb)
 
         # Clients
         self.inter_mng_client = rospy.ServiceProxy('/inter_mng_srv', InterMng)
@@ -193,6 +194,9 @@ class RobotDecision:
             self.robot_info.robot_route = self.curr_route
             self.robot_info.robot_p = 0.0
             self.robot_info.robot_enter_time = rospy.get_time()
+            self.robot_info.robot_enter_conflict = False
+            self.decision_model.want_to_enter_conflict = False
+            self.decision_model.enter_permission = False
             self.robot_motion_controller.total_distance_apriltag = 0.0
 
             # update global info
@@ -287,15 +291,15 @@ class RobotDecision:
         twist_from_decision = self.decision_model.decision_maker(twist_from_img)
         return twist_from_decision
 
-    def inform_enter_conflict_cb(self, msg: Bool):
+    def enter_conflict_cb(self):
         """
         Update the robot's conflict zone entry state based on the received message.
         """
-        self.decision_model.want_to_enter_conflict = msg.data
-        if not self.decision_model.want_to_enter_conflict:
-            self.decision_model.enter_permission = False
-            self.robot_info.robot_enter_conflict = False
-        return
+        self.decision_model.want_to_enter_conflict = True
+        response = TriggerResponse
+        response.success = True
+        response.message = f"{self.robot_name} want to enter conflict zone"
+        return response
     
     def kinematic_info_cb(self, kinematic_data_msg: KinematicDataArray):
         """
