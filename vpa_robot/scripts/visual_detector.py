@@ -244,8 +244,6 @@ class RobotVision:
         # Step5 FROM HSV IMAGE TO TARGET COORDINATE
         target_x, result_cv_img = self.find_and_draw_target(cv_img=cv_img, cv_hsv_img=cv_hsv_img)  
 
-        target_x = self.image_width * 0.75
-                
         # Step6 FROM TARGET COORDINATE TO TWIST
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
 
