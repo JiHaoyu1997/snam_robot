@@ -265,6 +265,7 @@ class RobotVision:
 
         if cross_inter_boundary:
             self.cross_inter_boundary_line_count += 1
+            print(self.cross_inter_boundary_line_count)
             if self.cross_inter_boundary_line_count >= 2 and self.cross_inter_boundary_timer is None:                
                 self.cross_inter_boundary_timer = rospy.Timer(rospy.Duration(1 / 3), self.cross_inter_boundary_timer_cb, oneshot=True)
         else:
@@ -403,7 +404,7 @@ class RobotVision:
         return target_x, cv_img
     
     def go_thur_352(self, cv_img, cv_hsv_img):
-        rospy.logwarn("enter 352 route")
+        rospy.logwarn_once("enter 352 route")
         # check if conflict zone
         self.detect_conflict_boundary_line(cv_hsv_img=cv_hsv_img)
         if not self.enter_conflict_zone:
