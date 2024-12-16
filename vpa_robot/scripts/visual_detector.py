@@ -267,7 +267,6 @@ class RobotVision:
 
         if cross_inter_boundary:
             self.cross_inter_boundary_line_count += 1
-            print(self.cross_inter_boundary_line_count)
             if self.cross_inter_boundary_line_count >= 2 and self.cross_inter_boundary_timer is None:                
                 self.cross_inter_boundary_timer = rospy.Timer(rospy.Duration(1 / 3), self.cross_inter_boundary_timer_cb, oneshot=True)
         else:
@@ -469,7 +468,6 @@ class RobotVision:
         if target_x == None:
             if action == 2:
                 target_x = self.image_width * 0.7
-                print('x')
             target_x = self.image_width / 2
         cv2.circle(cv_img, (int(target_x), int(cv_hsv_img.shape[0]/2)), 5, (255, 255, 0), 5)
 
