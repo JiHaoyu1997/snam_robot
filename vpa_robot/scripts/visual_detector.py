@@ -467,6 +467,8 @@ class RobotVision:
         hsv_space: hsv.HSVSpace = self.inter_guide_line[action]
         target_x = search_pattern.search_inter_guide_line2(hsv_space, cv_hsv_img, action)
         if target_x == None:
+            if self.next_action == 2:
+                target_x = self.image_width * 0.6
             target_x = self.image_width / 2
         cv2.circle(cv_img, (int(target_x), int(cv_hsv_img.shape[0]/2)), 5, (255, 255, 0), 5)
 
