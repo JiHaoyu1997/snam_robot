@@ -320,7 +320,7 @@ def search_inter_guide_line2(hsv_space: HSVSpace, hsv_image, action: int, recurs
             # print(seg)
 
             if len(seg) == 1:
-                result = min(max(RIGHT_TURN_L,int(np.mean(seg[0]))),RIGHT_TURN_R)
+                result = min(max(RIGHT_TURN_L, int(np.mean(seg[0]))),RIGHT_TURN_R)
                 # print(y ,result)
                 return result
             
