@@ -254,7 +254,7 @@ class RobotVision:
         self.pub_cmd_vel_from_img(v_x, omega_z, v_factor)
 
         # Step9 PUB IMAGE MESSAGES 
-        mask_img = self.inter_boundary_line_hsv.apply_mask(hsv_image=cv_hsv_img)  
+        mask_img = self.right_guide_hsv.apply_mask(hsv_image=cv_hsv_img)  
         self.pub_cv_img(cv_img=result_cv_img)
         self.pub_acc_img(acc_img=acc_img)
         self.pub_mask_img(mask_img=mask_img)
@@ -418,7 +418,7 @@ class RobotVision:
             self.current_zone = Zone.CONFLICT
             target_x = search_pattern.search_inter_guide_line2(self.right_guide_hsv, cv_hsv_img, 2)
             if target_x == None:
-                target_x = self.image_width * 0.8
+                target_x = self.image_width * 0.775
         cv2.circle(cv_img, (int(target_x), int(cv_hsv_img.shape[0]/2)), 5, (255, 255, 0), 5)
 
         return target_x, cv_img
