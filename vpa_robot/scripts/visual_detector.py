@@ -469,6 +469,7 @@ class RobotVision:
         if target_x == None:
             if self.next_action == 2:
                 target_x = self.image_width * 0.7
+                print('x')
             target_x = self.image_width / 2
         cv2.circle(cv_img, (int(target_x), int(cv_hsv_img.shape[0]/2)), 5, (255, 255, 0), 5)
 
