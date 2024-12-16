@@ -337,7 +337,7 @@ def search_inter_guide_line2(hsv_space: HSVSpace, hsv_image, action: int, recurs
                 # print(y ,result)
                 return result
                     
-        return None
+        return int(hsv_image.shape[1] * 0.6)
     
     else: 
         # thur
