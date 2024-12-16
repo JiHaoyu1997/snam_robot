@@ -35,7 +35,7 @@ HSV_RANGES = {
     'red_acc':  HSVSpace(h_u=180, h_l=175, s_u=255, s_l=150, v_u=255, v_l=60),
     'orange':   HSVSpace(h_u=30,  h_l=5,   s_u=255, s_l=90,  v_u=235, v_l=100),
     'yellow':   HSVSpace(h_u=36,  h_l=26,  s_u=255, s_l=100, v_u=255, v_l=100),
-    'green':    HSVSpace(h_u=95,  h_l=65,  s_u=255, s_l=100, v_u=255, v_l=75),
+    'green':    HSVSpace(h_u=95,  h_l=65,  s_u=255, s_l=100, v_u=255, v_l=100),
     'blue':     HSVSpace(h_u=120, h_l=105, s_u=255, s_l=100, v_u=255, v_l=100),
     'purple':   HSVSpace(h_u=170, h_l=140, s_u=255, s_l=100, v_u=255, v_l=100),
     'pink':     HSVSpace(h_u=175, h_l=145, s_u=255, s_l=80,  v_u=255, v_l=100),
