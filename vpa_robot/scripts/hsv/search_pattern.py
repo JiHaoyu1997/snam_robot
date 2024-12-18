@@ -31,8 +31,8 @@ def search_buffer_line(cv_hsv_img, buffer_line_hsv: HSVSpace) -> list:
 
     for h in h_list:
         # search this part of the picture
-        _line = np.nonzero(buffer_line_mask_img[h, 60: ])[0]
-        _line = _line + 60
+        _line = np.nonzero(buffer_line_mask_img[h, 40: ])[0]
+        _line = _line + 40
         if len(_line) > 8 and len(_line) < 50:
             # there are proper amount of points at this part
             _line_center = int(np.mean(_line))        
