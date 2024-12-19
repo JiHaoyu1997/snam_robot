@@ -120,10 +120,12 @@ class RobotVision:
 
         self.cross_inter_boundary_timer = None
         self.cross_inter_boundary_line_count = 0
+        self.last_cross_inter_boundary_time = 0.0
 
         self.enter_conflict_zone = False
         self.cross_conflict_boundary_timer = None
         self.cross_conflict_boundary_line_count = 0
+        self.last_cross_conflict_boundary_time = 0.0
 
         self.stop = False
         self.stop_timer = None
@@ -269,8 +271,9 @@ class RobotVision:
 
         if cross_inter_boundary:
             self.cross_inter_boundary_line_count += 1
-            if self.cross_inter_boundary_line_count >= 2 and self.cross_inter_boundary_timer is None:                
-                self.cross_inter_boundary_timer = rospy.Timer(rospy.Duration(1 / 3), self.cross_inter_boundary_timer_cb, oneshot=True)
+            if self.cross_inter_boundary_line_count >= 2 and self.cross_inter_boundary_timer is None:  
+                if rospy.get_time() - self.last_cross_conflict_boundary_time > 0.2:
+                    self.cross_inter_boundary_timer = rospy.Timer(rospy.Duration(1 / 3), self.cross_inter_boundary_timer_cb, oneshot=True)
         else:
             self.cross_inter_boundary_line_count = 0
 
@@ -283,6 +286,7 @@ class RobotVision:
             new_route = [route for route in new_route]
             self.curr_route = new_route
             self.enter_conflict_zone = False
+            self.last_cross_inter_boundary_time = rospy.get_time()
             threading.Thread(target=self.req_update_new_route, args=(new_route,)).start()
             self.cross_inter_boundary_timer = None
             return
@@ -298,7 +302,8 @@ class RobotVision:
         if cross_conflict_boundary:
             self.cross_conflict_boundary_line_count += 1
             if self.cross_conflict_boundary_line_count >= 2 and self.cross_conflict_boundary_timer is None:
-                self.cross_conflict_boundary_timer = rospy.Timer(rospy.Duration(1 / 4), self.cross_conflict_boundary_timer_cb, oneshot=True)
+                if rospy.get_time() - self.last_cross_inter_boundary_time > 0.2:
+                    self.cross_conflict_boundary_timer = rospy.Timer(rospy.Duration(1 / 4), self.cross_conflict_boundary_timer_cb, oneshot=True)
         else:
             self.cross_conflict_boundary_line_count = 0
 
@@ -307,6 +312,7 @@ class RobotVision:
     def cross_conflict_boundary_timer_cb(self, event):
         rospy.logwarn(f"{self.robot_name} cross conflict boundary")
         self.enter_conflict_zone = True
+        self.last_cross_conflict_boundary_time = rospy.get_time()
         self.update_enter_conflict_status()
         self.cross_conflict_boundary_timer = None
         return
