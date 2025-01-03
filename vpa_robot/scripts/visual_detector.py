@@ -425,7 +425,10 @@ class RobotVision:
             self.current_zone = Zone.CONFLICT
             target_x = search_pattern.search_inter_guide_line2(self.right_guide_hsv, cv_hsv_img, 2)
             if target_x == None:
-                target_x = self.image_width * 0.7
+                if self.robot_id == 2:
+                    target_x = self.image_width * 0.75
+                else:
+                    target_x = self.image_width * 0.7
         cv2.circle(cv_img, (int(target_x), int(cv_hsv_img.shape[0]/2)), 5, (255, 255, 0), 5)
 
         return target_x, cv_img
