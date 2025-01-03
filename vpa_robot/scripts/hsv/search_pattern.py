@@ -4,7 +4,7 @@ from hsv.hsv import HSVSpace
 
 LEFT_TURN_R     = 200 
 LEFT_TURN_L     = 40
-RIGHT_TURN_R    = 260
+RIGHT_TURN_R    = 240
 RIGHT_TURN_L    = 120
 THUR_L          = 100
 THUR_R          = 220
@@ -215,8 +215,8 @@ def search_inter_guide_line2(hsv_space: HSVSpace, hsv_image, action: int, recurs
             y = i
 
             if recursion_depth == 0:
-                line1 = np.nonzero(mask[y, 40 : 260])[0]
-                line2 = np.nonzero(mask[y - 20, 40 : 260])[0]
+                line1 = np.nonzero(mask[y, 40 : 240])[0]
+                line2 = np.nonzero(mask[y - 20, 40 : 240])[0]
                 line1 = line1 + 40
                 line2 = line2 + 40
 
@@ -245,16 +245,16 @@ def search_inter_guide_line2(hsv_space: HSVSpace, hsv_image, action: int, recurs
                 if len(seg1) == 1:
                     mean0 = np.mean(seg2[0])
                     mean1 = np.mean(seg2[1])
-                    if 40 < mean0 < 260 and 40 < mean1 < 260:
+                    if 40 < mean0 < 240 and 40 < mean1 < 240:
                         dist0 = abs(mean0 - width * 0.4)
                         dist1 = abs(mean1 - width * 0.4)
                         if dist0 < dist1:
                             res = int(np.mean(seg2[0]))
                         else:
                             res = int(np.mean(seg2[1]))
-                    elif 40 < mean0 < 260:
+                    elif 40 < mean0 < 240:
                         res = int(np.mean(seg2[0]))
-                    elif 40 < mean1 < 260:
+                    elif 40 < mean1 < 240:
                         res = int(np.mean(seg2[1]))                 
 
                 elif len(seg1) == 2:
@@ -269,7 +269,7 @@ def search_inter_guide_line2(hsv_space: HSVSpace, hsv_image, action: int, recurs
                     res = int(np.mean(seg2[0]))
             
             elif len(seg2) > 2:
-                new_seg2 = { k: v for k, v in seg2.items()if 40 < np.mean(v) < 260 }
+                new_seg2 = { k: v for k, v in seg2.items()if 40 < np.mean(v) < 240 }
 
                 if len(new_seg2) == 0:
                     res = None
@@ -277,7 +277,7 @@ def search_inter_guide_line2(hsv_space: HSVSpace, hsv_image, action: int, recurs
                 elif len(new_seg2) == 1:
                     res = int() 
 
-                avg_positions = [np.mean(segment) for segment in seg2.values() if 40 < np.mean(segment) < 260]
+                avg_positions = [np.mean(segment) for segment in seg2.values() if 40 < np.mean(segment) < 240]
                 
                 # Check if avg_positions is empty or contains NaN
                 if not avg_positions or np.isnan(np.mean(avg_positions)):
