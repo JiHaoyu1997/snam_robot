@@ -427,6 +427,8 @@ class RobotVision:
             if target_x == None:
                 if self.robot_id == 2:
                     target_x = self.image_width * 0.75
+                elif self.robot_id == 6:
+                    target_x = self.image_width * 0.75
                 else:
                     target_x = self.image_width * 0.7
         cv2.circle(cv_img, (int(target_x), int(cv_hsv_img.shape[0]/2)), 5, (255, 255, 0), 5)
