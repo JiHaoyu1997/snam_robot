@@ -246,8 +246,8 @@ def search_inter_guide_line2(hsv_space: HSVSpace, hsv_image, action: int, recurs
                     mean0 = np.mean(seg2[0])
                     mean1 = np.mean(seg2[1])
                     if 40 < mean0 < 280 and 40 < mean1 < 280:
-                        dist0 = abs(mean0 - width // 3)
-                        dist1 = abs(mean1 - width // 3)
+                        dist0 = abs(mean0 - width * 0.4)
+                        dist1 = abs(mean1 - width * 0.4)
                         if dist0 < dist1:
                             res = int(np.mean(seg2[0]))
                         else:
