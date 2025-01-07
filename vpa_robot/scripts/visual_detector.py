@@ -250,6 +250,8 @@ class RobotVision:
         # Step6 TARGET GAP VALIDATION
         target_x = self.valid_target_gap(new_target=target_x, alpha=0.5)
 
+        print(target_x)
+
         # Step7 FROM TARGET COORDINATE TO TWIST
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
 
@@ -443,7 +445,7 @@ class RobotVision:
             target_x = search_pattern.search_inter_guide_line2(self.right_guide_hsv, cv_hsv_img, 2)
             if target_x is None:
                 if self.robot_id in [2, 6, 8]:
-                    target_x = self.image_width * 0.75
+                    target_x = self.image_width * 0.775
                 else:
                     target_x = self.image_width * 0.7
         cv2.circle(cv_img, (int(target_x), int(cv_hsv_img.shape[0]/2)), 5, (255, 255, 0), 5)
