@@ -250,8 +250,6 @@ class RobotVision:
         # Step6 TARGET GAP VALIDATION
         target_x = self.valid_target_gap(new_target=target_x, alpha=0.5)
 
-        print(target_x)
-
         # Step7 FROM TARGET COORDINATE TO TWIST
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
 
