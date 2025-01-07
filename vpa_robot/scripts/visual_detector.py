@@ -260,12 +260,10 @@ class RobotVision:
         self.pub_cmd_vel_from_img(v_x, omega_z, v_factor)
 
         # Step10 PUB IMAGE MESSAGES 
-        mask_img1 = self.stop_line_hsv.apply_mask(hsv_image=cv_hsv_img)  
-        mask_img2 = self.stop_line_hsv2.apply_mask(hsv_image=cv_hsv_img)  
-        mask_img = mask_img1 + mask_img2
-        self.pub_cv_img(cv_img=result_cv_img)
-        self.pub_acc_img(acc_img=acc_img)
+        mask_img = self.right_guide_hsv.apply_mask(hsv_image=cv_hsv_img) 
         self.pub_mask_img(mask_img=mask_img)
+        self.pub_cv_img(cv_img=result_cv_img)
+        # self.pub_acc_img(acc_img=acc_img)
 
         return 
     
