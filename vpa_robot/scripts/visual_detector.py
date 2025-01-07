@@ -441,10 +441,8 @@ class RobotVision:
             # conflict zone
             self.current_zone = Zone.CONFLICT
             target_x = search_pattern.search_inter_guide_line2(self.right_guide_hsv, cv_hsv_img, 2)
-            if target_x == None:
-                if self.robot_id == 2:
-                    target_x = self.image_width * 0.75
-                elif self.robot_id == 6:
+            if target_x is None:
+                if self.robot_id in [2, 6, 8]:
                     target_x = self.image_width * 0.75
                 else:
                     target_x = self.image_width * 0.7
