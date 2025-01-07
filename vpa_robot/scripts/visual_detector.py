@@ -117,6 +117,7 @@ class RobotVision:
     def status_flag_init(self):
         self.curr_route = [0, 0, 0]
         self.current_zone = Zone.BUFFER_AREA
+        self.last_target = None
 
         self.cross_inter_boundary_timer = None
         self.cross_inter_boundary_line_count = 0
@@ -246,16 +247,19 @@ class RobotVision:
         # Step5 FROM HSV IMAGE TO TARGET COORDINATE
         target_x, result_cv_img = self.find_and_draw_target(cv_img=cv_img, cv_hsv_img=cv_hsv_img)  
 
-        # Step6 FROM TARGET COORDINATE TO TWIST
+        # Step6 TARGET GAP VALIDATION
+        target_x = self.valid_target_gap(new_target=target_x, alpha=0.5)
+
+        # Step7 FROM TARGET COORDINATE TO TWIST
         v_x, omega_z = self.calculate_velocity(target_x=target_x)
 
-        # Step7 ACC FUNC
+        # Step8 ACC FUNC
         v_factor = self.calc_vel_factor(v_x=v_x, acc_hsv_img=acc_hsv_img)
            
-        # Step8 PUB TWIST TO DECISION MAKER
+        # Step9 PUB TWIST TO DECISION MAKER
         self.pub_cmd_vel_from_img(v_x, omega_z, v_factor)
 
-        # Step9 PUB IMAGE MESSAGES 
+        # Step10 PUB IMAGE MESSAGES 
         mask_img1 = self.stop_line_hsv.apply_mask(hsv_image=cv_hsv_img)  
         mask_img2 = self.stop_line_hsv2.apply_mask(hsv_image=cv_hsv_img)  
         mask_img = mask_img1 + mask_img2
@@ -263,7 +267,19 @@ class RobotVision:
         self.pub_acc_img(acc_img=acc_img)
         self.pub_mask_img(mask_img=mask_img)
 
-        return    
+        return 
+    
+    def valid_target_gap(self, new_target, alpha=0.5):
+        if self.last_target is None:
+            self.last_target = new_target
+        
+        else:
+            if abs(new_target - self.last_target) > 160:
+                self.last_target = new_target * alpha + self.last_target * (1 - alpha)
+            else:
+                self.last_target = new_target
+        
+        return self.last_target
 
     def detect_inter_boundary_line(self, cv_hsv_img: Image):
         dis2inter = search_pattern.search_line(cv_hsv_img, self.inter_boundary_line_hsv, top_line=100)
@@ -409,7 +425,7 @@ class RobotVision:
         # GENERAL ROUTE
         else:
             target_x, cv_img = self.cross_intersection(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
-        
+
         return target_x, cv_img
     
     def go_thur_352(self, cv_img, cv_hsv_img):
