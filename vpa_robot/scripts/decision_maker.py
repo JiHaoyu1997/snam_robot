@@ -3,7 +3,7 @@
 import rospy
 from typing import List
 
-from robot.robot import find_id_by_robot_name, RobotMotion
+from robot.robot import robot_dict, find_id_by_robot_name, RobotMotion
 
 from std_msgs.msg import Bool
 from geometry_msgs.msg import Twist
@@ -58,6 +58,7 @@ class InterInfo:
 class FCFSModel:
     def __init__(self, robot_id=0) -> None:
         self.robot_id = robot_id
+        self.robot_name = robot_dict[robot_id]
         self.want_to_enter_conflict = False
         self.enter_permission = False
 
@@ -88,7 +89,7 @@ class FCFSModel:
                 return False 
             
         # No robots have entered the conflict zone; this robot can pass
-        rospy.loginfo_once("Have permission enter conflict area")
+        rospy.loginfo(f"{self.robot_name} obtain permission to enter conflict area")
         return True 
     
 
@@ -334,14 +335,12 @@ class RobotDecision:
         return
     
     def shutdown_handler(self):
-        print(2)
         cmd_vel = Twist()
         self.cmd_vel_pub.publish(cmd_vel)
         return
 
     def signal_shutdown(self, msg: Bool):
         if msg.data:
-            print(1)
             rospy.signal_shutdown('decision maker node shutdown')
         return
 
