@@ -49,7 +49,7 @@ def search_line(hsv_image, hsv_space: HSVSpace, top_line = 100) -> Union[int, fl
 
     max_points = 0
 
-    for i in range(-50, top_line, 50):
+    for i in range(-50, top_line, 25):
         point = np.nonzero(mask[lower_bound : upper_bound, width_center + i])
         num_points = len(point[0])    
 
