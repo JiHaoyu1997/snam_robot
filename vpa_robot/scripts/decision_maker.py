@@ -88,6 +88,7 @@ class FCFSModel:
                 return False 
             
         # No robots have entered the conflict zone; this robot can pass
+        rospy.loginfo_once("Have permission enter conflict area")
         return True 
     
 
@@ -333,12 +334,14 @@ class RobotDecision:
         return
     
     def shutdown_handler(self):
+        print(2)
         cmd_vel = Twist()
         self.cmd_vel_pub.publish(cmd_vel)
         return
 
     def signal_shutdown(self, msg: Bool):
         if msg.data:
+            print(1)
             rospy.signal_shutdown('decision maker node shutdown')
         return
 

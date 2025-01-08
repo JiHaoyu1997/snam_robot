@@ -382,9 +382,7 @@ class RobotVision:
             dis2ready = search_pattern.search_line(cv_hsv_img, self.ready_line_hsv)
             if dis2ready > 25:
                 self.stop = True
-                print(1)
                 if not self.auto_request_task:
-                    print(2)
                     self.pub_shutdown_signal()
                 elif self.auto_request_task_timer is None:
                         self.auto_request_task_timer = rospy.Timer(rospy.Duration(1), self.auto_request_task_timer_cb, oneshot=True)
@@ -567,7 +565,6 @@ class RobotVision:
         return
 
     def pub_shutdown_signal(self):
-        rospy.loginfo("robot_interface_shutdown")
         pub = rospy.Publisher('robot_interface_shutdown', Bool, queue_size=1)
         msg = Bool()
         msg.data = True
