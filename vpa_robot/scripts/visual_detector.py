@@ -275,7 +275,7 @@ class RobotVision:
             self.last_target = new_target
         
         else:
-            if abs(new_target - self.last_target) > 160:
+            if abs(new_target - self.last_target) > 120:
                 self.last_target = new_target * alpha + self.last_target * (1 - alpha)
             else:
                 self.last_target = new_target
