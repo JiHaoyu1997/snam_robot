@@ -568,7 +568,15 @@ class RobotVision:
         pub = rospy.Publisher('robot_interface_shutdown', Bool, queue_size=1)
         msg = Bool()
         msg.data = True
+
+        timeout = rospy.Time.now() + rospy.Duration(1.0)
+        while pub.get_num_connections() == 0 and rospy.Time.now() < timeout:
+            rospy.sleep(0.1)
+
         pub.publish(msg)
+        rospy.loginfo_once("shutdown signal published")
+
+        rospy.sleep(0.5)
         rospy.signal_shutdown('Travel ends, shutdown the node.')
         return
 
