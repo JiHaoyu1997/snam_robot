@@ -557,19 +557,21 @@ class RobotVision:
         cmd_msg.linear.x = v_x * v_factor
         cmd_msg.angular.z = omega_z * v_factor
         self.cmd_vel_from_img_pub.publish(cmd_msg)
-
         return
 
     def signal_shutdown(self,msg:Bool):
         if msg.data:
             rospy.signal_shutdown('viusal detector node shutdown')
+        return
 
     def pub_shutdown_signal(self):
+        rospy.loginfo("robot_interface_shutdown")
         pub = rospy.Publisher('robot_interface_shutdown', Bool, queue_size=1)
         msg = Bool()
         msg.data = True
         pub.publish(msg)
         rospy.signal_shutdown('Travel ends, shutdown the node.')
+        return
 
     def test_mode_func(self, cv_img, cv_hsv_img):
         if self.test_mode == 'hsv':
