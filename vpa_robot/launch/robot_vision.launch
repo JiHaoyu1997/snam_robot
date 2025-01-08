@@ -2,6 +2,7 @@
     <arg name="robot_name"/>
     <arg name="test_mode"/>
     <arg name="acc_on"/>
+    <arg name="auto_request_task"/>
 
     <arg name="width"       default="320"/>
     <arg name="height"      default="240"/>
@@ -23,9 +24,10 @@
 
     <node name="robot_vision" pkg="vpa_robot" type="visual_detector.py" output="screen">
         <!--  -->
-        <param name="robot_name"    value="$(arg robot_name)"/>
-        <param name="test_mode"     value="$(arg test_mode)"/>
-        <param name="acc_on"        value="$(arg acc_on)"/>
+        <param name="robot_name"            value="$(arg robot_name)"/>
+        <param name="test_mode"             value="$(arg test_mode)"/>
+        <param name="acc_on"                value="$(arg acc_on)"/>
+        <param name="auto_request_task"     value="$(arg auto_request_task)"/>
         <!--  -->
         <param name="image_width"   value="$(arg width)"/>
         <param name="image_height"  value="$(arg height)"/>

@@ -41,6 +41,7 @@ class TaskManager:
         self.curr_route_pub = rospy.Publisher('curr_route', Int8MultiArray, queue_size=1)
 
         # Subscribers
+        self.shutdown_sub = rospy.Subscriber("robot_interface_shutdown", Bool, self.signal_shutdown)
 
         # Servers
         self.node_ready_handle_server = rospy.Service('ready_signal', ReadySignal, self.ready_signal_cb)
@@ -157,6 +158,9 @@ class TaskManager:
         route_msg = Int8MultiArray(data=self.curr_route)
         self.curr_route_pub.publish(route_msg)
 
+    def signal_shutdown(self,msg:Bool):
+        if msg.data:
+            rospy.signal_shutdown('Task Manager node shutdown')
 
 if __name__ == '__main__':
     N = TaskManager()

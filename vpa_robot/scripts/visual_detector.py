@@ -60,6 +60,7 @@ class RobotVision:
 
         # Simple ACC Function: on or off, default on
         self.acc_mode = bool(rospy.get_param('~acc_on', True))
+        self.auto_request_task = bool(rospy.get_param('~auto_request_task', True))
 
         #
         self.test_mode = rospy.get_param('~test_mode', 'default')
@@ -132,11 +133,8 @@ class RobotVision:
         self.stop_timer = None
         self.in_lane = True
 
-        # Time lock (prohibit unreasonable status change)
-        self.enter_inter_time = 0
-        self.left_inter_time  = 0
-
         # Task
+        self.auto_request_task_timer = None
         self.req_new_task_list_lock  = True
         self.find_task_line = False     # did the robot find the task_line already
         self.task_counter   = 0         # this is to count how many tasks has this specific robot conducted
@@ -310,7 +308,7 @@ class RobotVision:
         except Exception as e:
             rospy.logerr(f"Error in timer callback: {e}")
         finally:
-            rospy.loginfo("Timer callback completed")
+            pass
 
     def detect_conflict_boundary_line(self, cv_hsv_img):
         dis2conflict = search_pattern.search_stop_line(cv_hsv_img, self.stop_line_hsv, self.stop_line_hsv2)
@@ -384,17 +382,10 @@ class RobotVision:
             dis2ready = search_pattern.search_line(cv_hsv_img, self.ready_line_hsv)
             if dis2ready > 25:
                 self.stop = True
-                return target_x, cv_img
-                if not self.req_new_task_list_lock:
-                    rospy.wait_for_service("new_task_list_srv")
-                    self.req_new_task_list_lock = True
-                    req = NewTaskListRequest(robot_id=self.robot_id)
-                    resp: NewTaskListResponse = self.new_task_list_client.call(req)
-                    if resp.success:
-                        rospy.loginfo(f'{resp.message}')
-                        self.curr_route = [6, 6, 2]
-                        self.req_update_new_route(self.curr_route)
-                        self.stop = False
+                if not self.auto_request_task:
+                    self.pub_shutdown_signal()
+                elif self.auto_request_task_timer is None:
+                        self.auto_request_task_timer = rospy.Timer(rospy.Duration(1), self.auto_request_task_timer_cb, oneshot=True)
             else:
                 target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)         
             
@@ -410,7 +401,6 @@ class RobotVision:
             self.detect_conflict_boundary_line(cv_hsv_img=cv_hsv_img)
             if not self.enter_conflict_zone:  
                 self.current_zone = Zone.BUFFER_AREA                 
-                self.req_new_task_list_lock = False
                 target_x, cv_img = self.find_target_from_buffer_line(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
             else:
@@ -428,6 +418,24 @@ class RobotVision:
             target_x, cv_img = self.cross_intersection(cv_img=cv_img, cv_hsv_img=cv_hsv_img)
 
         return target_x, cv_img
+
+    def auto_request_task_timer_cb(self, event):
+        rospy.logwarn(f"{self.robot_name} auto request new task list")
+        try:
+            rospy.wait_for_service("new_task_list_srv")
+            req = NewTaskListRequest(robot_id=self.robot_id)
+            resp: NewTaskListResponse = self.new_task_list_client.call(req)
+            if resp.success:
+                rospy.loginfo(f'{resp.message}')
+                self.curr_route = [6, 6, 2]
+                threading.Thread(target=self.req_update_new_route, args=(self.curr_route,)).start()
+                self.stop = False
+                self.auto_request_task_timer = None
+                return
+        except Exception as e:
+            rospy.logerr(f"Error in timer callback: {e}")
+        finally:
+            pass
     
     def go_thur_352(self, cv_img, cv_hsv_img):
         rospy.logwarn_once("enter 352 route")
@@ -555,6 +563,13 @@ class RobotVision:
     def signal_shutdown(self,msg:Bool):
         if msg.data:
             rospy.signal_shutdown('viusal detector node shutdown')
+
+    def pub_shutdown_signal(self):
+        pub = rospy.Publisher('robot_interface_shutdown', Bool, queue_size=1)
+        msg = Bool()
+        msg.data = True
+        pub.publish(msg)
+        rospy.signal_shutdown('Travel ends, shutdown the node.')
 
     def test_mode_func(self, cv_img, cv_hsv_img):
         if self.test_mode == 'hsv':
