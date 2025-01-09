@@ -3,12 +3,12 @@
 # current_dir = os.path.dirname(os.path.abspath(__file__))
 # map_folder_path = os.path.join(current_dir, "../map")
 # sys.path.append(map_folder_path)
-from map.map import local_map_grid_model
 
 import rospy
 import numpy as np
 from typing import List
-from robot import robot_dict
+from map.map import local_map_grid_model
+from robot.robot import robot_dict
 from geometry_msgs.msg import Twist
 
 class GridModel:
