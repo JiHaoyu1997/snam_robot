@@ -186,6 +186,7 @@ class RobotDecision:
         # Init
         if new_route == [6, 6, 2]:
             self.curr_route = [6, 6, 2]
+            self.robot_info.robot_route = self.curr_route
             return NewRouteResponse(success=True, message=f"{self.robot_name} start new travel")
         
         # Condition Match             
