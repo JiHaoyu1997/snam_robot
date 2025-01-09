@@ -282,7 +282,7 @@ class RobotDecision:
         """
         Receive Twist messages from the vision system.
         """
-        cmd_vel = self.make_decision(twist_from_img=msg, inter_info=self.local_inter_info)
+        cmd_vel = self.make_decision(twist_from_img=msg)
         self.cmd_vel_pub.publish(cmd_vel)
         return
 
