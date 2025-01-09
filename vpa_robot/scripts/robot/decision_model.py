@@ -49,13 +49,13 @@ class GridModel:
             # When some one robot has already entered the conflict zone
             if robot_info.robot_enter_conflict:
                 route = robot_info.robot_route
-                occupied_grid = local_map_grid_model(robot_info.route[0], robot_info.route[1], robot_info.route[2])
+                occupied_grid = local_map_grid_model(route[0], route[1], route[2])
                 self.record_occupied_grid(occupied_grid=occupied_grid)
 
         # Step2 check grid conflict 
         enter_permission = self.check_occupied_grid_conflict(curr_route=curr_route)
         if enter_permission:
-            rospy.logwarn_once(f"{self.robot_name} obtain permission to enter conflict area")
+            rospy.logwarn(f"{self.robot_name} obtain permission to enter conflict area")
             self.occupied_grid_matrix = np.zeros((2,2), dtype=int)
         else:
             rospy.logwarn(f"{self.robot_name} must wait")  
