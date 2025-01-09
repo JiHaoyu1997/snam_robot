@@ -133,6 +133,8 @@ class RobotVision:
         self.stop_timer = None
         self.in_lane = True
 
+        self.lock = threading.Lock()
+
         # Task
         self.auto_request_task_timer = None
         self.req_new_task_list_lock  = True
@@ -287,9 +289,6 @@ class RobotVision:
         if cross_inter_boundary:
             self.cross_inter_boundary_line_count += 1
             if self.cross_inter_boundary_line_count >= 2 and self.cross_inter_boundary_timer is None:
-                gap = rospy.get_time() - self.last_cross_conflict_boundary_time  
-                if gap > 0.2:
-                    rospy.loginfo(f"detect_inter_boundary_line {gap}")
                     self.cross_inter_boundary_timer = rospy.Timer(rospy.Duration(1 / 3), self.cross_inter_boundary_timer_cb, oneshot=True)
         else:
             self.cross_inter_boundary_line_count = 0
@@ -297,20 +296,25 @@ class RobotVision:
         return    
     
     def cross_inter_boundary_timer_cb(self, event):
-        rospy.logwarn(f"{self.robot_name} cross inter boundary")
-        try:
-            new_route = self.req_new_route()
-            new_route = [route for route in new_route]
-            self.curr_route = new_route
-            self.enter_conflict_zone = False
-            self.last_cross_inter_boundary_time = rospy.get_time()
-            threading.Thread(target=self.req_update_new_route, args=(new_route,)).start()
-            self.cross_inter_boundary_timer = None
-            return
-        except Exception as e:
-            rospy.logerr(f"Error in timer callback: {e}")
-        finally:
-            pass
+        with self.lock:
+            time_gap = rospy.get_time() - self.last_cross_conflict_boundary_time  
+            if time_gap < 0.3:
+                rospy.logwarn(f"{self.robot_name} detect_inter_boundary_line trigger error")
+                return
+            try:
+                rospy.logwarn(f"{self.robot_name} cross inter boundary")    
+                new_route = self.req_new_route()
+                new_route = [route for route in new_route]
+                self.curr_route = new_route
+                self.enter_conflict_zone = False
+                self.last_cross_inter_boundary_time = rospy.get_time()
+                threading.Thread(target=self.req_update_new_route, args=(new_route,)).start()
+                self.cross_inter_boundary_timer = None
+                return
+            except Exception as e:
+                rospy.logerr(f"Error in timer callback: {e}")
+            finally:
+                pass
 
     def detect_conflict_boundary_line(self, cv_hsv_img):
         dis2conflict = search_pattern.search_stop_line(cv_hsv_img, self.stop_line_hsv, self.stop_line_hsv2)
@@ -319,22 +323,24 @@ class RobotVision:
         if cross_conflict_boundary:
             self.cross_conflict_boundary_line_count += 1
             if self.cross_conflict_boundary_line_count >= 2 and self.cross_conflict_boundary_timer is None:
-                gap = rospy.get_time() - self.last_cross_inter_boundary_time
-                if gap > 0.2:
-                    rospy.loginfo(f"detect_conflict_boundary_line {gap}")
-                    self.cross_conflict_boundary_timer = rospy.Timer(rospy.Duration(1 / 4), self.cross_conflict_boundary_timer_cb, oneshot=True)
+                self.cross_conflict_boundary_timer = rospy.Timer(rospy.Duration(1 / 4), self.cross_conflict_boundary_timer_cb, oneshot=True)
         else:
             self.cross_conflict_boundary_line_count = 0
 
         return
     
     def cross_conflict_boundary_timer_cb(self, event):
-        rospy.logwarn(f"{self.robot_name} cross conflict boundary")
-        self.enter_conflict_zone = True
-        self.last_cross_conflict_boundary_time = rospy.get_time()
-        self.update_enter_conflict_status()
-        self.cross_conflict_boundary_timer = None
-        return
+        with self.lock:
+            time_gap = rospy.get_time() - self.last_cross_inter_boundary_time
+            if time_gap < 0.3:
+                rospy.logwarn(f"{self.robot_name} detect_conflict_boundary_line trigger error")
+                return
+            rospy.logwarn(f"{self.robot_name} cross conflict boundary")
+            self.enter_conflict_zone = True
+            self.last_cross_conflict_boundary_time = rospy.get_time()
+            self.update_enter_conflict_status()
+            self.cross_conflict_boundary_timer = None
+            return
     
     def req_new_route(self):
         try:
