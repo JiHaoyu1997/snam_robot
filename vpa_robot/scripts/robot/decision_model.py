@@ -3,6 +3,8 @@
 # current_dir = os.path.dirname(os.path.abspath(__file__))
 # map_folder_path = os.path.join(current_dir, "../map")
 # sys.path.append(map_folder_path)
+# from map import local_map_grid_model
+# from robot import robot_dict
 
 import rospy
 import numpy as np
@@ -15,6 +17,7 @@ class GridModel:
     def __init__(self, robot_id=0) -> None:
         self.robot_id = robot_id
         self.robot_name = robot_dict[robot_id]
+        self.curr_route = []
         self.occupied_grid_matrix = np.zeros((2,2), dtype=int)
         
         self.want_to_enter_conflict = False
@@ -37,13 +40,13 @@ class GridModel:
         """
         Check the status of robots in the queue:
         """
-        curr_route = []
+        self.occupied_grid_matrix = np.zeros((2,2), dtype=int)
 
         # Step1 record which grids are already occupied
         for robot_info in robot_info_list:            
             # reccord curr route and skip self
             if robot_info.robot_id == self.robot_id:
-                curr_route = [route for route in robot_info.robot_route]
+                self.curr_route  = [route for route in robot_info.robot_route]
                 continue
 
             # When some one robot has already entered the conflict zone
@@ -53,7 +56,7 @@ class GridModel:
                 self.record_occupied_grid(occupied_grid=occupied_grid)
 
         # Step2 check grid conflict 
-        enter_permission = self.check_occupied_grid_conflict(curr_route=curr_route)
+        enter_permission = self.check_occupied_grid_conflict(curr_route=self.curr_route)
         if enter_permission:
             rospy.logwarn(f"{self.robot_name} obtain permission to enter conflict area")
             self.occupied_grid_matrix = np.zeros((2,2), dtype=int)
