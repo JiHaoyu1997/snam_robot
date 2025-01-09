@@ -62,7 +62,7 @@ class GridModel:
             self.occupied_grid_matrix = np.zeros((2,2), dtype=int)
         else:
             rospy.logwarn(f"{self.robot_name} must wait")  
-
+        print(self.occupied_grid_matrix)
         return enter_permission
     
     def record_occupied_grid(self, occupied_grid: List[int]):
