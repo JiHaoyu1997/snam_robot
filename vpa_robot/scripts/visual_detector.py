@@ -289,7 +289,7 @@ class RobotVision:
             if self.cross_inter_boundary_line_count >= 2 and self.cross_inter_boundary_timer is None:
                 gap = rospy.get_time() - self.last_cross_conflict_boundary_time  
                 if gap > 0.2:
-                    print( gap)
+                    rospy.loginfo(f"detect_inter_boundary_line {gap}")
                     self.cross_inter_boundary_timer = rospy.Timer(rospy.Duration(1 / 3), self.cross_inter_boundary_timer_cb, oneshot=True)
         else:
             self.cross_inter_boundary_line_count = 0
@@ -321,7 +321,7 @@ class RobotVision:
             if self.cross_conflict_boundary_line_count >= 2 and self.cross_conflict_boundary_timer is None:
                 gap = rospy.get_time() - self.last_cross_inter_boundary_time
                 if gap > 0.2:
-                    print(gap)
+                    rospy.loginfo(f"detect_conflict_boundary_line {gap}")
                     self.cross_conflict_boundary_timer = rospy.Timer(rospy.Duration(1 / 4), self.cross_conflict_boundary_timer_cb, oneshot=True)
         else:
             self.cross_conflict_boundary_line_count = 0
