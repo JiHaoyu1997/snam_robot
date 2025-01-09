@@ -298,7 +298,7 @@ class RobotVision:
     def cross_inter_boundary_timer_cb(self, event):
         with self.lock:
             time_gap = rospy.get_time() - self.last_cross_conflict_boundary_time  
-            print('green', time_gap)
+            # print('green', time_gap)
             if time_gap < 0.2:
                 rospy.logwarn(f"{self.robot_name} detect_inter_boundary_line trigger error")
                 self.cross_inter_boundary_timer = None
@@ -334,7 +334,7 @@ class RobotVision:
     def cross_conflict_boundary_timer_cb(self, event):
         with self.lock:
             time_gap = rospy.get_time() - self.last_cross_inter_boundary_time
-            print('red', time_gap)
+            # print('red', time_gap)
             if time_gap < 0.5:
                 rospy.logwarn(f"{self.robot_name} detect_conflict_boundary_line trigger error")
                 self.cross_conflict_boundary_timer = None
@@ -465,7 +465,7 @@ class RobotVision:
             target_x = search_pattern.search_inter_guide_line2(self.right_guide_hsv, cv_hsv_img, 2)
             if target_x is None:
                 if self.robot_id in [2, 6, 8]:
-                    target_x = self.image_width * 0.75
+                    target_x = self.image_width * 0.7
                 else:
                     target_x = self.image_width * 0.7
         cv2.circle(cv_img, (int(target_x), int(cv_hsv_img.shape[0]/2)), 5, (255, 255, 0), 5)

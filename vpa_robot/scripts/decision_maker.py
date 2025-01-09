@@ -4,6 +4,7 @@ import rospy
 from typing import List
 
 from robot.robot import robot_dict, find_id_by_robot_name, RobotMotion
+from robot.decision_model import GridModel
 
 from std_msgs.msg import Bool
 from geometry_msgs.msg import Twist
@@ -122,7 +123,8 @@ class RobotDecision:
         self.robot_name = rospy.get_param('~robot_name', 'db19')
         self.robot_id = find_id_by_robot_name(robot_name=self.robot_name)
         self.robot_info = RobotInfo(name=self.robot_name, robot_id=self.robot_id)
-        self.decision_model = FCFSModel(robot_id=self.robot_id)
+        # self.decision_model = FCFSModel(robot_id=self.robot_id)
+        self.decision_model = GridModel(robot_id=self.robot_id)
         self.robot_motion_controller = RobotMotion(name=self.robot_name, robot_id=self.robot_id) 
 
         # Initialize route and intersection information
@@ -284,14 +286,14 @@ class RobotDecision:
         self.cmd_vel_pub.publish(cmd_vel)
         return
 
-    def make_decision(self, twist_from_img: Twist, inter_info: InterInfo) -> Twist:
+    def make_decision(self, twist_from_img: Twist) -> Twist:
         """
         Decision-making process based on the robot's current info.
         """
         if self.decision_model.want_to_enter_conflict:
-                if not self.decision_model.enter_permission:
-                    self.decision_model.enter_permission = self.decision_model.check_enter_permission(self.local_inter_info.robot_info)
-                    self.robot_info.robot_enter_conflict = self.decision_model.enter_permission
+            if not self.decision_model.enter_permission:
+                self.decision_model.enter_permission = self.decision_model.check_enter_permission(self.local_inter_info.robot_info)
+                self.robot_info.robot_enter_conflict = self.decision_model.enter_permission
         twist_from_decision = self.decision_model.decision_maker(twist_from_img)
         return twist_from_decision
 
