@@ -298,6 +298,7 @@ class RobotVision:
     def cross_inter_boundary_timer_cb(self, event):
         with self.lock:
             time_gap = rospy.get_time() - self.last_cross_conflict_boundary_time  
+            print('green', time_gap)
             if time_gap < 0.3:
                 rospy.logwarn(f"{self.robot_name} detect_inter_boundary_line trigger error")
                 return
@@ -332,6 +333,7 @@ class RobotVision:
     def cross_conflict_boundary_timer_cb(self, event):
         with self.lock:
             time_gap = rospy.get_time() - self.last_cross_inter_boundary_time
+            print('red', time_gap)
             if time_gap < 0.3:
                 rospy.logwarn(f"{self.robot_name} detect_conflict_boundary_line trigger error")
                 return
