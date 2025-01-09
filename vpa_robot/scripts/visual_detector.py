@@ -402,6 +402,7 @@ class RobotVision:
             dis2ready = search_pattern.search_line(cv_hsv_img, self.ready_line_hsv)
             if dis2ready > 25:
                 self.stop = True
+                self.detect_green_lock = False
                 if not self.auto_request_task:
                     self.pub_shutdown_signal()
                 elif self.auto_request_task_timer is None:
