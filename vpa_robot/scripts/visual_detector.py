@@ -301,6 +301,7 @@ class RobotVision:
             print('green', time_gap)
             if time_gap < 0.2:
                 rospy.logwarn(f"{self.robot_name} detect_inter_boundary_line trigger error")
+                self.cross_inter_boundary_timer = None
                 return
             try:
                 rospy.logwarn(f"{self.robot_name} cross inter boundary")    
@@ -336,6 +337,7 @@ class RobotVision:
             print('red', time_gap)
             if time_gap < 0.5:
                 rospy.logwarn(f"{self.robot_name} detect_conflict_boundary_line trigger error")
+                self.cross_conflict_boundary_timer = None
                 return
             rospy.logwarn(f"{self.robot_name} cross conflict boundary")
             self.enter_conflict_zone = True
