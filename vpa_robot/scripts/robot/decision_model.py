@@ -23,7 +23,6 @@ class GridModel:
         self.want_to_enter_conflict = False
         self.enter_permission = False
 
-
     def decision_maker(self, twist_from_img: Twist):
         """
         Decision logic:

@@ -119,6 +119,7 @@ class RobotVision:
         self.curr_route = [0, 0, 0]
         self.current_zone = Zone.BUFFER_AREA
         self.last_target = None
+        self.detect_green_lock = False
 
         self.cross_inter_boundary_timer = None
         self.cross_inter_boundary_line_count = 0
@@ -283,6 +284,9 @@ class RobotVision:
         return self.last_target
 
     def detect_inter_boundary_line(self, cv_hsv_img: Image):
+        if self.detect_green_lock:
+            return
+
         dis2inter = search_pattern.search_line(cv_hsv_img, self.inter_boundary_line_hsv, top_line=100)
         cross_inter_boundary = dis2inter > 25
 
@@ -304,7 +308,8 @@ class RobotVision:
                 self.cross_inter_boundary_timer = None
                 return
             try:
-                rospy.logwarn(f"{self.robot_name} cross inter boundary")    
+                rospy.logwarn(f"{self.robot_name} cross inter boundary") 
+                self.detect_green_lock = True   
                 new_route = self.req_new_route()
                 new_route = [route for route in new_route]
                 self.curr_route = new_route
@@ -340,6 +345,7 @@ class RobotVision:
                 self.cross_conflict_boundary_timer = None
                 return
             rospy.logwarn(f"{self.robot_name} cross conflict boundary")
+            self.detect_green_lock = False
             self.enter_conflict_zone = True
             self.last_cross_conflict_boundary_time = rospy.get_time()
             self.update_enter_conflict_status()
