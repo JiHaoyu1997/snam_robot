@@ -72,6 +72,7 @@ class GridModel:
         return
     
     def check_occupied_grid_conflict(self, curr_route):
+        print(curr_route)
         grid_want_to_occupy = local_map_grid_model(curr_route[0], curr_route[1], curr_route[2])
         for grid_id in grid_want_to_occupy:
             matrix_coord = self.grid_id_to_matrix_coord(grid_id=grid_id)
