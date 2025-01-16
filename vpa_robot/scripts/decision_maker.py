@@ -4,7 +4,7 @@ import rospy
 from typing import List
 
 from robot.robot import robot_dict, find_id_by_robot_name, RobotMotion
-from robot.decision_model import GridModel
+from robot.decision_model import FIFOModel, GridBasedModel, GridBasedOptimalModel
 
 from std_msgs.msg import Bool
 from geometry_msgs.msg import Twist
@@ -19,17 +19,38 @@ from vpa_robot.srv import NewRoute, NewRouteRequest, NewRouteResponse
 from vpa_robot.srv import ReadySignal, ReadySignalResponse
 
 class RobotInfo:
-    def __init__(self, name="", robot_id=0, robot_route=[0, 0, 0], v=0.0, p=0.0, coordinate=(0.0, 0.0), enter_time=0.0, enter_conflict=False, arrive_cp_time=0.0, exit_time=0.0):
+    def __init__(
+            self, 
+            name="", 
+            robot_id=0, 
+            robot_route=[0, 0, 0], 
+            v=0.0, 
+            p=0.0, 
+            coordinate=(0.0, 0.0), 
+            enter_conflict=False,
+            robot_enter_lane_time = 0.0,
+            robot_estimated_arrive_conflict_time = 0.0,
+            robot_arrival_conflict_time = 0.0,
+            robot_enter_conflict_time = 0.0,
+            robot_arrive_cp_time = 0.0,
+            robot_exit_time = 0.0,
+                 ):
         self.robot_name = name
         self.robot_id = robot_id
         self.robot_route = robot_route
         self.robot_v = v
         self.robot_p = p
         self.robot_coordinate = coordinate
-        self.robot_enter_time = enter_time
         self.robot_enter_conflict = enter_conflict
-        self.robot_arrive_cp_time = arrive_cp_time
-        self.robot_exit_time = exit_time
+
+        # time info
+        self.robot_enter_lane_time = robot_enter_lane_time
+        self.robot_estimated_arrive_conflict_time = robot_estimated_arrive_conflict_time   
+        self.robot_arrival_conflict_time = robot_arrival_conflict_time
+        self.robot_enter_conflict_time = robot_enter_conflict_time
+        self.robot_arrive_cp_time = robot_arrive_cp_time
+        self.robot_exit_time = robot_exit_time
+
 
     def to_robot_info_msg(self):
         """
@@ -42,73 +63,34 @@ class RobotInfo:
         msg.robot_v = self.robot_v
         msg.robot_p = self.robot_p
         msg.robot_coordinate = self.robot_coordinate
-        msg.robot_enter_time = self.robot_enter_time
-        msg.robot_enter_conflict = self.robot_enter_conflict
+        msg.robot_enter_conflict
+
+        # time info
+        msg.robot_enter_lane_time = self.robot_enter_lane_time
+        msg.robot_estimated_arrive_conflict_time = self.robot_estimated_arrive_conflict_time
+        msg.robot_arrival_conflict_time = self.robot_arrival_conflict_time
+        msg.robot_enter_conflict_time = self.robot_enter_conflict_time
         msg.robot_arrive_cp_time = self.robot_arrive_cp_time
         msg.robot_exit_time = self.robot_exit_time
         return msg
+    
+    def calc_lane_travel_time(self):
+        lane_time =  self.robot_arrival_conflict_time - self.robot_enter_lane_time
+        return lane_time
 
+    def calc_wait_time(self):
+        wait_time = self.robot_enter_conflict_time - self.robot_arrival_conflict_time
+        return wait_time
+    
+    def calc_conflict_zone_travel_time(self):
+        cz_time = self.robot_exit_time - self.robot_enter_conflict_time
+        return cz_time
 
 class InterInfo:
     def __init__(self, inter_id=0):
         self.inter_id = inter_id                # 交叉路口ID
         self.robot_id_list = []                 # 机器人ID列表
         self.robot_info: List[RobotInfo] = []   # RobotInfo实例列表
-
-
-class FCFSModel:
-    def __init__(self, robot_id=0) -> None:
-        self.robot_id = robot_id
-        self.robot_name = robot_dict[robot_id]
-        self.want_to_enter_conflict = False
-        self.enter_permission = False
-
-    def decision_maker(self, twist_from_img: Twist):
-        """
-        Decision logic:
-        """
-        # If not yet in the conflict zone, return the original control command
-        if not self.want_to_enter_conflict:
-            return twist_from_img
-        
-        if not self.enter_permission:
-            return Twist()
-        else:
-            return twist_from_img
-
-    def check_enter_permission(self, robot_info_list: List[RobotInfo]):
-        """
-        Check the status of robots in the queue:
-        """
-        for robot_info in robot_info_list:
-            # skip self
-            if robot_info.robot_id == self.robot_id:
-                continue
-
-            # A robot has already entered the conflict zone; this robot cannot pass
-            if robot_info.robot_enter_conflict:
-                return False 
-            
-        # No robots have entered the conflict zone; this robot can pass
-        rospy.loginfo(f"{self.robot_name} obtain permission to enter conflict area")
-        return True 
-    
-
-class CBAAandDMPC:
-    def __init__(self, robot_id=0) -> None:
-        self.robot_id = robot_id
-        self.enter_conflict_zone = False
-
-    def get_priority_by_CBAA(self):
-        pass
-
-    def get_twist_by_DMPC(self):
-        pass
-
-    def decision_maker(self, twist_from_img, robot_info):
-        priority = self.get_priority_by_CBAA()
-        twist = self.get_twist_by_DMPC()
-        return twist       
 
 
 class RobotDecision:
@@ -119,12 +101,10 @@ class RobotDecision:
         rospy.on_shutdown(self.shutdown_handler)
         self.node_name = 'robot_decision' 
 
-        # Robot name
         self.robot_name = rospy.get_param('~robot_name', 'db19')
         self.robot_id = find_id_by_robot_name(robot_name=self.robot_name)
         self.robot_info = RobotInfo(name=self.robot_name, robot_id=self.robot_id)
-        # self.decision_model = FCFSModel(robot_id=self.robot_id)
-        self.decision_model = GridModel(robot_id=self.robot_id)
+        self.decision_model = GridBasedModel(robot_id=self.robot_id)
         self.robot_motion_controller = RobotMotion(name=self.robot_name, robot_id=self.robot_id) 
 
         # Initialize route and intersection information
@@ -196,16 +176,25 @@ class RobotDecision:
             # update local info
             self.curr_route = new_route
             self.local_inter_id = new_route[1]
+            rospy.loginfo(f"{self.robot_name} travel distance = {self.robot_info.robot_p}")
+
             self.robot_info.robot_route = self.curr_route
             self.robot_info.robot_p = 0.0
-            self.robot_info.robot_enter_time = rospy.get_time()
             self.robot_info.robot_enter_conflict = False
+            self.robot_info.robot_exit_time = rospy.get_time()
+            self.robot_info.robot_enter_lane_time = rospy.get_time()
+            cz_time = self.robot_info.calc_conflict_zone_travel_time()
+            rospy.loginfo(f"{self.robot_name} cz time = {cz_time}")
+
             self.decision_model.want_to_enter_conflict = False
             self.decision_model.enter_permission = False
+
             self.robot_motion_controller.total_distance_apriltag = 0.0
 
             # update global info
             self.update_global_inter_info()
+
+            # update inter_x info sub 
             self.update_inter_sub()
 
             # response
@@ -270,10 +259,15 @@ class RobotDecision:
                 v=info.robot_v,
                 p=info.robot_p,
                 coordinate=info.robot_coordinate,
-                enter_time=info.robot_enter_time,
                 enter_conflict=info.robot_enter_conflict,
-                arrive_cp_time=info.robot_arrive_cp_time,
-                exit_time=info.robot_exit_time
+
+                # time info
+                robot_enter_lane_time=info.robot_enter_lane_time,
+                robot_estimated_arrive_conflict_time=info.robot_estimated_arrive_conflict_time,
+                robot_arrival_conflict_time=info.robot_arrival_conflict_time,
+                robot_enter_conflict_time=info.robot_enter_conflict_time,
+                roobot_arrive_cp_time=info.robot_arrive_cp_time,
+                robot_exit_time=info.robot_exit_time
             ) for info in robot_info
         ]
         return
@@ -294,6 +288,13 @@ class RobotDecision:
             if not self.decision_model.enter_permission:
                 self.decision_model.enter_permission = self.decision_model.check_enter_permission(self.local_inter_info.robot_info)
                 self.robot_info.robot_enter_conflict = self.decision_model.enter_permission
+
+                # robot entet conflict
+                if self.decision_model.enter_permission:
+                    self.robot_info.robot_enter_conflict_time = rospy.get_time()
+                    wait_time = self.robot_info.calc_wait_time()
+                    rospy.loginfo(f"{self.robot_name} wait time = {wait_time}")
+
         twist_from_decision = self.decision_model.decision_maker(twist_from_img)
         return twist_from_decision
 
@@ -301,7 +302,13 @@ class RobotDecision:
         """
         Update the robot's conflict zone entry state based on the received message.
         """
+        # arrival at the conflict boundary line (red stop line)
         self.decision_model.want_to_enter_conflict = True
+        self.robot_info.robot_arrival_conflict_time = rospy.get_time()
+        lane_time = self.robot_info.calc_lane_travel_time()
+        rospy.loginfo(f"{self.robot_name} lane time = {lane_time} | lane distance {self.robot_info.robot_p}")
+
+        # respond
         response = TriggerResponse()
         response.success = True
         response.message = f"{self.robot_name} want to enter conflict zone"
@@ -333,7 +340,8 @@ class RobotDecision:
         """
         Publisch self robot_info.
         """
-        # TODO: update expected robot_arrive_cp_time & robot_exit_time
+        curr_coordinate = self.robot_info.robot_coordinate
+        curr_route = self.curr_route
         robot_info_msg = self.robot_info.to_robot_info_msg()
         self.robot_info_pub.publish(robot_info_msg)
         return

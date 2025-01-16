@@ -9,3 +9,9 @@ coord = (row, col)
 
 matrix[coord[0], coord[1]] = 1
 print(matrix)
+
+robot_id_list = [1,3,5]
+robot_id = 5
+if robot_id in robot_id_list:
+    index = robot_id_list.index(robot_id)
+    print(robot_id_list[:index])
