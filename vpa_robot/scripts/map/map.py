@@ -135,7 +135,7 @@ def local_map_grid_model(last: int, current: int, next: int):
         return [2, 1]
     
     if node_set == [1,2,6]:
-        return 1.4444
+        return [2]
 
     if node_set == [3,2,1]:
         return [4]
@@ -272,7 +272,7 @@ def find_lane_total_distance(last: int, current: int, next: int):
         return [2, 1]
     
     if node_set == [1,2,6]:
-        return [2]
+        return 1.4444
 
     if node_set == [3,2,1]:
         return [4]
