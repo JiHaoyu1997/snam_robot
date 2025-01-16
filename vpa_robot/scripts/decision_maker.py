@@ -255,11 +255,14 @@ class RobotDecision:
                 curr_pose = data.pose
                 curr_vel = data.vel
 
-                # update local info
+                # update kinematic info
                 self.robot_motion_controller.kinematic_recoder(pose=curr_pose, vel=curr_vel)
+
+                # update local info
                 self.robot_info.robot_v = curr_vel[0]
                 self.robot_info.robot_p = self.robot_motion_controller.total_distance_apriltag
                 self.robot_info.robot_coordinate = (curr_pose[1], curr_pose[2])
+
         return
     
     def wheel_omega_cb(self, wheel_omega_msg: WheelsEncoder):
@@ -272,8 +275,14 @@ class RobotDecision:
         """
         Publisch self robot_info.
         """
-        curr_coordinate = self.robot_info.robot_coordinate
-        curr_route = self.curr_route
+        if self.curr_route == [6,6,2] or self.curr_route == [2,6,6]:
+            est_time = 0.0
+        elif self.decision_model.want_to_enter_conflict:
+            est_time = 0.0
+        else:
+            est_time = self.robot_motion_controller.calc_estimated_arrive_conflict_time(route=self.curr_route)
+
+        self.robot_info.robot_estimated_arrive_conflict_time = est_time
         robot_info_msg = self.robot_info.to_robot_info_msg()
         self.robot_info_pub.publish(robot_info_msg)
         return

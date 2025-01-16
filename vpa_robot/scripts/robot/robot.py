@@ -1,5 +1,6 @@
 import math
 import threading
+from map.map import find_lane_total_distance
 from vpa_robot.msg import RobotInfo as RobotInfoMsg
 
 robot_dict = {
@@ -144,45 +145,9 @@ class RobotMotion:
             # 打印当前速度和位置
             # rospy.loginfo(f"Wheel Omega -- Left Wheel Distance: {s_left:.3f} m, Right Wheel Distance: {s_right:.3f}m.")
 
-class PermissionChecker:
-    def __init__(self, check_function, callback, check_interval=0.5):
-        """
-        初始化权限检查器
-        
-        :param check_function: 用于检查权限的函数，返回 True 或 False
-        :param callback: 当权限通过时触发的回调函数
-        :param check_interval: 检查权限的时间间隔（秒）
-        """
-        self._check_function = check_function
-        self._callback = callback
-        self._check_interval = check_interval
-        self._stop_event = threading.Event()
-        self._thread = None
-
-    def start(self):
-        """
-        启动检查线程
-        """
-        if self._thread and self._thread.is_alive():
-            return  # 如果线程已经运行，不重复启动
-        self._stop_event.clear()
-        self._thread = threading.Thread(target=self._run)
-        self._thread.start()
-
-    def stop(self):
-        """
-        停止检查线程
-        """
-        if self._thread and self._thread.is_alive():
-            self._stop_event.set()
-            self._thread.join()
-
-    def _run(self):
-        """
-        检查权限的循环逻辑
-        """
-        while not self._stop_event.is_set():
-            if self._check_function():
-                self._callback()
-                break
-            self._stop_event.wait(self._check_interval)  # 等待指定间隔
+    def calc_estimated_arrive_conflict_time(self, route):
+        curr_lane_total_distance = find_lane_total_distance(last=route[0], current=route[1], next=route[2])
+        distance = curr_lane_total_distance - self.total_distance_apriltag
+        vel = self.vel
+        est_time = distance / vel
+        return est_time
