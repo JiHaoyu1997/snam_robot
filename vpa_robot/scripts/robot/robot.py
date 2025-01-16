@@ -151,5 +151,6 @@ class RobotMotion:
         vel = self.vel
         if vel == 0.0:
             return 0.0
-        est_time = distance / vel[0]
-        return est_time
+        else:
+            est_time = distance / vel[0]
+            return est_time
