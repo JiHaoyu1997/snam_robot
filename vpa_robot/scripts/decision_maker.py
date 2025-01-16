@@ -198,7 +198,7 @@ class RobotDecision:
                 robot_estimated_arrive_conflict_time=info.robot_estimated_arrive_conflict_time,
                 robot_arrival_conflict_time=info.robot_arrival_conflict_time,
                 robot_enter_conflict_time=info.robot_enter_conflict_time,
-                roobot_arrive_cp_time=info.robot_arrive_cp_time,
+                robot_arrive_cp_time=info.robot_arrive_cp_time,
                 robot_exit_time=info.robot_exit_time
             ) for info in robot_info
         ]
