@@ -3,7 +3,7 @@
 import rospy
 from typing import List
 
-from robot.robot import robot_dict, find_id_by_robot_name, RobotMotion
+from robot.robot import robot_dict, find_id_by_robot_name, RobotInfo, RobotMotion
 from robot.decision_model import FIFOModel, GridBasedModel, GridBasedOptimalModel
 
 from std_msgs.msg import Bool
@@ -17,74 +17,6 @@ from vpa_robot_interface.msg import WheelsEncoder
 from vpa_robot.srv import InterMng, InterMngRequest, InterMngResponse
 from vpa_robot.srv import NewRoute, NewRouteRequest, NewRouteResponse
 from vpa_robot.srv import ReadySignal, ReadySignalResponse
-
-class RobotInfo:
-    def __init__(
-            self, 
-            name="", 
-            robot_id=0, 
-            robot_route=[0, 0, 0], 
-            v=0.0, 
-            p=0.0, 
-            coordinate=(0.0, 0.0), 
-            enter_conflict=False,
-            robot_enter_lane_time = 0.0,
-            robot_estimated_arrive_conflict_time = 0.0,
-            robot_arrival_conflict_time = 0.0,
-            robot_enter_conflict_time = 0.0,
-            robot_arrive_cp_time = 0.0,
-            robot_exit_time = 0.0,
-                 ):
-        self.robot_name = name
-        self.robot_id = robot_id
-        self.robot_route = robot_route
-        self.robot_v = v
-        self.robot_p = p
-        self.robot_coordinate = coordinate
-        self.robot_enter_conflict = enter_conflict
-
-        # time info
-        self.robot_enter_lane_time = robot_enter_lane_time
-        self.robot_estimated_arrive_conflict_time = robot_estimated_arrive_conflict_time   
-        self.robot_arrival_conflict_time = robot_arrival_conflict_time
-        self.robot_enter_conflict_time = robot_enter_conflict_time
-        self.robot_arrive_cp_time = robot_arrive_cp_time
-        self.robot_exit_time = robot_exit_time
-
-
-    def to_robot_info_msg(self):
-        """
-        Annotation
-        """
-        msg = RobotInfoMsg()
-        msg.robot_name = self.robot_name
-        msg.robot_id = self.robot_id
-        msg.robot_route = self.robot_route
-        msg.robot_v = self.robot_v
-        msg.robot_p = self.robot_p
-        msg.robot_coordinate = self.robot_coordinate
-        msg.robot_enter_conflict
-
-        # time info
-        msg.robot_enter_lane_time = self.robot_enter_lane_time
-        msg.robot_estimated_arrive_conflict_time = self.robot_estimated_arrive_conflict_time
-        msg.robot_arrival_conflict_time = self.robot_arrival_conflict_time
-        msg.robot_enter_conflict_time = self.robot_enter_conflict_time
-        msg.robot_arrive_cp_time = self.robot_arrive_cp_time
-        msg.robot_exit_time = self.robot_exit_time
-        return msg
-    
-    def calc_lane_travel_time(self):
-        lane_time =  self.robot_arrival_conflict_time - self.robot_enter_lane_time
-        return lane_time
-
-    def calc_wait_time(self):
-        wait_time = self.robot_enter_conflict_time - self.robot_arrival_conflict_time
-        return wait_time
-    
-    def calc_conflict_zone_travel_time(self):
-        cz_time = self.robot_exit_time - self.robot_enter_conflict_time
-        return cz_time
 
 class InterInfo:
     def __init__(self, inter_id=0):

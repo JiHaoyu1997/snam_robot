@@ -11,7 +11,6 @@ import numpy as np
 from typing import List
 from map.map import local_map_grid_model
 from robot.robot import robot_dict
-from decision_maker  import RobotInfo
 from geometry_msgs.msg import Twist
 
 class FIFOModel:
@@ -34,7 +33,7 @@ class FIFOModel:
         else:
             return twist_from_img
 
-    def check_enter_permission(self, robot_info_list: List[RobotInfo]):
+    def check_enter_permission(self, robot_info_list):
         """
         Check the status of robots in the queue:
         """
