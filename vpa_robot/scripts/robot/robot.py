@@ -149,5 +149,7 @@ class RobotMotion:
         curr_lane_total_distance = find_lane_total_distance(last=route[0], current=route[1], next=route[2])
         distance = curr_lane_total_distance - self.total_distance_apriltag
         vel = self.vel
+        if vel == 0.0:
+            return 0.0
         est_time = distance / vel[0]
         return est_time
