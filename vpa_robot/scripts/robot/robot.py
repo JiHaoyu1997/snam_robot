@@ -69,7 +69,7 @@ class RobotInfo:
         msg.robot_v = self.robot_v
         msg.robot_p = self.robot_p
         msg.robot_coordinate = self.robot_coordinate
-        msg.robot_enter_conflict
+        msg.robot_enter_conflict = self.robot_enter_conflict
 
         # time info
         msg.robot_enter_lane_time = self.robot_enter_lane_time
