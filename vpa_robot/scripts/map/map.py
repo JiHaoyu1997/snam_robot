@@ -293,10 +293,10 @@ def find_lane_total_distance(last: int, current: int, next: int):
         return [3, 2]
     
     if node_set == [6,2,1]:
-        return [1, 4]
+        return 1.0562
     
     if node_set == [6,2,3]:
-        return [1, 3]
+        return 1.0562
     
     if node_set == [6,2,5]:
         return 1.0562

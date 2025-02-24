@@ -280,7 +280,8 @@ class RobotDecision:
         elif self.decision_model.want_to_enter_conflict:
             est_time = 0.0
         else:
-            est_time = self.robot_motion_controller.calc_estimated_arrive_conflict_time(route=self.curr_route)
+            est_time = 0.0
+            # est_time = self.robot_motion_controller.calc_estimated_arrive_conflict_time(route=self.curr_route)
 
         self.robot_info.robot_estimated_arrive_conflict_time = est_time
         robot_info_msg = self.robot_info.to_robot_info_msg()
