@@ -105,6 +105,7 @@ class GridBasedModel:
 
             # When some one robot has already entered the conflict zone
             if robot_info.robot_enter_conflict:
+                print(robot_info.robot_name)
                 route = robot_info.robot_route
                 occupied_grid = local_map_grid_model(route[0], route[1], route[2])
                 self.record_occupied_grid(occupied_grid=occupied_grid)

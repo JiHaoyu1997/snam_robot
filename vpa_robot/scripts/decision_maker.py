@@ -219,8 +219,9 @@ class RobotDecision:
         if self.decision_model.want_to_enter_conflict:
             if not self.decision_model.enter_permission:
                 self.decision_model.enter_permission = self.decision_model.check_enter_permission(self.local_inter_info.robot_info)
+                print(self.decision_model.enter_permission)
                 self.robot_info.robot_enter_conflict = self.decision_model.enter_permission
-
+                print(self.robot_info.robot_enter_conflict)
                 # robot entet conflict
                 if self.decision_model.enter_permission:
                     self.robot_info.robot_enter_conflict_time = rospy.get_time()

@@ -247,16 +247,16 @@ def find_lane_total_distance(last: int, current: int, next: int):
 
     # Inter1
     if node_set == [2,1,3]:
-        return [1]
+        return 1.0602
     
     if node_set == [2,1,4]:
-        return [1, 3]
+        return 1.0602
     
     if node_set == [3,1,2]:
         return 0.2731
     
     if node_set == [3,1,4]:
-        return [3]
+        return 0.2731
     
     if node_set == [4,1,2]:
         return [4, 2]
@@ -266,10 +266,10 @@ def find_lane_total_distance(last: int, current: int, next: int):
 
     # Inter2
     if node_set == [1,2,3]:
-        return [2, 3]
+        return 1.4444
     
     if node_set == [1,2,5]:
-        return [2, 1]
+        return 1.4444
     
     if node_set == [1,2,6]:
         return 1.4444
@@ -284,32 +284,32 @@ def find_lane_total_distance(last: int, current: int, next: int):
         return [4, 2]
     
     if node_set == [5,2,1]:
-        return [3, 4]
+        return 1.1716
     
     if node_set == [5,2,3]:
-        return [3]
+        return 1.1716
     
     if node_set == [5,2,6]:
-        return [3, 2]
+        return 1.1716
     
     if node_set == [6,2,1]:
-        return 1.0562
+        return 0.9849
     
     if node_set == [6,2,3]:
-        return 1.0562
+        return 0.9849
     
     if node_set == [6,2,5]:
-        return 1.0562
+        return 0.9849
     
     # Inter3
     if node_set == [1,3,2]:
-        return [2]
+        return 0.3302
     
     if node_set == [1,3,4]:
-        return [2, 3]
+        return 0.3302
     
     if node_set == [1,3,5]:
-        return [2, 1]
+        return 0.3302
     
     if node_set == [2,3,1]:
         return [1, 4]
@@ -324,7 +324,7 @@ def find_lane_total_distance(last: int, current: int, next: int):
         return 0.2532
     
     if node_set == [4,3,2]:
-        return [4, 2]
+        return 0.2532
         
     if node_set == [4,3,5]:
         return 0.2532
@@ -352,23 +352,23 @@ def find_lane_total_distance(last: int, current: int, next: int):
         return [1]
     
     if node_set == [5,4,1]:
-        return [3, 4]
+        return 1.4426
     
     if node_set == [5,4,3]:
         return 1.4426
 
     # Inter5
     if node_set == [2,5,3]:
-        return [1, 4]
+        return 1.5394
     
     if node_set == [2,5,4]:
         return 1.5394
     
     if node_set == [3,5,2]:
-        return [2]
+        return 0.2732
     
     if node_set == [3,5,4]:
-        return [2, 3]
+        return 0.2732
 
     if node_set == [4,5,2]:
         return [4, 2]
