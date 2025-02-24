@@ -238,7 +238,7 @@ class RobotDecision:
         self.decision_model.want_to_enter_conflict = True
         self.robot_info.robot_arrival_conflict_time = rospy.get_time()
         lane_time = self.robot_info.calc_lane_travel_time()
-        rospy.loginfo(f"{self.robot_name} lane time = {lane_time} | lane distance {self.robot_info.robot_p}")
+        rospy.loginfo(f"{self.robot_name} lane{self.curr_route} time = {round(lane_time, 5)} | distance {round(self.robot_info.robot_p, 5)}")
 
         # respond
         response = TriggerResponse()
