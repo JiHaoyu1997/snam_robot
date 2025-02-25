@@ -55,6 +55,7 @@ class RobotDecision:
         self.wheel_omega_sub = rospy.Subscriber('wheel_omega', WheelsEncoder, self.wheel_omega_cb)
         self.inter_info_sub = rospy.Subscriber(self.local_inter_info_topic, InterInfoMsg, self.inter_info_cb)
         self.shutdown_sub = rospy.Subscriber("robot_interface_shutdown", Bool, self.signal_shutdown)
+        self.local_brake_sub = rospy.Subscriber("local_brake", Bool, self.local_brake_sub_cb)
         
         # Servers
         self.update_route_server = rospy.Service('update_route_srv', NewRoute, self.update_route_cb)
@@ -105,22 +106,31 @@ class RobotDecision:
         
         # Condition Match             
         if self.curr_route[1] == new_route[0] and self.curr_route[2] == new_route[1]:
+            # get time
+            now_time = round(rospy.get_time(), 5)
+            self.robot_info.robot_exit_time = now_time
+            self.robot_info.robot_enter_lane_time = now_time
+            if self.departure_time:
+                travel_time = now_time - self.departure_time
+            rospy.loginfo(f"{self.robot_name} travel time: {travel_time}")
+
             # update local info
             self.curr_route = new_route
             self.local_inter_id = new_route[1]
-            rospy.loginfo(f"{self.robot_name} travel distance = {self.robot_info.robot_p}")
+            rospy.loginfo(f"{self.robot_name} travel total distance in inter{self.curr_route[0]}: {self.robot_info.robot_p}")
 
+            # update pub info
             self.robot_info.robot_route = self.curr_route
             self.robot_info.robot_p = 0.0
             self.robot_info.robot_enter_conflict = False
-            self.robot_info.robot_exit_time = rospy.get_time()
-            self.robot_info.robot_enter_lane_time = rospy.get_time()
             cz_time = self.robot_info.calc_conflict_zone_travel_time()
             rospy.loginfo(f"{self.robot_name} cz time = {cz_time}")
 
+            # update decision flag
             self.decision_model.want_to_enter_conflict = False
             self.decision_model.enter_permission = False
 
+            # reset segment travel distance
             self.robot_motion_controller.total_distance_apriltag = 0.0
 
             # update global info
@@ -237,6 +247,8 @@ class RobotDecision:
         """
         # arrival at the conflict boundary line (red stop line)
         self.decision_model.want_to_enter_conflict = True
+
+        # get time
         self.robot_info.robot_arrival_conflict_time = rospy.get_time()
         lane_time = self.robot_info.calc_lane_travel_time()
         rospy.loginfo(f"{self.robot_name} lane{self.curr_route} time = {round(lane_time, 5)} | distance {round(self.robot_info.robot_p, 5)}")
@@ -271,6 +283,10 @@ class RobotDecision:
         Through wheel encoder to calc travel time.
         """
         return self.robot_motion_controller.tick_recorder(msg=wheel_omega_msg)    
+    
+    def local_brake_sub_cb(self, msg: Bool):
+        if msg.data:
+            self.departure_time = round(rospy.get_time(), 5)
 
     def pub_robot_info(self, event):
         """
