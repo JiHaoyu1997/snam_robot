@@ -9,7 +9,7 @@ from enum import Enum
 import cv2
 from cv_bridge import CvBridge
 
-from robot.robot import find_id_by_robot_name
+from robot.robot import find_id_by_robot_name, find_dep_delay
 from map import map
 from hsv import hsv, search_pattern
 from pid_controller import pid_controller
@@ -117,7 +117,7 @@ class RobotVision:
 
     def global_brake_sub_cb(self, msg: Bool):
         if not msg.data:
-            time_sleep = 5
+            time_sleep = find_dep_delay(self.robot_id)
             rospy.sleep(time_sleep)
             self.curr_route = [6, 6, 2]
 

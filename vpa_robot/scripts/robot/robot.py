@@ -20,8 +20,21 @@ robot_dict = {
     10:'fiona',
 }
 
+robot_departure_delay_dict = {
+    1:0,
+    2:'vivian',
+    6:5,
+    7:5,
+    8:'luna',
+    9:'robert',
+    10:'fiona',
+}
+
 def find_id_by_robot_name(robot_name):
     return next((key for key, value in robot_dict.items() if value == robot_name), None)
+
+def find_dep_delay(robot_id):
+    return robot_departure_delay_dict[robot_id]
 
 
 class RobotInfo:
