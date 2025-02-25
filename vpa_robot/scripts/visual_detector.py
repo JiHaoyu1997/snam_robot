@@ -90,6 +90,7 @@ class RobotVision:
         # Subscribers
         self.image_raw_sub = rospy.Subscriber("robot_cam/image_raw", Image, self.image_raw_sub_cb)
         self.shutdown_sub = rospy.Subscriber("robot_interface_shutdown", Bool, self.signal_shutdown)
+        self.global_brake_sub = rospy.Subscriber("/global_brake", Bool, self.global_brake_sub_cb)
 
         # Servers
         self.srv_color = Server(color_hsvConfig, self.dynamic_reconfigure_callback_hsv)
@@ -110,10 +111,16 @@ class RobotVision:
             response: ReadySignalResponse = ready_signal_client.call(self.node_name)
             if response.success:
                 rospy.loginfo(f"{self.robot_name}: Visual Detector is Online")
-                self.curr_route = [6, 6, 2]
 
         except rospy.ServiceException as e:
             rospy.logerr(f"service call failed: {e}")
+
+    def global_brake_sub_cb(self, msg: Bool):
+        if msg.data:
+            time_sleep = 5
+            rospy.sleep(time_sleep)
+            self.curr_route = [6, 6, 2]
+
 
     def status_flag_init(self):
         self.curr_route = [0, 0, 0]
