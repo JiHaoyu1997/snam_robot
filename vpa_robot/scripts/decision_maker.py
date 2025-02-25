@@ -64,6 +64,7 @@ class RobotDecision:
         # Clients
         self.inter_mng_client = rospy.ServiceProxy('/inter_mng_srv', InterMng)
 
+        # Init
         self.send_ready_signal()
 
         self.timer = rospy.Timer(rospy.Duration(1 / 20), self.pub_robot_info)
@@ -285,7 +286,7 @@ class RobotDecision:
         return self.robot_motion_controller.tick_recorder(msg=wheel_omega_msg)    
     
     def local_brake_sub_cb(self, msg: Bool):
-        if msg.data:
+        if not msg.data:
             self.departure_time = round(rospy.get_time(), 5)
 
     def pub_robot_info(self, event):
