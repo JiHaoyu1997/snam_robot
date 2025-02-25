@@ -6,7 +6,6 @@
 # from map import find_lane_total_distance
 
 import math
-import threading
 from map.map import find_lane_total_distance
 from vpa_robot.msg import RobotInfo as RobotInfoMsg
 
@@ -22,12 +21,12 @@ robot_dict = {
 
 robot_departure_delay_dict = {
     1:0,
-    2:'vivian',
-    6:5,
+    2:0,
+    6:0,
     7:5,
-    8:'luna',
-    9:'robert',
-    10:'fiona',
+    8:0,
+    9:0,
+    10:0,
 }
 
 def find_id_by_robot_name(robot_name):
