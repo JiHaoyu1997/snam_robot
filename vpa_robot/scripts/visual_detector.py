@@ -116,7 +116,7 @@ class RobotVision:
             rospy.logerr(f"service call failed: {e}")
 
     def global_brake_sub_cb(self, msg: Bool):
-        if msg.data:
+        if not msg.data:
             time_sleep = 5
             rospy.sleep(time_sleep)
             self.curr_route = [6, 6, 2]
