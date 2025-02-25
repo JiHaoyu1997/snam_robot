@@ -1,8 +1,8 @@
 <launch>
     <arg name="robot_name"          value="$(env robot_name)"/>
     <arg name="test_mode"           default="default"/> 
-    <arg name="acc_on"              default="true"/>
-    <arg name="auto_request_task"   default="true"/>
+    <arg name="acc_on"              default="false"/>
+    <arg name="auto_request_task"   default="false"/>
     
     <group ns="$(arg robot_name)">
         <group if="$(arg acc_on)"> 

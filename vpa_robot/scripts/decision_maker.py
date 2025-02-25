@@ -113,7 +113,7 @@ class RobotDecision:
             self.robot_info.robot_enter_lane_time = now_time
             if self.departure_time:
                 travel_time = now_time - self.departure_time
-                rospy.loginfo(f"{self.robot_name} travel time: {travel_time}")
+                rospy.loginfo(f"{self.robot_name} travel time until now: {travel_time}")
 
             # update local info
             self.curr_route = new_route
@@ -125,7 +125,7 @@ class RobotDecision:
             self.robot_info.robot_p = 0.0
             self.robot_info.robot_enter_conflict = False
             cz_time = self.robot_info.calc_conflict_zone_travel_time()
-            rospy.loginfo(f"{self.robot_name} cz time = {cz_time}")
+            rospy.loginfo(f"{self.robot_name} cz travel time in inter{self.curr_route[1]}: {cz_time}")
 
             # update decision flag
             self.decision_model.want_to_enter_conflict = False
@@ -237,7 +237,7 @@ class RobotDecision:
                 if self.decision_model.enter_permission:
                     self.robot_info.robot_enter_conflict_time = rospy.get_time()
                     wait_time = self.robot_info.calc_wait_time()
-                    rospy.loginfo(f"{self.robot_name} wait time = {wait_time}")
+                    rospy.loginfo(f"{self.robot_name} wait time in inter{self.curr_route[1]}: {wait_time}")
 
         twist_from_decision = self.decision_model.decision_maker(twist_from_img)
         return twist_from_decision
@@ -252,7 +252,7 @@ class RobotDecision:
         # get time
         self.robot_info.robot_arrival_conflict_time = rospy.get_time()
         lane_time = self.robot_info.calc_lane_travel_time()
-        rospy.loginfo(f"{self.robot_name} lane{self.curr_route} time = {round(lane_time, 5)} | distance {round(self.robot_info.robot_p, 5)}")
+        rospy.loginfo(f"{self.robot_name} lane travel time in route{self.curr_route} = {round(lane_time, 5)} | distance {round(self.robot_info.robot_p, 5)}")
 
         # respond
         response = TriggerResponse()
