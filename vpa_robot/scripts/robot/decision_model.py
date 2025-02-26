@@ -51,23 +51,6 @@ class FIFOModel:
         return True 
     
 
-class CBAAandDMPC:
-    def __init__(self, robot_id=0) -> None:
-        self.robot_id = robot_id
-        self.enter_conflict_zone = False
-
-    def get_priority_by_CBAA(self):
-        pass
-
-    def get_twist_by_DMPC(self):
-        pass
-
-    def decision_maker(self, twist_from_img, robot_info):
-        priority = self.get_priority_by_CBAA()
-        twist = self.get_twist_by_DMPC()
-        return twist       
-
-
 class GridBasedModel:
     def __init__(self, robot_id=0) -> None:
         self.robot_id = robot_id
@@ -210,6 +193,77 @@ class GridBasedOptimalModel:
         binary_grid_id = format(grid_id - 1, '02b')
         matrix_coord = int(binary_grid_id[0]), int(binary_grid_id[1])        
         return matrix_coord
+    
+
+class VSCSModel:
+    def __init__(self, robot_id=0) -> None:
+        self.robot_id = robot_id
+        self.robot_name = robot_dict[robot_id]
+        self.curr_route = []
+        self.init_system_dynamic_matrix()
+    
+    def init_system_dynamic_matrix(self):
+        self.A = np.array([
+            [0, -1],
+            [0, -1]
+            ])
+
+        self.B = np.array([
+            [0],
+            [1]
+            ])
+        
+        print("init system dynamic matrix")
+
+    def generate_matrix_H(self, h: dict, n_t=3):
+        H = np.zeros((n_t, n_t))
+
+        for (i, j), value in h.items():
+            if i < j:
+                H[i, j] = -value
+                H[j, i] = value
+                
+        for i in range(n_t):
+            s = 0.0            
+            for j in range(n_t):
+                if i == j:
+                    continue
+                if i < j:
+                    s += h.get((i, j), 0)
+                else:
+                    s += -h.get((j, i), 0)
+            H[i, i] = s
+
+        return H
+    
+    
+    def generate_param_hij(self, robot_info_list):
+        h = {}
+        n = len(robot_info_list)
+        
+        for i in range(n - 1):
+            for j in range(i+1, n):
+                h[i,j]
+
+
+    def calc_hij(self, i, j, robot_info_list):
+        robot_info_i = robot_info_list[i]
+        robot_info_j = robot_info_list[j]
+
+
+    def calc_sigma_max(self, robot_info_list):
+        h = {
+            (0, 1):  1,
+            (0, 2): -1,
+            (1, 2):  0,
+        }
+
+        H = self.generate_H(h=h)
+        print(H)
+        U, s, Vt = np.linalg.svd(H)
+        norm_H = s[0]
+        print(norm_H)
+        return norm_H
 
 
 if __name__ == '__main__':

@@ -140,6 +140,9 @@ class RobotDecision:
             # update inter_x info sub 
             self.update_inter_sub()
 
+            # update Controll Gain
+            print(self.local_inter_info.robot_info[0].robot_route)
+
             # response
             if new_route[1] == 6 and new_route[2] == 6:
                 return NewRouteResponse(success=True, message=f"{self.robot_name} travel end")
