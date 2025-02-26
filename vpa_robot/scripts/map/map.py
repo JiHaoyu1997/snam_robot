@@ -7,7 +7,6 @@
     # 1: left 
     # 2: right
 
-
 def local_mapper(last: int, current: int, next: int) -> int:
 
     node_set = [last, current, next]
@@ -519,31 +518,20 @@ def local_map_path_length_in_gird_table(last: int, current: int, next: int, grid
 
     return 0.0
 
-ROUTE_TABLE = {
-    # Inter1
-    1:{
-    [2,1,3]:0,
-    [2,1,4]:1,
-    [3,1,2]:2,
-    [3,1,4]:3,
-    [4,1,2]:4,
-    [4,1,3]:5,
-    }
-}
-
-ROUTE_CP_TABLE = {
-    1:[
-
-    ]
-}
 
 def find_conflict_point(route_i, route_j):
-    print(route_i)
-    print(route_j)
     if route_i[1] != route_j[1]:
-        raise ValueError("Not in the same Intersection")
+        raise ValueError("Agents not in the same Intersection")
     
     curr_inter_id = route_i[1]
 
-    route_i_id = ROUTE_TABLE[1][route_i]
-    # conflict_point_id = 
+    route_i_id = ROUTE_TABLE[curr_inter_id][route_i]
+    route_j_id = ROUTE_TABLE[curr_inter_id][route_j]
+    conflict_point  = ROUTE_CP_TABLE[curr_inter_id][route_i_id][route_j_id]
+    print(conflict_point)
+
+if __name__ == "__main__":
+    from route import ROUTE_TABLE, ROUTE_CP_TABLE
+    route1 = (2, 3, 4)
+    route2 = (1, 3, 5)
+    find_conflict_point(route_i=route1, route_j=route2)
