@@ -6,6 +6,7 @@
     # 0: through 
     # 1: left 
     # 2: right
+from route import ROUTE_TABLE, ROUTE_CP_TABLE, CP_COORDINATE_TABLE
 
 def local_mapper(last: int, current: int, next: int) -> int:
 
@@ -103,6 +104,7 @@ def local_mapper(last: int, current: int, next: int) -> int:
         return 1
     
     return None
+
 
 def local_map_grid_model(last: int, current: int, next: int):
 
@@ -241,6 +243,7 @@ def local_map_grid_model(last: int, current: int, next: int):
 
     return None
 
+
 def find_lane_total_distance(last: int, current: int, next: int):
 
     node_set = [last, current, next]
@@ -377,6 +380,7 @@ def find_lane_total_distance(last: int, current: int, next: int):
         return [4]
 
     return 0.0
+
 
 def local_map_path_length_in_gird_table(last: int, current: int, next: int, grid: int):
 
@@ -528,10 +532,14 @@ def find_conflict_point(route_i, route_j):
     route_i_id = ROUTE_TABLE[curr_inter_id][route_i]
     route_j_id = ROUTE_TABLE[curr_inter_id][route_j]
     conflict_point  = ROUTE_CP_TABLE[curr_inter_id][route_i_id][route_j_id]
-    print(conflict_point)
+    return conflict_point
 
+def find_conflict_point_coordinate(inter, cp):
+    cp_coor = CP_COORDINATE_TABLE[inter][cp]
+    return cp_coor
 if __name__ == "__main__":
-    from route import ROUTE_TABLE, ROUTE_CP_TABLE
+
     route1 = (2, 3, 4)
     route2 = (1, 3, 5)
     find_conflict_point(route_i=route1, route_j=route2)
+    find_conflict_point_coordinate(3, 1)

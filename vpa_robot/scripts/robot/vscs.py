@@ -2,7 +2,7 @@ import cvxpy as cp
 import numpy as np
 import time
 
-class VSCS():
+class VSCS:
 
     def __init__(self):
         self.A = []
@@ -351,24 +351,16 @@ class VSCS():
 
         return H
 
-    def calc_sigma_max(self):
-        h = {
-            (0, 1):  1,
-            (0, 2): -1,
-            (1, 2):  0,
-        }
-
-        H = self.generate_H(h=h)
-        print(H)
+    def calc_sigma_max(self, H):
         U, s, Vt = np.linalg.svd(H)
         norm_H = s[0]
-        print(norm_H)
+        # print(norm_H)
         return norm_H
 
-    def sol_lmi_position_based(self, zeta=0.1):
-        A = self.A
-        B = self.B
-        sigma_max = self.calc_sigma_max()
+    def sol_lmi_position_based(self, A, B, H, zeta=0.1):
+        A = A
+        B = B
+        sigma_max = self.calc_sigma_max(H)
         sigma_max_squared = sigma_max**2
 
         Q = cp.Variable((2, 2), symmetric=True)
@@ -403,17 +395,20 @@ class VSCS():
         constraints.append(X <= -1e-9 * np.eye(4))
 
         prob = cp.Problem(objective, constraints)
-        result = prob.solve(solver=cp.SCS, verbose=True)
+        result = prob.solve(solver=cp.SCS, verbose=False)
 
         print("Status:", prob.status)
         if prob.status in ["optimal", "optimal_inaccurate", "feasible"]:
             Q_val = Q.value
             P_val = np.linalg.inv(Q_val)
-            print("P =\n", P_val)
-            K_val = B.T @ P_val
-            print("K =\n", K_val)
+            # print("P =\n", P_val)
+            # print(B.T)
+            K_val = - B.T @ P_val
+            # print("K =\n", K_val)
         else:
             print("No feasible solution found")
+        
+        return K_val
 
 
 if __name__ == "__main__":

@@ -1,16 +1,20 @@
-# import os
-# import sys
-# current_dir = os.path.dirname(os.path.abspath(__file__))
-# map_folder_path = os.path.join(current_dir, "../map")
-# sys.path.append(map_folder_path)
-# from map import local_map_grid_model
-# from robot import robot_dict
+import os
+import sys
+current_dir = os.path.dirname(os.path.abspath(__file__))
+map_folder_path = os.path.join(current_dir, "../map")
+sys.path.append(map_folder_path)
+from map import local_map_grid_model, find_conflict_point, find_conflict_point_coordinate
+from robot import robot_dict, RobotInfo
 
+import math
 import rospy
 import numpy as np
 from typing import List
-from map.map import local_map_grid_model
-from robot.robot import robot_dict
+
+from vscs import VSCS
+# from map.map import local_map_grid_model, find_conflict_point, find_conflict_point_coordinate
+# from robot.robot import robot_dict, RobotInfo
+
 from geometry_msgs.msg import Twist
 
 class FIFOModel:
@@ -200,9 +204,10 @@ class VSCSModel:
         self.robot_id = robot_id
         self.robot_name = robot_dict[robot_id]
         self.curr_route = []
-        self.init_system_dynamic_matrix()
-    
-    def init_system_dynamic_matrix(self):
+        
+        
+        self.vscs = VSCS()
+        self.robot_id_list = []
         self.A = np.array([
             [0, -1],
             [0, -1]
@@ -212,16 +217,58 @@ class VSCSModel:
             [0],
             [1]
             ])
+    
+    def record_robot_id_list(self, robo_id_list: List[int]):
+        self.robot_id_list = robo_id_list
+
+    def calc_control_gain(self, robot_info_list: List[RobotInfo]):
+        N = len(robot_info_list)
+        if N == 1:
+            if robot_info_list[0].robot_id == self.robot_id:
+                k = (0, 0)
+                return k
+            else:
+                raise ValueError("agent self info not in inter_info_list")
+            
+        else:
+            K = self.calc_k(robot_info_list, N)
+            return K
         
-        print("init system dynamic matrix")
+    def calc_state_error(self, robot_info_list: List[RobotInfo]):
+        for robot_info in robot_info_list:
+            if robot_info.robot_id == self.robot_id:
+                self.curr_coor = robot_info.robot_coordinate
+
+        x_i = np.array([s_i])
+
+    
+    def generate_cp_state_matrix(self, robot_info_list: List[RobotInfo]):
+        N = len(robot_info_list)
+        cp_flag_matrix = np.zeros((N, N))
+        for i in range(N):
+            for j in range(i + 1, N):
+                robot_route_i = robot_info_list[i].robot_route
+                robot_route_j = robot_info_list[j].robot_route
+                cp = find_conflict_point(route_i=robot_route_i, route_j=robot_route_j)
+                if cp != 0:
+                    cp_flag_matrix[i][j] = 1
+
+        cp_state_matrix = cp_flag_matrix + cp_flag_matrix.T
+        print(cp_state_matrix)
+
+    def calc_k(self, robot_info_list, N):
+        h = self.generate_h_dict(robot_info_list=robot_info_list)
+        H = self.generate_matrix_H(h=h, n_t=N)
+        K = self.vscs.sol_lmi_position_based(A=self.A, B=self.B, H=H)
+        print(K)
+        return K
 
     def generate_matrix_H(self, h: dict, n_t=3):
         H = np.zeros((n_t, n_t))
 
         for (i, j), value in h.items():
-            if i < j:
-                H[i, j] = -value
-                H[j, i] = value
+            H[i, j] = - value
+            H[j, i] = value
                 
         for i in range(n_t):
             s = 0.0            
@@ -233,43 +280,91 @@ class VSCSModel:
                 else:
                     s += -h.get((j, i), 0)
             H[i, i] = s
-
+        print(H)
         return H
-    
-    
-    def generate_param_hij(self, robot_info_list):
+        
+    def generate_h_dict(self, robot_info_list):
         h = {}
         n = len(robot_info_list)
         
-        for i in range(n - 1):
-            for j in range(i+1, n):
-                h[i,j]
+        for i in range(n):
+            for j in range(i + 1, n):
+                h[i,j] = self.calc_hij(i=i, j=j, robot_info_list=robot_info_list)
+        
+        # print(h)
+        return h
 
+    def calc_hij(self, i, j, robot_info_list: List[RobotInfo]):
+        robot_route_i = robot_info_list[i].robot_route
+        robot_route_j = robot_info_list[j].robot_route
+        inter = robot_route_i[1]
+        cp = find_conflict_point(route_i=robot_route_i, route_j=robot_route_j)
+        # print(cp)
 
-    def calc_hij(self, i, j, robot_info_list):
-        robot_info_i = robot_info_list[i]
-        robot_info_j = robot_info_list[j]
+        if cp == 0:
+            hij = 0
+        else:
+            cp_coor = find_conflict_point_coordinate(inter=inter, cp=cp)
+            s_i = self.calc_distance_to_cp(cp_coor, robot_info_list[i])
+            s_j = self.calc_distance_to_cp(cp_coor, robot_info_list[j])
+            # print(s_i, s_j)
+            bij = self.calc_bij(s_i, s_j)
+            # print(bij)
+            rij = self.cacl_rij(s_i, s_j)
+            # print(rij)
+            hij = bij * rij
+            
+        return hij
 
+    def calc_distance_to_cp(self, cp_coor, robot_info: RobotInfo):
+        robot_coor = robot_info.robot_coordinate
+        distance_to_cp = math.sqrt((robot_coor[0] - cp_coor[0])**2 + (robot_coor[1] - cp_coor[1])**2)
+        return distance_to_cp
+    
+    def calc_bij(self, s_i, s_j):
+        if s_i < s_j:
+            bij = 1
+        elif s_i > s_j:
+            bij = -1
+        else:
+            # TODO
+            bij = 1
+        return bij
+    
+    def cacl_rij(self, s_i, s_j):
+        lij = abs(s_i - s_j)
+        lr = 40
 
-    def calc_sigma_max(self, robot_info_list):
-        h = {
-            (0, 1):  1,
-            (0, 2): -1,
-            (1, 2):  0,
-        }
-
-        H = self.generate_H(h=h)
-        print(H)
-        U, s, Vt = np.linalg.svd(H)
-        norm_H = s[0]
-        print(norm_H)
-        return norm_H
+        if lij < lr:
+            rij = 1
+        elif lij == lr:
+            rij = 0
+        else:
+            rij = -1
+        return rij
 
 
 if __name__ == '__main__':
-    decison_model = GridBasedOptimalModel(robot_id=1)
-    decison_model.record_occupied_grid(occupied_grid=(4, 1))
-    print(decison_model.occupied_grid_matrix)
-    decison_model.grid_want_to_occupy = [2]
-    result = decison_model.check_occupied_grid_conflict(curr_route=[5,3,1])
-    print(result)
+    decision_model = VSCSModel(robot_id=1)
+    robot_info_list = [
+        RobotInfo(
+            name="mingna",
+            robot_id=1,
+            robot_route=(2, 3, 4),
+            coordinate=(1.193, 1.208)
+        ),
+        RobotInfo(
+            name="henry",
+            robot_id=7,
+            robot_route=(1, 3, 5),
+            coordinate=(1.826, 2.216)
+        ),
+        RobotInfo(
+            name="luna",
+            robot_id=8,
+            robot_route=(5, 3, 1),
+            coordinate=(2.016, 0.71)
+        )
+    ]
+    decision_model.calc_control_gain(robot_info_list=robot_info_list)
+    decision_model.calc_state_error(robot_info_list=robot_info_list)

@@ -1,9 +1,9 @@
-import os
-import sys
-current_dir = os.path.dirname(os.path.abspath(__file__))
-map_folder_path = os.path.join(current_dir, "../map")
-sys.path.append(map_folder_path)
-from map import local_map_grid_model
+# import os
+# import sys
+# current_dir = os.path.dirname(os.path.abspath(__file__))
+# map_folder_path = os.path.join(current_dir, "../map")
+# sys.path.append(map_folder_path)
+# from map import local_map_grid_model
 
 import numpy as np
 
@@ -133,6 +133,56 @@ ROUTE_CP_TABLE = {
     5: INTER_5_CP_TABLE,
 }
 
+
+INTER_1_CP_COORD_TABLE = {
+    1:(0.0, 0.0),
+    2:(0.0, 0.0),
+    3:(0.0, 0.0),
+    4:(0.0, 0.0),
+    5:(0.0, 0.0),
+}
+
+INTER_2_CP_COORD_TABLE = {
+    1:(0.0, 0.0),
+    2:(0.0, 0.0),
+    3:(0.0, 0.0),
+    4:(0.0, 0.0),
+    5:(0.0, 0.0),
+}
+
+INTER_3_CP_COORD_TABLE = {
+    1:(1.804, 1.215),
+    2:(1.812, 1.442),
+    3:(2.047, 1.206),
+    4:(2.056, 1.449),
+    5:(1.930, 1.324),    
+}
+
+INTER_4_CP_COORD_TABLE = {
+    1:(0.0, 0.0),
+    2:(0.0, 0.0),
+    3:(0.0, 0.0),
+    4:(0.0, 0.0),
+    5:(0.0, 0.0),    
+}
+
+INTER_5_CP_COORD_TABLE = {
+    1:(0.0, 0.0),
+    2:(0.0, 0.0),
+    3:(0.0, 0.0),
+    4:(0.0, 0.0),
+    5:(0.0, 0.0),    
+}
+
+
+CP_COORDINATE_TABLE = {
+    1:INTER_1_CP_COORD_TABLE,
+    2:INTER_2_CP_COORD_TABLE,
+    3:INTER_3_CP_COORD_TABLE,
+    4:INTER_4_CP_COORD_TABLE,
+    5:INTER_5_CP_COORD_TABLE,
+}
+
 def generate_cp_table(inter_id=1):
     INTER_ROUTE_TABLE = ROUTE_TABLE[inter_id]
     N = len(INTER_ROUTE_TABLE)
@@ -163,6 +213,8 @@ def grid_id_to_matrix_coord(grid_id):
         return matrix_coord
 
 def generate_gird_matrix(table, id):
+    from map import local_map_grid_model
+    
     grid_matrix = np.zeros((2,2), dtype=int) 
     route = find_route_in_route_table(table=table, id=id)
     gird_id = local_map_grid_model(route[0], route[1], route[2])

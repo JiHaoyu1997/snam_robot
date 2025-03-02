@@ -4,7 +4,7 @@ import rospy
 from typing import List
 
 from robot.robot import robot_dict, find_id_by_robot_name, RobotInfo, RobotMotion
-from robot.decision_model import FIFOModel, GridBasedModel, GridBasedOptimalModel
+from robot.decision_model import FIFOModel, GridBasedModel, GridBasedOptimalModel, VSCSModel
 
 from std_msgs.msg import Bool
 from geometry_msgs.msg import Twist
@@ -38,6 +38,12 @@ class RobotDecision:
         self.robot_info = RobotInfo(name=self.robot_name, robot_id=self.robot_id)
         self.decision_model = GridBasedModel(robot_id=self.robot_id)
         self.robot_motion_controller = RobotMotion(name=self.robot_name, robot_id=self.robot_id) 
+
+        # Virtual Spring Control System
+        self.vscs_model = VSCSModel(robot_id=self.robot_id)
+        self.control_gain = (1, 1)
+        self.robot_id_list = []
+
 
         # Initialize route and intersection information
         self.curr_route = [0, 0, 0]
@@ -141,7 +147,7 @@ class RobotDecision:
             self.update_inter_sub()
 
             # update Controll Gain
-            print(self.local_inter_info.robot_info[0].robot_route)
+            self.control_gain = self.vscs_model.calc_control_gain()
 
             # response
             if new_route[1] == 6 and new_route[2] == 6:
@@ -195,7 +201,14 @@ class RobotDecision:
         Updates local intersection information.
         """
         self.local_inter_info.inter_id = inter_info_msg.inter_id
-        self.local_inter_info.robot_id_list = inter_info_msg.robot_id_list
+
+        if self.local_inter_info.robot_id_list == inter_info_msg.robot_id_list:
+            pass
+        else:
+            self.local_inter_info.robot_id_list = inter_info_msg.robot_id_list
+            rospy.logwarn("robot_id_list change")
+
+        
         robot_info: List[RobotInfoMsg] = inter_info_msg.robot_info
         self.local_inter_info.robot_info = [
             RobotInfo(
@@ -217,6 +230,15 @@ class RobotDecision:
             ) for info in robot_info
         ]
         return
+    
+    def calc_control_input(self, twist_from_img: Twist):
+        if self.control_gain == (0, 0):
+            cmd_vel = twist_from_img
+        else:
+            err_sum = 1
+            control_input = self.control_gain * err_sum
+            cmd_vel = Twist()
+            cmd_vel.linear.x = control_input
 
     def cmd_vel_from_img_cb(self, msg: Twist):
         """

@@ -1,12 +1,12 @@
-# import os
-# import sys
-# current_dir = os.path.dirname(os.path.abspath(__file__))
-# map_folder_path = os.path.abspath(os.path.join(current_dir, '../map'))
-# sys.path.append(map_folder_path)
-# from map import find_lane_total_distance
+import os
+import sys
+current_dir = os.path.dirname(os.path.abspath(__file__))
+map_folder_path = os.path.abspath(os.path.join(current_dir, '../map'))
+sys.path.append(map_folder_path)
+from map import find_lane_total_distance
 
 import math
-from map.map import find_lane_total_distance
+# from map.map import find_lane_total_distance
 from vpa_robot.msg import RobotInfo as RobotInfoMsg
 
 robot_dict = {
