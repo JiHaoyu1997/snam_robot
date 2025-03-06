@@ -1,10 +1,10 @@
-import os
-import sys
-current_dir = os.path.dirname(os.path.abspath(__file__))
-map_folder_path = os.path.join(current_dir, "../map")
-sys.path.append(map_folder_path)
-from map import local_map_grid_model, find_conflict_point, find_conflict_point_coordinate
-from robot import robot_dict, RobotInfo
+# import os
+# import sys
+# current_dir = os.path.dirname(os.path.abspath(__file__))
+# map_folder_path = os.path.join(current_dir, "../map")
+# sys.path.append(map_folder_path)
+# from map import local_map_grid_model, find_conflict_point, find_conflict_point_coordinate
+# from robot import robot_dict, RobotInfo
 
 import math
 import rospy
@@ -12,8 +12,8 @@ import numpy as np
 from typing import List
 
 from vscs import VSCS
-# from map.map import local_map_grid_model, find_conflict_point, find_conflict_point_coordinate
-# from robot.robot import robot_dict, RobotInfo
+from map.map import local_map_grid_model, find_conflict_point, find_conflict_point_coordinate
+from robot.robot import robot_dict, RobotInfo
 
 from geometry_msgs.msg import Twist
 
@@ -239,7 +239,7 @@ class VSCSModel:
             if robot_info.robot_id == self.robot_id:
                 self.curr_coor = robot_info.robot_coordinate
 
-        x_i = np.array([s_i])
+        # x_i = np.array([s_i])
 
     
     def generate_cp_state_matrix(self, robot_info_list: List[RobotInfo]):
