@@ -11,9 +11,9 @@ import rospy
 import numpy as np
 from typing import List
 
-from vscs import VSCS
 from map.map import local_map_grid_model, find_conflict_point, find_conflict_point_coordinate
 from robot.robot import robot_dict, RobotInfo
+from robot.vscs import VSCS
 
 from geometry_msgs.msg import Twist
 
