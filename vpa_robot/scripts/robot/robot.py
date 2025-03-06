@@ -113,6 +113,7 @@ class RobotMotion:
         self.radius = 0.0318
         self.baseline = 0.1
         self.ticks_per_circle = 135
+        self.delta_t = 0.05
 
         self.prev_pose_data = []
         self.curr_pose_data = []
@@ -158,9 +159,11 @@ class RobotMotion:
             left_ticks = msg.left_ticks
             right_ticks = msg.right_ticks
 
-            s_left = left_ticks / self.ticks_per_circle * 2 * math.pi * self.radius
-            s_right = right_ticks / self.ticks_per_circle * 2 * math.pi * self.radius
+            vel_left = left_ticks / self.ticks_per_circle * 2 * math.pi * self.radius / self.delta_t
+            vel_right = right_ticks / self.ticks_per_circle * 2 * math.pi * self.radius / self.delta_t
 
+            velocity = (vel_left + vel_right) / 2
+            print(velocity)
             # 打印当前速度和位置
             # rospy.loginfo(f"Wheel Omega -- Left Wheel Distance: {s_left:.3f} m, Right Wheel Distance: {s_right:.3f}m.")
 
