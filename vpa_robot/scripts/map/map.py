@@ -6,7 +6,7 @@
     # 0: through 
     # 1: left 
     # 2: right
-from route import ROUTE_TABLE, ROUTE_CP_TABLE, CP_COORDINATE_TABLE
+from map.route import ROUTE_TABLE, ROUTE_CP_TABLE, CP_COORDINATE_TABLE
 
 def local_mapper(last: int, current: int, next: int) -> int:
 
