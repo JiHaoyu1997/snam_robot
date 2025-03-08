@@ -11,16 +11,7 @@
 #         self.lambda2_L = 0
 #         self.lambda_max_L = 0
 #         self.lambda_max_L2 = 0
-
-#     def init_vscs_model(self):
-#         # start_time = time.time()
 #         self.init_system_dynamic_matrix()
-#         self.init_curr_L()
-#         self.calc_lambda_L()
-#         # self.validate_parameters()
-#         # end_time = time.time()
-#         # elapsed_time = end_time - start_time
-#         # print(f"Function executed in {elapsed_time:.4f} seconds")
 
 #     def init_system_dynamic_matrix(self):
 #         self.A = np.array([
@@ -32,23 +23,6 @@
 #             [0],
 #             [1]
 #             ])
-
-#     def init_curr_L(self):
-#         # self.L = np.array([
-#         #     [  1, -1,  0,  0],
-#         #     [ -1,  3, -1, -1],
-#         #     [  0, -1,  1,  0],
-#         #     [  0, -1,  0,  1]
-#         #     ])
-#         self.L = np.array((
-#             [1, -1],
-#             [-1, 1],
-#         ))
-
-#         # n = 3
-#         # self.L =  (n - 1) * np.eye(n) - np.ones((n, n))
-#         print(self.L)
-
 #     def calc_lambda_L(self):
 #         if self.L is []:
 #             raise ValueError("No Laplacian Matrix")
@@ -64,9 +38,9 @@
 #         self.lambda_max_L = np.max(eigvals_L)
 #         self.lambda_max_L2 = np.max(np.linalg.eigvals(L @ L)) 
         
-#         print("lambda2(L_t) =", self.lambda2_L)
-#         print("lambda_max(L_t) =", self.lambda_max_L)
-#         print("lambda_max(L_t^2) =", self.lambda_max_L2)
+#         # print("lambda2(L_t) =", self.lambda2_L)
+#         # print("lambda_max(L_t) =", self.lambda_max_L)
+#         # print("lambda_max(L_t^2) =", self.lambda_max_L2)
 
 #     def validate_parameters(self):
 #         # Check if the matrix parameters are empty using numpy's size attribute
@@ -88,9 +62,13 @@
 #         # If all validations pass, return True
 #         return True
 
-#     def sol_lmi(self, zeta=0.1):
+#     def sol_lmi(self, L, zeta=0.1):
+#         self.L = L
+#         self.calc_lambda_L()
+
 #         A = self.A
 #         B = self.B
+        
 #         lambda2 = self.lambda2_L
 #         lambda_max_Lt2 = self.lambda_max_L2
 
@@ -122,31 +100,36 @@
 #             [X31, X32, X33]
 #         ])
         
+#         # objective = cp.Minimize(0)
 #         objective = cp.Maximize(cp.trace(X))
 
 #         constraints = []
 #         constraints.append(Q >> 0)
 #         constraints.append(H >> 0)
-#         constraints.append(alpha >= 1e-9)
+#         constraints.append(alpha >= 1e-6)
 #         constraints.append(delta >= 1e-9)
 #         constraints.append(epsilon >= 1e-9)
 #         constraints.append(LMT1 >= 1e-9)
-#         constraints.append(X <= -1e-9 * np.eye(4))
+#         constraints.append(X <= -1e-6 * np.eye(4))
 
 #         prob = cp.Problem(objective, constraints)
-#         result = prob.solve(solver=cp.SCS, verbose=True)
+#         result = prob.solve(solver=cp.SCS, verbose=False)
 
 #         print("Status:", prob.status)
 #         if prob.status in ["optimal", "optimal_inaccurate", "feasible"]:
 #             Q_val = Q.value
 #             P_val = np.linalg.inv(Q_val)
 #             alpha = alpha.value
+#             # print(alpha)
+#             # print(np.shape(B.T), np.shape(P_val))
 #             K_val = alpha * (B.T @ P_val)
+#             # print(np.shape(K_val))
 #             print("K =\n", K_val)
+#             return K_val
 
 #             M_val = M.value
 #             M_val = M_val @ P_val
-#             print(M_val)
+#             # print(M_val)
 #         else:
 #             print("No feasible solution found")
 

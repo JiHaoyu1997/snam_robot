@@ -1,12 +1,16 @@
-import rospy
+import os
+import sys
+current_dir = os.path.dirname(os.path.abspath(__file__))
+map_folder_path = os.path.join(current_dir, "..")
+sys.path.append(map_folder_path)
+from map.map import local_map_grid_model, find_conflict_point, find_conflict_point_coordinate
+from robot.robot import robot_dict, RobotInfo
+from vscs import VSCS
 
+import rospy
 import math
 import numpy as np
 from typing import List
-
-from map.map import local_map_grid_model, find_conflict_point, find_conflict_point_coordinate
-from robot.robot import robot_dict, RobotInfo
-# from vscs import VSCS
 
 from geometry_msgs.msg import Twist
 
@@ -199,7 +203,7 @@ class VSCSModel:
         self.curr_route = []
         self.robot_id_list = []
         
-        # self.vscs_solver = VSCS()
+        self.vscs_solver = VSCS()
         self.L = []
         self.cp_matrix = []
     
@@ -242,8 +246,8 @@ class VSCSModel:
         return L, cp_matrix
 
     def calc_control_gain(self):
-        # K = self.vscs_solver.sol_lmi(self.L)
-        K = np.array([[-0.3668002, 1.11743303]])
+        K = self.vscs_solver.sol_lmi(self.L)
+        # K = np.array([[-0.3668002, 1.11743303]])
         return K
 
     def calc_cumulative_error(self, robot_id_list: List[int], robot_info_list: List[RobotInfo]):
