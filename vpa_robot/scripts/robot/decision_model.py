@@ -196,10 +196,6 @@ class VSCSModel:
     def __init__(self, robot_id=0) -> None:
         self.robot_id = robot_id
         self.robot_name = robot_dict[robot_id]
-        self.curr_route = []
-        self.robot_id_list = []
-        
-        # self.vscs_solver = VSCS()
         self.L = []
         self.cp_matrix = []
     
@@ -248,7 +244,7 @@ class VSCSModel:
     def calc_control_gain(self):
         # K = self.vscs_solver.sol_lmi(self.L)
         K = np.array([
-            [-15.84482884,  24.64597674]
+            [-5.19884665,  8.54126546]
             ])
         return K
 
