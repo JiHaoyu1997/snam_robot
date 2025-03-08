@@ -115,7 +115,11 @@ class RobotDecision:
         # Condition Match             
         if self.curr_route[1] == new_route[0] and self.curr_route[2] == new_route[1]:
             # get time
+            
             now_time = round(rospy.get_time(), 5)
+            travel_time = now_time - self.robot_info.robot_enter_lane_time
+            rospy.loginfo_once(f"{self.robot_name} travel time in Inter{self.curr_route[1]}: {travel_time}")
+            
             self.robot_info.robot_exit_time = now_time
             self.robot_info.robot_enter_lane_time = now_time
             # if self.departure_time:
@@ -125,14 +129,14 @@ class RobotDecision:
             # update local info
             self.curr_route = new_route
             self.local_inter_id = new_route[1]
-            rospy.loginfo(f"{self.robot_name} travel total distance in inter{self.curr_route[0]}: {self.robot_info.robot_p}")
+            # rospy.loginfo(f"{self.robot_name} travel total distance in inter{self.curr_route[0]}: {self.robot_info.robot_p}")
 
             # update pub info
             self.robot_info.robot_route = self.curr_route
             self.robot_info.robot_p = 0.0
             self.robot_info.robot_enter_conflict = False
             cz_time = self.robot_info.calc_conflict_zone_travel_time()
-            rospy.loginfo(f"{self.robot_name} cz travel time in inter{self.curr_route[1]}: {cz_time}")
+            # rospy.loginfo(f"{self.robot_name} cz travel time in inter{self.curr_route[1]}: {cz_time}")
 
             # update decision flag
             self.decision_model.want_to_enter_conflict = False
@@ -146,9 +150,6 @@ class RobotDecision:
 
             # update inter_x info sub 
             self.update_inter_sub()
-
-            # update Controll Gain
-            self.control_gain = self.vscs_model.calc_control_gain()
 
             # response
             if new_route[1] == 6 and new_route[2] == 6:
