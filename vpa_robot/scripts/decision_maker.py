@@ -308,7 +308,8 @@ class RobotDecision:
         """
         Through wheel encoder to calc travel time.
         """
-        return self.robot_motion_controller.tick_recorder(msg=wheel_omega_msg)    
+        pass
+        # return self.robot_motion_controller.tick_recorder(msg=wheel_omega_msg)    
     
     def local_brake_sub_cb(self, msg: Bool):
         if not msg.data:

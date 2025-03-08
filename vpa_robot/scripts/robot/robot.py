@@ -173,7 +173,7 @@ class RobotMotion:
     
             self.old_left_ticks = new_left_ticks
             self.old_right_ticks = new_right_ticks
-            print('vel', velocity)
+            # print('vel', velocity)
             # 打印当前速度和位置
             # rospy.loginfo(f"Wheel Omega -- Left Wheel Distance: {s_left:.3f} m, Right Wheel Distance: {s_right:.3f}m.")
 

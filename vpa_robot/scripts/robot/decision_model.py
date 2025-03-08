@@ -214,7 +214,7 @@ class VSCSModel:
         control_input = controller_gain @ cumulative_error
         # print(control_input)
         delta_v = control_input * delta_t
-        print(delta_v)
+        # print(delta_v)
         twist.linear.x = 0.3 + control_input
         twist.angular.z = twist_from_img.angular.z
         return twist
@@ -237,8 +237,8 @@ class VSCSModel:
         for i in range(N):
             L[i][i] = -np.sum(L[i])
 
-        print(L)
-        print(cp_matrix)
+        print('laplacian', L)
+        # print(cp_matrix)
         return L, cp_matrix
 
     def calc_control_gain(self):
