@@ -215,6 +215,7 @@ class VSCSModel:
             cumulative_error = self.calc_cumulative_error(robot_id_list, robot_info_list)
             # print(cumulative_error)
             control_input = controller_gain @ cumulative_error
+            print(control_input)
             # print(control_input)
             delta_v = control_input * delta_t
             # print(delta_v)
