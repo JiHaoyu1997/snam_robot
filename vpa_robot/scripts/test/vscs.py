@@ -106,10 +106,10 @@ class VSCS:
         constraints = []
         constraints.append(Q >> 0)
         constraints.append(H >> 0)
-        constraints.append(alpha >= 1e-9)
-        constraints.append(delta >= 1e-9)
-        constraints.append(epsilon >= 1e-9)
-        constraints.append(LMT1 >= 1e-9)
+        constraints.append(alpha >= 5e-6)
+        constraints.append(delta >= 1e-6)
+        constraints.append(epsilon >= 1e-6)
+        constraints.append(LMT1 >= 1e-6)
         constraints.append(X <= -1e-6 * np.eye(4))
 
         prob = cp.Problem(objective, constraints)
@@ -120,7 +120,7 @@ class VSCS:
             Q_val = Q.value
             P_val = np.linalg.inv(Q_val)
             alpha = alpha.value
-            # print(alpha)
+            print(alpha)
             # print(np.shape(B.T), np.shape(P_val))
             K_val = alpha * (B.T @ P_val)
             # print(np.shape(K_val))
