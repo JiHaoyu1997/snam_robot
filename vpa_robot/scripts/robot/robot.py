@@ -125,6 +125,8 @@ class RobotMotion:
         self.theta = 0.0
         self.total_distance_wheel_omega = 0.0
         self.vel_history_wheel_omega = []
+        self.old_left_ticks = 0
+        self.old_right_ticks = 0
 
     
     def kinematic_recoder(self, pose, vel):
@@ -156,13 +158,21 @@ class RobotMotion:
     
     def tick_recorder(self, msg):
             # 读取左右轮角速度
-            left_ticks = msg.left_ticks
-            right_ticks = msg.right_ticks
+            new_left_ticks = msg.left_ticks
+            new_right_ticks = msg.right_ticks
 
-            vel_left = left_ticks / self.ticks_per_circle * 2 * math.pi * self.radius / self.delta_t
-            vel_right = right_ticks / self.ticks_per_circle * 2 * math.pi * self.radius / self.delta_t
+            old_left_ticks = self.old_left_ticks
+            old_right_ticks = self.old_right_ticks
 
+            delta_left_ticks = new_left_ticks - old_left_ticks
+            delta_right_ticks = new_right_ticks -old_right_ticks
+
+            vel_left = delta_left_ticks / self.ticks_per_circle * 2 * math.pi * self.radius / self.delta_t
+            vel_right = delta_right_ticks / self.ticks_per_circle * 2 * math.pi * self.radius / self.delta_t
             velocity = (vel_left + vel_right) / 2
+    
+            self.old_left_ticks = new_left_ticks
+            self.old_right_ticks = new_right_ticks
             print('vel', velocity)
             # 打印当前速度和位置
             # rospy.loginfo(f"Wheel Omega -- Left Wheel Distance: {s_left:.3f} m, Right Wheel Distance: {s_right:.3f}m.")
