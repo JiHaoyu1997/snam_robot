@@ -25,7 +25,7 @@ class VSCS:
     def init_system_dynamic_matrix(self):
         self.A = np.array([
             [0, -1],
-            [0, -1]
+            [0,  0]
             ])
 
         self.B = np.array([
@@ -40,9 +40,14 @@ class VSCS:
         #     [  0, -1,  1,  0],
         #     [  0, -1,  0,  1]
         #     ])
+        self.L = np.array((
+            [1, -1],
+            [-1, 1],
+        ))
 
-        n = 3
-        self.L =  (n - 1) * np.eye(n) - np.ones((n, n))
+        # n = 3
+        # self.L =  (n - 1) * np.eye(n) - np.ones((n, n))
+        print(self.L)
 
     def calc_lambda_L(self):
         if self.L is []:
@@ -83,67 +88,33 @@ class VSCS:
         # If all validations pass, return True
         return True
 
-    def sol_lmi_with_global_sector(self):
-
-        A = self.A
-        B = self.B
-        
-        Q = cp.Variable((2, 2), symmetric=True)
-
-        alpha = cp.Variable()
-        delta = cp.Variable()
-        epsilon = cp.Variable()
-
-        LMI1 = Q @ A.T + A @ Q - epsilon * (B @ B.T)
-        LMT2 = epsilon - 2*alpha*self.lambda2_L + delta*self.lambda_max_L2 - alpha**2/delta 
-        # TODO: 如何解决变量delta在分母上的问题
-
-        constraints = []
-        constraints.append(LMI1 <= -1e-3 * np.eye(2))
-        constraints.append(LMT2 <= -1e-6)
-
-        objective = cp.Minimize(0)
-        prob = cp.Problem(objective, constraints)
-        result = prob.solve(solver=cp.SCS, verbose=True)
-
-        print("Status:", prob.status)
-        if prob.status in ["optimal", "optimal_inaccurate", "feasible"]:
-            alpha = alpha.value
-            Q_val = Q.value
-            P_val = np.linalg.inv(Q_val)
-            K_val = alpha * (B.T @ P_val)
-            print("K =\n", K_val)
-        else:
-            print("No feasible solution found")
-        
-    def sol_lmi_with_local_sector(self, zeta=0.1):
+    def sol_lmi(self, zeta=0.1):
         A = self.A
         B = self.B
         lambda2 = self.lambda2_L
         lambda_max_Lt2 = self.lambda_max_L2
 
         Q = cp.Variable((2, 2), symmetric=True)
-        R = cp.Variable((1, 2))
+        H = cp.Variable((2, 2), symmetric=True)
+        M = cp.Variable((1, 2))
 
         alpha = cp.Variable()
         delta = cp.Variable()
         epsilon = cp.Variable()
 
-        LMT1 = 2*alpha*lambda2 - delta*lambda_max_Lt2 -epsilon
-        LMI2 = 2*zeta*delta - 1
+        LMT1 = 2*alpha*lambda2 - delta*lambda_max_Lt2 - epsilon
 
-        X11 = Q @ A.T + A @ Q - epsilon * (B @ B.T)
-        X12 = R.T
+        X11 = Q @ A.T + A @ Q - epsilon * (B @ B.T) + H
+        X12 = zeta * M.T
         X13 = np.zeros((2,1))
 
-        X21 = R
-        X22 = np.array([[-2/zeta]])
+        X21 = zeta * M
+        X22 = np.array([[-2*zeta]])
         X23 = -np.eye(1)
 
         X31 = np.zeros((1,2))
         X32 = -np.eye(1)
-        # X33 = np.array([[-delta * zeta**2]])
-        X33 = cp.reshape(-delta * zeta**2, (1, 1), order='C')
+        X33 = cp.reshape(-delta, (1, 1), order='C')
 
         X = cp.bmat([
             [X11, X12, X13],
@@ -151,77 +122,11 @@ class VSCS:
             [X31, X32, X33]
         ])
         
-        objective = cp.Minimize(0)
+        objective = cp.Maximize(cp.trace(X))
 
         constraints = []
         constraints.append(Q >> 0)
-        constraints.append(alpha >= 1e-6)
-        constraints.append(delta >= 1e-6)
-        constraints.append(epsilon >= 1e-6)
-        constraints.append(LMT1 >= 1e-6)
-        constraints.append(LMI2 >= 1e-6)
-        constraints.append(X <= -1e-6 * np.eye(4))
-
-        prob = cp.Problem(objective, constraints)
-        result = prob.solve(solver=cp.SCS, verbose=True)
-
-        # print("Status:", prob.status)
-        if prob.status in ["optimal", "optimal_inaccurate", "feasible"]:
-            alpha = alpha.value
-            Q_val = Q.value
-            P_val = np.linalg.inv(Q_val)
-            K_val = alpha * (B.T @ P_val)
-            print("K =\n", K_val)
-
-            R_val = R.value
-            M_val = R_val @ P_val
-            print(M_val)
-        else:
-            print("No feasible solution found")
-
-    def sol_lmi_with_local_sector_ref(self, zeta=0.1):
-        A = self.A
-        B = self.B
-        lambda2 = self.lambda2_L
-        lambda_max_Lt2 = self.lambda_max_L2
-
-        Q = cp.Variable((2, 2), symmetric=True)
-        F = cp.Variable((2, 2), symmetric=True)
-        R = cp.Variable((1, 2))
-        R_ref = np.array([[1, 1]])
-
-        alpha = cp.Variable()
-        delta = cp.Variable()
-        epsilon = cp.Variable()
-
-        LMT1 = 2*alpha*lambda2 - delta*lambda_max_Lt2 -epsilon
-
-        X11 = Q @ A.T + A @ Q - epsilon * (B @ B.T) + F
-        X12 = R.T
-        X13 = np.zeros((2,1))
-
-        X21 = R
-        X22 = np.array([[-2/zeta]])
-        X23 = -np.eye(1)
-
-        X31 = np.zeros((1,2))
-        X32 = -np.eye(1)
-        X33 = cp.reshape(-delta * zeta**2, (1, 1), order='C')
-
-        X = cp.bmat([
-            [X11, X12, X13],
-            [X21, X22, X23],
-            [X31, X32, X33]
-        ])
-        
-        objective = cp.Minimize(0)
-        # objective = cp.Minimize(cp.norm(R - R_ref, 'fro'))
-
-        constraints = []
-        constraints.append(Q >> 0)
-        constraints.append(F >> 0)
-        # constraints.append(cp.norm(R, 'fro') >= epsilon)
-        # constraints.append(cp.abs(R) <= 10)
+        constraints.append(H >> 0)
         constraints.append(alpha >= 1e-9)
         constraints.append(delta >= 1e-9)
         constraints.append(epsilon >= 1e-9)
@@ -239,8 +144,8 @@ class VSCS:
             K_val = alpha * (B.T @ P_val)
             print("K =\n", K_val)
 
-            R_val = R.value
-            M_val = R_val @ P_val
+            M_val = M.value
+            M_val = M_val @ P_val
             print(M_val)
         else:
             print("No feasible solution found")
@@ -414,4 +319,4 @@ class VSCS:
 if __name__ == "__main__":
     vcsc = VSCS()
     vcsc.init_vscs_model()
-    vcsc.sol_lmi_position_based()
+    vcsc.sol_lmi()
