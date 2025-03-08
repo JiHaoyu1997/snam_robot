@@ -218,30 +218,27 @@ class VSCSModel:
             [1]
             ])
     
-    def record_robot_id_list(self, robo_id_list: List[int]):
-        self.robot_id_list = robo_id_list
-
-    def calc_control_gain(self, robot_info_list: List[RobotInfo]):
-        N = len(robot_info_list)
-        if N == 1:
-            if robot_info_list[0].robot_id == self.robot_id:
-                k = (0, 0)
-                return k
-            else:
-                raise ValueError("agent self info not in inter_info_list")
-            
-        else:
-            K = self.calc_k(robot_info_list, N)
-            return K
-        
-    def calc_state_error(self, robot_info_list: List[RobotInfo]):
-        for robot_info in robot_info_list:
-            if robot_info.robot_id == self.robot_id:
-                self.curr_coor = robot_info.robot_coordinate
-
-        # x_i = np.array([s_i])
-
+    def calc_twsit(self, twist_from_img: Twist, robot_info_list: List[RobotInfo]):
+        twist = Twist()
+        self.L = self.generate_L(robot_info_list=robot_info_list)
+        self.controller_gain = self.calc_control_gain()
+        self.cumulative_error = self.calc_cumulative_error()
+        twist.linear.x = twist_from_img.linear.x + self.controller_gain @ self.cumulative_error
+        twist.angular.z = twist_from_img.angular.z
+        return twist
     
+    def generate_L(self, robot_info_list: List[RobotInfo]):
+        N = len(robot_info_list)
+        L = np.zeros((N, N))
+        for i in range(N):
+            for j in range(i + 1, N):
+                robot_route_i = robot_info_list[i].robot_route
+                robot_route_j = robot_info_list[j].robot_route
+                cp = find_conflict_point(route_i=robot_route_i, route_j=robot_route_j)
+                if cp != 0:
+                    L[i][j] = -1
+                    
+
     def generate_cp_state_matrix(self, robot_info_list: List[RobotInfo]):
         N = len(robot_info_list)
         cp_flag_matrix = np.zeros((N, N))
@@ -255,6 +252,34 @@ class VSCSModel:
 
         cp_state_matrix = cp_flag_matrix + cp_flag_matrix.T
         print(cp_state_matrix)
+
+
+
+    def calc_control_gain(self, robot_info_list: List[RobotInfo]):
+        N = len(robot_info_list)
+        if N == 1:
+            if robot_info_list[0].robot_id == self.robot_id:
+                k = (0, 0)
+                return k
+            else:
+                raise ValueError("agent self info not in inter_info_list")
+            
+        else:
+            K = self.calc_k(robot_info_list, N)
+            return K
+
+    def calc_state_error(self, robot_info_list: List[RobotInfo]):
+        for robot_info in robot_info_list:
+            if robot_info.robot_id == self.robot_id:
+                self.curr_coor = robot_info.robot_coordinate
+
+
+    def record_robot_id_list(self, robo_id_list: List[int]):
+        self.robot_id_list = robo_id_list
+
+        
+
+    
 
     def calc_k(self, robot_info_list, N):
         h = self.generate_h_dict(robot_info_list=robot_info_list)
