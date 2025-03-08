@@ -30,9 +30,11 @@ class RobotDecision:
     def __init__(self) -> None:
         # Initialize ROS node
         rospy.init_node('decision_maker')
+        rospy.on_shutdown(self.shutdown_handler)
         self.node_name = 'robot_decision' 
 
         self.robot_name = rospy.get_param('~robot_name', 'db19')
+        print(self.robot_name)
         self.robot_id = find_id_by_robot_name(robot_name=self.robot_name)
         self.robot_info = RobotInfo(name=self.robot_name, robot_id=self.robot_id)
         self.decision_model = GridBasedModel(robot_id=self.robot_id)
@@ -70,7 +72,6 @@ class RobotDecision:
         self.inter_mng_client = rospy.ServiceProxy('/inter_mng_srv', InterMng)
 
         # Init
-        rospy.on_shutdown(self.shutdown_handler)
         self.send_ready_signal()
 
         self.timer = rospy.Timer(rospy.Duration(1 / 20), self.pub_robot_info)
