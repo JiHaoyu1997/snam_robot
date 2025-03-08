@@ -207,6 +207,8 @@ class VSCSModel:
         twist = Twist()
         delta_t = 0.05
         N = len(robot_info_list)
+        if N == 1:
+             return twist_from_img
         self.L, self.cp_matrix = self.generate_L(robot_info_list=robot_info_list)
         controller_gain = self.calc_control_gain()
         cumulative_error = self.calc_cumulative_error(robot_id_list, robot_info_list)
