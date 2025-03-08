@@ -244,6 +244,8 @@ class RobotDecision:
         """
         Decision-making process based on the robot's current info.
         """
+        N = len(self.local_inter_info.robot_info)
+        print(f"make_decision; N={N}")
 
         if self.curr_route[1] != 3:
             if self.decision_model.want_to_enter_conflict:
