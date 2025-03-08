@@ -231,6 +231,7 @@ class RobotDecision:
             ) for info in robot_info
         ]
 
+        N = len(self.local_inter_info.robot_info)
         print(f"inter_info_cb; N={N}")
         return
 
