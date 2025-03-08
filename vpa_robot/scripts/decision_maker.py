@@ -118,7 +118,7 @@ class RobotDecision:
             
             now_time = round(rospy.get_time(), 5)
             travel_time = now_time - self.robot_info.robot_enter_lane_time
-            rospy.loginfo_once(f"{self.robot_name} travel time in Inter{self.curr_route[1]}: {travel_time}")
+            rospy.loginfo(f"{self.robot_name} travel time in Inter{self.curr_route[1]}: {travel_time}")
             
             self.robot_info.robot_exit_time = now_time
             self.robot_info.robot_enter_lane_time = now_time

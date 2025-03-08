@@ -5,6 +5,7 @@
 # sys.path.append(map_folder_path)
 # from map import find_lane_total_distance
 
+import rospy
 import math
 from map.map import find_lane_total_distance
 from vpa_robot.msg import RobotInfo as RobotInfoMsg
@@ -103,6 +104,9 @@ class RobotInfo:
     def calc_conflict_zone_travel_time(self):
         cz_time = self.robot_exit_time - self.robot_enter_conflict_time
         return cz_time
+    
+    def record_curr_state(self):
+        rospy.loginfo_once(f"{self.robot_name} enter Inter3 with coor={self.robot_coordinate} & vel={self.robot_v}")
 
 class RobotMotion:
 
