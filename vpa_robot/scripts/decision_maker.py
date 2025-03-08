@@ -207,7 +207,7 @@ class RobotDecision:
             pass
         else:
             self.local_inter_info.robot_id_list = inter_info_msg.robot_id_list
-            rospy.logwarn("robot_id_list change")
+            # rospy.logwarn("robot_id_list change")
 
         
         robot_info: List[RobotInfoMsg] = inter_info_msg.robot_info

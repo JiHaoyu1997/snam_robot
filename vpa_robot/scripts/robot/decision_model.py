@@ -206,7 +206,7 @@ class VSCSModel:
     def calc_twist(self, twist_from_img: Twist, robot_id_list: List[int], robot_info_list: List[RobotInfo]):
         print(robot_id_list)
         N = len(robot_id_list)
-        if N == 1:
+        if N <= 1 :
              return twist_from_img
         else:
             twist = Twist()
