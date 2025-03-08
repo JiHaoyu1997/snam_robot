@@ -163,7 +163,7 @@ class RobotMotion:
             vel_right = right_ticks / self.ticks_per_circle * 2 * math.pi * self.radius / self.delta_t
 
             velocity = (vel_left + vel_right) / 2
-            print(velocity)
+            print('vel', velocity)
             # 打印当前速度和位置
             # rospy.loginfo(f"Wheel Omega -- Left Wheel Distance: {s_left:.3f} m, Right Wheel Distance: {s_right:.3f}m.")
 
