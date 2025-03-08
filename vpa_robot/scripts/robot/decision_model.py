@@ -204,22 +204,23 @@ class VSCSModel:
         self.cp_matrix = []
     
     def calc_twist(self, twist_from_img: Twist, robot_id_list: List[int], robot_info_list: List[RobotInfo]):
-        twist = Twist()
-        delta_t = 0.05
         N = len(robot_info_list)
         if N == 1:
              return twist_from_img
-        self.L, self.cp_matrix = self.generate_L(robot_info_list=robot_info_list)
-        controller_gain = self.calc_control_gain()
-        cumulative_error = self.calc_cumulative_error(robot_id_list, robot_info_list)
-        # print(cumulative_error)
-        control_input = controller_gain @ cumulative_error
-        # print(control_input)
-        delta_v = control_input * delta_t
-        # print(delta_v)
-        twist.linear.x = 0.3 + control_input
-        twist.angular.z = twist_from_img.angular.z
-        return twist
+        else:
+            twist = Twist()
+            delta_t = 0.05
+            self.L, self.cp_matrix = self.generate_L(robot_info_list=robot_info_list)
+            controller_gain = self.calc_control_gain()
+            cumulative_error = self.calc_cumulative_error(robot_id_list, robot_info_list)
+            # print(cumulative_error)
+            control_input = controller_gain @ cumulative_error
+            # print(control_input)
+            delta_v = control_input * delta_t
+            # print(delta_v)
+            twist.linear.x = 0.3 + delta_v
+            twist.angular.z = twist_from_img.angular.z
+            return twist
     
     def generate_L(self, robot_info_list: List[RobotInfo]):
         N = len(robot_info_list)
