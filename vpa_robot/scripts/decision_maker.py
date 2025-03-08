@@ -115,11 +115,15 @@ class RobotDecision:
         # Condition Match             
         if self.curr_route[1] == new_route[0] and self.curr_route[2] == new_route[1]:
             # get time
-            
             now_time = round(rospy.get_time(), 5)
             travel_time = now_time - self.robot_info.robot_enter_lane_time
             rospy.loginfo(f"{self.robot_name} travel time in Inter{self.curr_route[1]}: {travel_time}")
             
+            if new_route[1] == 3:
+                print(1)
+                self.robot_info.record_curr_state()
+
+
             self.robot_info.robot_exit_time = now_time
             self.robot_info.robot_enter_lane_time = now_time
             # if self.departure_time:
@@ -279,7 +283,7 @@ class RobotDecision:
         # get time
         self.robot_info.robot_arrival_conflict_time = rospy.get_time()
         lane_time = self.robot_info.calc_lane_travel_time()
-        rospy.loginfo(f"{self.robot_name} lane travel time in route{self.curr_route} = {round(lane_time, 5)} | distance {round(self.robot_info.robot_p, 5)}")
+        # rospy.loginfo(f"{self.robot_name} lane travel time in route{self.curr_route} = {round(lane_time, 5)} | distance {round(self.robot_info.robot_p, 5)}")
 
         # respond
         response = TriggerResponse()

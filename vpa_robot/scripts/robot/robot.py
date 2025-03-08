@@ -106,6 +106,7 @@ class RobotInfo:
         return cz_time
     
     def record_curr_state(self):
+        print(1)
         rospy.loginfo_once(f"{self.robot_name} enter Inter3 with coor={self.robot_coordinate} & vel={self.robot_v}")
 
 class RobotMotion:
