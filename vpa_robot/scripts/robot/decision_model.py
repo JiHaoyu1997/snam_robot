@@ -224,7 +224,6 @@ class VSCSModel:
     
     def generate_L(self, robot_info_list: List[RobotInfo]):
         N = len(robot_info_list)
-        print(f"generate_L: N={N}")
         L = np.zeros((N, N), dtype=int)
         cp_matrix = np.zeros((N, N), dtype=int)
         for i in range(N):
@@ -251,8 +250,6 @@ class VSCSModel:
         return K
 
     def calc_cumulative_error(self, robot_id_list: List[int], robot_info_list: List[RobotInfo]):
-        print(f"calc_cumulative_error: robot_id_list={robot_id_list}")
-
         cumu_error = np.zeros((2,1))
         id_postion = robot_id_list.index(self.robot_id) 
         conflict_list = self.L[id_postion]
