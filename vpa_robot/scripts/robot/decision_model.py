@@ -247,7 +247,9 @@ class VSCSModel:
 
     def calc_control_gain(self):
         # K = self.vscs_solver.sol_lmi(self.L)
-        K = np.array([[-0.3668002, 1.11743303]])
+        K = np.array([
+            [-1.76765465,  4.73329709]
+            ])
         return K
 
     def calc_cumulative_error(self, robot_id_list: List[int], robot_info_list: List[RobotInfo]):
