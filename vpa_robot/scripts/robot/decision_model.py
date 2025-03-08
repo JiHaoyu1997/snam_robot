@@ -241,7 +241,7 @@ class VSCSModel:
         for i in range(N):
             L[i][i] = -np.sum(L[i])
 
-        rospy.loginfo_once('laplacian', L)
+        rospy.loginfo_once('laplacian: \n%s', np.array2string(L))
         # print(cp_matrix)
         return L, cp_matrix
 
