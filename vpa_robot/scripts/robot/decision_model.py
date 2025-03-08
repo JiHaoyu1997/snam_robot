@@ -6,8 +6,8 @@
 # from map import local_map_grid_model, find_conflict_point, find_conflict_point_coordinate
 # from robot import robot_dict, RobotInfo
 
-import math
 import rospy
+import math
 import numpy as np
 from typing import List
 
@@ -204,19 +204,10 @@ class VSCSModel:
         self.robot_id = robot_id
         self.robot_name = robot_dict[robot_id]
         self.curr_route = []
-        
+        self.robot_id_list = []
         
         self.vscs = VSCS()
-        self.robot_id_list = []
-        self.A = np.array([
-            [0, -1],
-            [0, -1]
-            ])
-
-        self.B = np.array([
-            [0],
-            [1]
-            ])
+        self.L = []
     
     def calc_twsit(self, twist_from_img: Twist, robot_info_list: List[RobotInfo]):
         twist = Twist()
@@ -237,6 +228,14 @@ class VSCSModel:
                 cp = find_conflict_point(route_i=robot_route_i, route_j=robot_route_j)
                 if cp != 0:
                     L[i][j] = -1
+                    L[j][i] = -1
+
+        for i in range(N):
+            L[i][i] = -np.sum(L[i])
+
+        print(L)
+        return L
+
                     
 
     def generate_cp_state_matrix(self, robot_info_list: List[RobotInfo]):
@@ -370,7 +369,7 @@ class VSCSModel:
 
 
 if __name__ == '__main__':
-    decision_model = VSCSModel(robot_id=1)
+    vscs = VSCSModel(robot_id=1)
     robot_info_list = [
         RobotInfo(
             name="mingna",
@@ -384,12 +383,11 @@ if __name__ == '__main__':
             robot_route=(1, 3, 5),
             coordinate=(1.826, 2.216)
         ),
-        RobotInfo(
-            name="luna",
-            robot_id=8,
-            robot_route=(5, 3, 1),
-            coordinate=(2.016, 0.71)
-        )
+        # RobotInfo(
+        #     name="luna",
+        #     robot_id=8,
+        #     robot_route=(5, 3, 1),
+        #     coordinate=(2.016, 0.71)
+        # )
     ]
-    decision_model.calc_control_gain(robot_info_list=robot_info_list)
-    decision_model.calc_state_error(robot_info_list=robot_info_list)
+    vscs.generate_L(robot_info_list=robot_info_list)
