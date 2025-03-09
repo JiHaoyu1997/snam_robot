@@ -530,7 +530,9 @@ def find_conflict_point_list(route):
 
 def find_conflict_point(route_i, route_j):
     if route_i[1] != route_j[1]:
+        print(route_i, route_j)
         raise ValueError("Agents not in the same Intersection")
+    
     
     curr_inter_id = route_i[1]
     route_i_id = ROUTE_TABLE[curr_inter_id][route_i]
