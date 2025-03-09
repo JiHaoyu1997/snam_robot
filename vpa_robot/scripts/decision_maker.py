@@ -60,6 +60,7 @@ class RobotDecision:
         self.inter_info_sub = rospy.Subscriber(self.local_inter_info_topic, InterInfoMsg, self.inter_info_cb)
         self.shutdown_sub = rospy.Subscriber("robot_interface_shutdown", Bool, self.signal_shutdown)
         self.local_brake_sub = rospy.Subscriber("local_brake", Bool, self.local_brake_sub_cb)
+        self.global_brake_sub = rospy.Subscriber("/global_brake", Bool, self.global_brake_sub_cb)
         
         # Servers
         self.update_route_server = rospy.Service('update_route_srv', NewRoute, self.update_route_cb)
@@ -119,7 +120,9 @@ class RobotDecision:
             if new_route[1] == 3:
                 self.robot_info.record_curr_state()
                 self.vscs_model.generate_pass_cp_flag_dict(new_route)
-
+                if self.departure_time:
+                    travel_total_time = now_time - self.departure_time
+                    rospy.loginfo(f"{self.robot_name} travel total time until now: {travel_total_time}")
 
             self.robot_info.robot_exit_time = now_time
             self.robot_info.robot_enter_lane_time = now_time
@@ -315,6 +318,9 @@ class RobotDecision:
         # return self.robot_motion_controller.tick_recorder(msg=wheel_omega_msg)    
     
     def local_brake_sub_cb(self, msg: Bool):
+        pass
+    
+    def global_brake_sub_cb(self, msg: Bool):
         if not msg.data:
             self.departure_time = round(rospy.get_time(), 5)
 
