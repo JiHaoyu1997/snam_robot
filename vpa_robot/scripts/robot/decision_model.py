@@ -4,7 +4,7 @@ import math
 import numpy as np
 from typing import List
 
-from map.map import local_map_grid_model, find_conflict_point, find_conflict_point_coordinate
+from map.map import local_map_grid_model, find_conflict_point_list, find_conflict_point, find_conflict_point_coordinate
 from robot.robot import robot_dict, RobotInfo
 # from vscs import VSCS
 
@@ -198,6 +198,11 @@ class VSCSModel:
         self.robot_name = robot_dict[robot_id]
         self.L = []
         self.cp_matrix = []
+
+    def generate_pass_cp_flag_dict(self, new_route):
+        route_in_tuple = tuple(new_route)
+        cp_list = find_conflict_point_list(route_in_tuple)
+        self.pass_cp_flag_dict = {cp: False for cp in cp_list}
     
     def calc_twist(self, twist_from_img: Twist, robot_id_list: List[int], robot_info_list: List[RobotInfo]):
         N = len(robot_id_list)
@@ -206,7 +211,7 @@ class VSCSModel:
         else:
             twist = Twist()
             delta_t = 0.05
-            self.L, self.cp_matrix = self.generate_L(robot_info_list=robot_info_list)
+            # self.L, self.cp_matrix = self.generate_L(robot_info_list=robot_info_list)
             controller_gain = self.calc_control_gain()
             cumulative_error = self.calc_cumulative_error(robot_id_list, robot_info_list)
             # print(cumulative_error)
@@ -260,8 +265,11 @@ class VSCSModel:
             if conflict == -1:
                 conflict_robot_id = robot_id_list[idx]
                 cp = cp_list[idx]
-                eij = self.calc_eij(conflict_robot_id, cp, robot_info_list)
-                cumu_error += eij
+                if self.pass_cp_flag_dict[cp]:
+                    cumu_error += 0
+                else:
+                    eij = self.calc_eij(conflict_robot_id, cp, robot_info_list)
+                    cumu_error += eij
         
         return cumu_error
     
@@ -288,11 +296,29 @@ class VSCSModel:
             e_s = (s_j - s_i) - lr
         else:
             e_s = (s_j - s_i) + lr
-        
+
         e_v = v_j - v_i
 
         eij = np.array([e_s, e_v]).reshape((2,1))
+
+        pass_cp_flag = self.break_virtual_spring(s_i, s_j, eij, cp)
         return eij
+    
+    def break_virtual_spring(self, s_i, s_j, eij, cp):
+        if s_i < 0.05:
+            rospy.loginfo_once(f"{self.robot_name} self pass cp={cp}")
+            self.pass_cp_flag_dict[cp] = True
+            return 
+
+        if s_j < 0.05:
+            rospy.loginfo_once(f"{self.robot_name} conflicting robot pass cp={cp}")
+            self.pass_cp_flag_dict[cp] = True
+            return
+
+        if np.linalg.norm(eij) < 0.01:
+            rospy.loginfo_once(f"{self.robot_name} befor cp={cp} reach harmony")
+            self.pass_cp_flag_dict[cp] = True
+            return
     
     def calc_distance_to_cp(self, cp_coor, robot_coor):
         distance_to_cp = math.sqrt((robot_coor[0] - cp_coor[0])**2 + (robot_coor[1] - cp_coor[1])**2)

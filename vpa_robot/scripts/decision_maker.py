@@ -42,9 +42,6 @@ class RobotDecision:
 
         # Virtual Spring Control System
         self.vscs_model = VSCSModel(robot_id=self.robot_id)
-        self.control_gain = (1, 1)
-        self.robot_id_list = []
-
 
         # Initialize route and intersection information
         self.curr_route = [0, 0, 0]
@@ -120,8 +117,8 @@ class RobotDecision:
             rospy.loginfo(f"{self.robot_name} travel time in Inter{self.curr_route[1]}: {travel_time}")
             
             if new_route[1] == 3:
-                print(1)
                 self.robot_info.record_curr_state()
+                self.vscs_model.generate_pass_cp_flag_dict(new_route)
 
 
             self.robot_info.robot_exit_time = now_time

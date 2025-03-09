@@ -3,7 +3,7 @@ import sys
 current_dir = os.path.dirname(os.path.abspath(__file__))
 map_folder_path = os.path.join(current_dir, "..")
 sys.path.append(map_folder_path)
-from map.map import local_map_grid_model, find_conflict_point, find_conflict_point_coordinate
+from map.map import local_map_grid_model, find_conflict_point_list, find_conflict_point, find_conflict_point_coordinate
 from robot.robot import robot_dict, RobotInfo
 from vscs import VSCS
 
@@ -14,214 +14,42 @@ from typing import List
 
 from geometry_msgs.msg import Twist
 
-class FIFOModel:
-    def __init__(self, robot_id=0) -> None:
-        self.robot_id = robot_id
-        self.robot_name = robot_dict[robot_id]
-        self.want_to_enter_conflict = False
-        self.enter_permission = False
-
-    def decision_maker(self, twist_from_img: Twist):
-        """
-        Decision logic:
-        """
-        # If not yet in the conflict zone, return the original control command
-        if not self.want_to_enter_conflict:
-            return twist_from_img
-        
-        if not self.enter_permission:
-            return Twist()
-        else:
-            return twist_from_img
-
-    def check_enter_permission(self, robot_info_list):
-        """
-        Check the status of robots in the queue:
-        """
-        for robot_info in robot_info_list:
-            # skip self
-            if robot_info.robot_id == self.robot_id:
-                continue
-
-            # A robot has already entered the conflict zone; this robot cannot pass
-            if robot_info.robot_enter_conflict:
-                return False 
-            
-        # No robots have entered the conflict zone; this robot can pass
-        rospy.loginfo(f"{self.robot_name} obtain permission to enter conflict area")
-        return True 
-    
-
-class GridBasedModel:
-    def __init__(self, robot_id=0) -> None:
-        self.robot_id = robot_id
-        self.robot_name = robot_dict[robot_id]
-        self.curr_route = []
-        self.occupied_grid_matrix = np.zeros((2,2), dtype=int)
-        
-        self.want_to_enter_conflict = False
-        self.enter_permission = False
-
-    def decision_maker(self, twist_from_img: Twist):
-        """
-        Decision logic:
-        """
-        # If not yet in the conflict zone, return the original control command
-        if not self.want_to_enter_conflict:
-            return twist_from_img        
-        if not self.enter_permission:
-            return Twist()
-        else:
-            return twist_from_img
-
-    def check_enter_permission(self, robot_info_list):
-        """
-        Check the status of robots in the queue:
-        """
-        self.occupied_grid_matrix = np.zeros((2,2), dtype=int)
-
-        # Step1 record which grids are already occupied
-        for robot_info in robot_info_list:            
-            # reccord curr route and skip self
-            if robot_info.robot_id == self.robot_id:
-                self.curr_route  = [route for route in robot_info.robot_route]
-                continue
-
-            # When some one robot has already entered the conflict zone
-            if robot_info.robot_enter_conflict:
-                route = robot_info.robot_route
-                occupied_grid = local_map_grid_model(route[0], route[1], route[2])
-                self.record_occupied_grid(occupied_grid=occupied_grid)
-
-        # Step2 check grid conflict 
-        enter_permission = self.check_occupied_grid_conflict(curr_route=self.curr_route)
-        if enter_permission:
-            rospy.logwarn(f"{self.robot_name} obtain permission to enter conflict area")
-            self.occupied_grid_matrix = np.zeros((2,2), dtype=int)
-        else:
-            rospy.logwarn(f"{self.robot_name} must wait")  
-        return enter_permission
-    
-    def record_occupied_grid(self, occupied_grid: List[int]):
-        for grid_id in occupied_grid:
-            matrix_coord = self.grid_id_to_matrix_coord(grid_id=grid_id)
-            self.occupied_grid_matrix[matrix_coord[0], matrix_coord[1]] = 1
-        return
-    
-    def check_occupied_grid_conflict(self, curr_route):
-        grid_want_to_occupy = local_map_grid_model(curr_route[0], curr_route[1], curr_route[2])
-        for grid_id in grid_want_to_occupy:
-            matrix_coord = self.grid_id_to_matrix_coord(grid_id=grid_id)
-            if self.occupied_grid_matrix[matrix_coord[0], matrix_coord[1]] == 1:
-                return False
-        return True
-
-    def grid_id_to_matrix_coord(self, grid_id):
-        binary_grid_id = format(grid_id - 1, '02b')
-        matrix_coord = int(binary_grid_id[0]), int(binary_grid_id[1])        
-        return matrix_coord
-
-
-class GridBasedOptimalModel:
-    def __init__(self, robot_id=0) -> None:
-        self.robot_id = robot_id
-        self.robot_name = robot_dict[robot_id]
-        self.curr_route = []
-        self.estimated_arrival_conflict_time = 0.0
-        self.occupied_grid_matrix = np.zeros((2,2), dtype=int)
-        self.occupied_grid_time_matrix = np.zeros((2,2), dtype=int)
-        
-        self.want_to_enter_conflict = False
-        self.enter_permission = False
-
-    def decision_maker(self, twist_from_img: Twist):
-        """
-        Decision logic:
-        """
-        # If not yet in the conflict zone, return the original control command
-        if not self.want_to_enter_conflict:
-            return twist_from_img        
-        if not self.enter_permission:
-            return Twist()
-        else:
-            return twist_from_img
-
-    def check_enter_permission(self, robot_info_list):
-        """
-        Check the status of robots in the queue:
-        """
-        self.occupied_grid_matrix = np.zeros((2,2), dtype=int)
-
-        # Step1 record which grids are already occupied
-        for robot_info in robot_info_list:            
-            # reccord curr route and skip self
-            if robot_info.robot_id == self.robot_id:
-                self.curr_route  = [route for route in robot_info.robot_route]
-                continue
-
-            # When some one robot has already entered the conflict zone
-            if robot_info.robot_enter_conflict:
-                route = robot_info.robot_route
-                occupied_grid = local_map_grid_model(route[0], route[1], route[2])
-                self.record_occupied_grid(occupied_grid=occupied_grid)
-
-        # Step2 check grid conflict 
-        enter_permission = self.check_occupied_grid_conflict(curr_route=self.curr_route)
-        if enter_permission:
-            rospy.logwarn(f"{self.robot_name} obtain permission to enter conflict area")
-            self.occupied_grid_matrix = np.zeros((2,2), dtype=int)
-        else:
-            rospy.logwarn(f"{self.robot_name} must wait")  
-        return enter_permission
-    
-    def record_occupied_grid(self, occupied_grid: List[int]):
-        for grid_id in occupied_grid:
-            matrix_coord = self.grid_id_to_matrix_coord(grid_id=grid_id)
-            self.occupied_grid_matrix[matrix_coord[0], matrix_coord[1]] = 1
-        return
-    
-    def check_occupied_grid_conflict(self, curr_route):
-        grid_want_to_occupy = local_map_grid_model(curr_route[0], curr_route[1], curr_route[2])
-        for grid_id in grid_want_to_occupy:
-            matrix_coord = self.grid_id_to_matrix_coord(grid_id=grid_id)
-            if self.occupied_grid_matrix[matrix_coord[0], matrix_coord[1]] == 1:
-                return False
-            else:
-                continue
-        return True
-
-    def grid_id_to_matrix_coord(self, grid_id):
-        binary_grid_id = format(grid_id - 1, '02b')
-        matrix_coord = int(binary_grid_id[0]), int(binary_grid_id[1])        
-        return matrix_coord
-    
 
 class VSCSModel:
     def __init__(self, robot_id=0) -> None:
         self.robot_id = robot_id
         self.robot_name = robot_dict[robot_id]
-        self.curr_route = []
-        self.robot_id_list = []
-        
-        self.vscs_solver = VSCS()
         self.L = []
         self.cp_matrix = []
+
+    def generate_pass_cp_flag_dict(self, new_route):
+        route_in_tuple = tuple(new_route)
+        cp_list = find_conflict_point_list(route_in_tuple)
+        self.pass_cp_flag_dict = {cp: False for cp in cp_list}
     
     def calc_twist(self, twist_from_img: Twist, robot_id_list: List[int], robot_info_list: List[RobotInfo]):
-        twist = Twist()
-        delta_t = 0.05
-        N = len(robot_info_list)
-        self.L, self.cp_matrix = self.generate_L(robot_info_list=robot_info_list)
-        controller_gain = self.calc_control_gain()
-        cumulative_error = self.calc_cumulative_error(robot_id_list, robot_info_list)
-        # print(cumulative_error)
-        control_input = controller_gain @ cumulative_error
-        # print(control_input)
-        delta_v = control_input * delta_t
-        print(delta_v)
-        twist.linear.x = 0.3 + control_input
-        twist.angular.z = twist_from_img.angular.z
-        return twist
+        for robot_info in robot_info_list:
+            if robot_info.robot_id == self.robot_id:
+                self.generate_pass_cp_flag_dict(robot_info.robot_route)
+        
+        N = len(robot_id_list)
+        if N <= 1 :
+             return twist_from_img
+        else:
+            twist = Twist()
+            delta_t = 0.05
+            self.L, self.cp_matrix = self.generate_L(robot_info_list=robot_info_list)
+            controller_gain = self.calc_control_gain()
+            cumulative_error = self.calc_cumulative_error(robot_id_list, robot_info_list)
+            # print(cumulative_error)
+            control_input = controller_gain @ cumulative_error
+            print(control_input)
+            # print(control_input)
+            delta_v = control_input * delta_t
+            # print(delta_v)
+            twist.linear.x = 0.3 + delta_v
+            twist.angular.z = twist_from_img.angular.z
+            return twist
     
     def generate_L(self, robot_info_list: List[RobotInfo]):
         N = len(robot_info_list)
@@ -241,13 +69,15 @@ class VSCSModel:
         for i in range(N):
             L[i][i] = -np.sum(L[i])
 
-        print(L)
-        print(cp_matrix)
+        rospy.loginfo_once('laplacian: \n%s', np.array2string(L))
+        # print(cp_matrix)
         return L, cp_matrix
 
     def calc_control_gain(self):
-        K = self.vscs_solver.sol_lmi(self.L)
-        # K = np.array([[-0.3668002, 1.11743303]])
+        # K = self.vscs_solver.sol_lmi(self.L)
+        K = np.array([
+            [-5.19884665,  8.54126546]
+            ])
         return K
 
     def calc_cumulative_error(self, robot_id_list: List[int], robot_info_list: List[RobotInfo]):
@@ -262,8 +92,11 @@ class VSCSModel:
             if conflict == -1:
                 conflict_robot_id = robot_id_list[idx]
                 cp = cp_list[idx]
-                eij = self.calc_eij(conflict_robot_id, cp, robot_info_list)
-                cumu_error += eij
+                if self.pass_cp_flag_dict[cp]:
+                    cumu_error += 0
+                else:
+                    eij = self.calc_eij(conflict_robot_id, cp, robot_info_list)
+                    cumu_error += eij
         
         return cumu_error
     
@@ -290,15 +123,34 @@ class VSCSModel:
             e_s = (s_j - s_i) - lr
         else:
             e_s = (s_j - s_i) + lr
-        
+
         e_v = v_j - v_i
 
         eij = np.array([e_s, e_v]).reshape((2,1))
+
+        pass_cp_flag = self.break_virtual_spring(s_i, s_j, eij, cp)
         return eij
+    
+    def break_virtual_spring(self, s_i, s_j, eij, cp):
+        if s_i < 0.05:
+            rospy.loginfo_once(f"{self.robot_name} self pass cp={cp}")
+            self.pass_cp_flag_dict[cp] = True
+            return 
+
+        if s_j < 0.05:
+            rospy.loginfo_once(f"{self.robot_name} conflicting robot pass cp={cp}")
+            self.pass_cp_flag_dict[cp] = True
+            return
+
+        if np.linalg.norm(eij) < 0.01:
+            rospy.loginfo_once(f"{self.robot_name} befor cp={cp} reach harmony")
+            self.pass_cp_flag_dict[cp] = True
+            return
     
     def calc_distance_to_cp(self, cp_coor, robot_coor):
         distance_to_cp = math.sqrt((robot_coor[0] - cp_coor[0])**2 + (robot_coor[1] - cp_coor[1])**2)
         return distance_to_cp
+                
                 
 
 if __name__ == '__main__':
@@ -328,3 +180,4 @@ if __name__ == '__main__':
         ),
     ]
     vscs.calc_twist(twist_from_img=Twist(), robot_id_list=robot_id_list, robot_info_list=robot_info_list)
+    # vscs.generate_pass_cp_flag_dict(new_route=[2, 3, 4])

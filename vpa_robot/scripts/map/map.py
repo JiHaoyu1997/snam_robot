@@ -6,7 +6,7 @@
     # 0: through 
     # 1: left 
     # 2: right
-from map.route import ROUTE_TABLE, ROUTE_CP_TABLE, CP_COORDINATE_TABLE
+from map.route import ROUTE_TABLE, ROUTE_CP_TABLE, CP_COORDINATE_TABLE, CP_TABLE
 
 def local_mapper(last: int, current: int, next: int) -> int:
 
@@ -523,12 +523,16 @@ def local_map_path_length_in_gird_table(last: int, current: int, next: int, grid
     return 0.0
 
 
+def find_conflict_point_list(route):
+    inter_id = route[1]
+    cp_list = CP_TABLE[inter_id][route]
+    return cp_list
+
 def find_conflict_point(route_i, route_j):
     if route_i[1] != route_j[1]:
         raise ValueError("Agents not in the same Intersection")
     
     curr_inter_id = route_i[1]
-
     route_i_id = ROUTE_TABLE[curr_inter_id][route_i]
     route_j_id = ROUTE_TABLE[curr_inter_id][route_j]
     conflict_point  = ROUTE_CP_TABLE[curr_inter_id][route_i_id][route_j_id]
@@ -537,9 +541,8 @@ def find_conflict_point(route_i, route_j):
 def find_conflict_point_coordinate(inter, cp):
     cp_coor = CP_COORDINATE_TABLE[inter][cp]
     return cp_coor
-if __name__ == "__main__":
 
-    route1 = (2, 3, 4)
-    route2 = (1, 3, 5)
-    find_conflict_point(route_i=route1, route_j=route2)
-    find_conflict_point_coordinate(3, 1)
+
+if __name__ == "__main__":
+    cp_list = find_conflict_point_list(inter=3, route=(2,3,5) )
+    print(cp_list)
