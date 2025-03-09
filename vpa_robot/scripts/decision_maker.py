@@ -72,7 +72,7 @@ class RobotDecision:
         # Init
         self.send_ready_signal()
 
-        self.timer = rospy.Timer(rospy.Duration(1 / 20), self.pub_robot_info)
+        self.timer = rospy.Timer(rospy.Duration(1 / 40), self.pub_robot_info)
     
     # Methods
     def send_ready_signal(self):
