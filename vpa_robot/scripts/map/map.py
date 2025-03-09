@@ -6,6 +6,7 @@
     # 0: through 
     # 1: left 
     # 2: right
+import rospy
 from map.route import ROUTE_TABLE, ROUTE_CP_TABLE, CP_COORDINATE_TABLE, CP_TABLE
 
 def local_mapper(last: int, current: int, next: int) -> int:
@@ -531,7 +532,7 @@ def find_conflict_point_list(route):
 def find_conflict_point(route_i, route_j):
     if route_i[1] != route_j[1]:
         print(route_i, route_j)
-        raise ValueError("Agents not in the same Intersection")
+        rospy.logwarn("Agents not in the same Intersection")
     
     
     curr_inter_id = route_i[1]
