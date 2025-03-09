@@ -21,10 +21,10 @@ robot_dict = {
 }
 
 robot_departure_delay_dict = {
-    1:5.5,
+    1:5,
     2:0,
     6:0,
-    7:9,
+    7:10.5,
     8:0,
     9:0,
     10:0,
