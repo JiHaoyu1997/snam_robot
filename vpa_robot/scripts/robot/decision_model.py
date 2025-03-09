@@ -301,7 +301,7 @@ class VSCSModel:
 
         eij = np.array([e_s, e_v]).reshape((2,1))
         error = np.linalg.norm(eij)
-        print("error", error)
+        print("eij", eij)
 
         pass_cp_flag = self.break_virtual_spring(s_i, s_j, error, cp)
         return eij
