@@ -133,7 +133,6 @@ class VSCSModel:
         print("error", error)
 
         
-
         pass_cp_flag = self.break_virtual_spring(s_i, s_j, error, cp)
         return eij
     

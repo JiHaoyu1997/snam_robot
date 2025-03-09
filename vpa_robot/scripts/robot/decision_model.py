@@ -216,7 +216,7 @@ class VSCSModel:
             cumulative_error = self.calc_cumulative_error(robot_id_list, robot_info_list)
             # print(cumulative_error)
             control_input = controller_gain @ cumulative_error
-            print(control_input)
+            # print(control_input)
             # print(control_input)
             delta_v = control_input * delta_t
             # print(delta_v)
@@ -226,6 +226,7 @@ class VSCSModel:
     
     def generate_L(self, robot_info_list: List[RobotInfo]):
         N = len(robot_info_list)
+        print(N)
         L = np.zeros((N, N), dtype=int)
         cp_matrix = np.zeros((N, N), dtype=int)
         for i in range(N):
@@ -301,8 +302,8 @@ class VSCSModel:
 
         eij = np.array([e_s, e_v]).reshape((2,1))
         error = abs(e_s)
-        if cp == 3:
-            print(s_i)
+        # if cp == 3:
+            # print(s_i)
 
         pass_cp_flag = self.break_virtual_spring(s_i, s_j, error, cp)
         return eij
