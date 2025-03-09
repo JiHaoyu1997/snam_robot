@@ -211,7 +211,7 @@ class VSCSModel:
         else:
             twist = Twist()
             delta_t = 0.05
-            # self.L, self.cp_matrix = self.generate_L(robot_info_list=robot_info_list)
+            self.L, self.cp_matrix = self.generate_L(robot_info_list=robot_info_list)
             controller_gain = self.calc_control_gain()
             cumulative_error = self.calc_cumulative_error(robot_id_list, robot_info_list)
             # print(cumulative_error)
