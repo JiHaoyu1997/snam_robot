@@ -300,8 +300,7 @@ class VSCSModel:
         e_v = v_j - v_i
 
         eij = np.array([e_s, e_v]).reshape((2,1))
-        error = np.linalg.norm(eij)
-        print("eij", eij)
+        error = abs(e_s)
 
         pass_cp_flag = self.break_virtual_spring(s_i, s_j, error, cp)
         return eij
@@ -317,7 +316,7 @@ class VSCSModel:
             self.pass_cp_flag_dict[cp] = True
             return
 
-        if error < 0.01:
+        if error < 0.05:
             rospy.loginfo_once(f"{self.robot_name} befor cp={cp} reach harmony")
             self.pass_cp_flag_dict[cp] = True
             return
