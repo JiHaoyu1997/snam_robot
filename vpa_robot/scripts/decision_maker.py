@@ -130,6 +130,12 @@ class RobotDecision:
             #     travel_time = now_time - self.departure_time
             #     rospy.loginfo(f"{self.robot_name} travel time until now: {travel_time}")
 
+            # update global info
+            self.update_global_inter_info()
+
+            # update inter_x info sub 
+            self.update_inter_sub()
+
             # update local info
             self.curr_route = new_route
             self.local_inter_id = new_route[1]
@@ -148,12 +154,6 @@ class RobotDecision:
 
             # reset segment travel distance
             self.robot_motion_controller.total_distance_apriltag = 0.0
-
-            # update global info
-            self.update_global_inter_info()
-
-            # update inter_x info sub 
-            self.update_inter_sub()
 
             # response
             if new_route[1] == 6 and new_route[2] == 6:
