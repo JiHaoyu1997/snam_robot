@@ -21,10 +21,10 @@ robot_dict = {
 }
 
 robot_departure_delay_dict = {
-    1:0,
+    1:5.5,
     2:0,
     6:0,
-    7:5,
+    7:9,
     8:0,
     9:0,
     10:0,
@@ -107,7 +107,7 @@ class RobotInfo:
     
     def record_curr_state(self):
         print(1)
-        rospy.loginfo_once(f"{self.robot_name} enter Inter3 with coor={self.robot_coordinate} & vel={self.robot_v}")
+        rospy.loginfo(f"{self.robot_name} enter Inter3 with coor={self.robot_coordinate} & vel={self.robot_v}")
 
 class RobotMotion:
 

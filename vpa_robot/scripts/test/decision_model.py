@@ -71,6 +71,7 @@ class VSCSModel:
             L[i][i] = -np.sum(L[i])
 
         rospy.loginfo_once('laplacian: \n%s', np.array2string(L))
+        print(L)
         # print(cp_matrix)
         return L, cp_matrix
 
@@ -160,13 +161,13 @@ if __name__ == '__main__':
     vscs = VSCSModel(robot_id=1)
     robot_id_list = [1, 7]
     robot_info_list = [
-        # RobotInfo(
-        #     name="luna",
-        #     robot_id=8,
-        #     robot_route=(5, 3, 1),
-        #     coordinate=(2.016, 0.71),
-        #     v=0.25
-        # ),
+        RobotInfo(
+            name="luna",
+            robot_id=8,
+            robot_route=(5, 3, 1),
+            coordinate=(2.016, 0.71),
+            v=0.25
+        ),
         RobotInfo(
             name="mingna",
             robot_id=1,

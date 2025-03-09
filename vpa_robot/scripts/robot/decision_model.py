@@ -249,7 +249,7 @@ class VSCSModel:
     def calc_control_gain(self):
         # K = self.vscs_solver.sol_lmi(self.L)
         K = np.array([
-            [-8.6669265,  13.92890099]
+            [-14.00904388,  23.55785533]
             ])
         return K
 
