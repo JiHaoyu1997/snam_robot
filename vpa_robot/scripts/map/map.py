@@ -533,6 +533,7 @@ def find_conflict_point(route_i, route_j):
     if route_i[1] != route_j[1]:
         print(route_i, route_j)
         rospy.logwarn("Agents not in the same Intersection")
+        return 0
     
     
     curr_inter_id = route_i[1]
