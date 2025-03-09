@@ -251,20 +251,19 @@ class RobotDecision:
         Decision-making process based on the robot's current info.
         """
 
-        if self.decision_model.want_to_enter_conflict:
-                if not self.decision_model.enter_permission:
-                    self.decision_model.enter_permission = self.decision_model.check_enter_permission(self.local_inter_info.robot_info)
-                    # print(self.decision_model.enter_permission)
-                    self.robot_info.robot_enter_conflict = self.decision_model.enter_permission
-                    # print(self.robot_info.robot_enter_conflict)
-                    # robot entet conflict
-                    if self.decision_model.enter_permission:
-                        self.robot_info.robot_enter_conflict_time = rospy.get_time()
-                        wait_time = self.robot_info.calc_wait_time()
-                        rospy.loginfo(f"{self.robot_name} wait time in inter{self.curr_route[1]}: {wait_time}")
-
-        twist_from_decision = self.decision_model.decision_maker(twist_from_img)
-        return twist_from_decision
+        # if self.decision_model.want_to_enter_conflict:
+        #         if not self.decision_model.enter_permission:
+        #             self.decision_model.enter_permission = self.decision_model.check_enter_permission(self.local_inter_info.robot_info)
+        #             # print(self.decision_model.enter_permission)
+        #             self.robot_info.robot_enter_conflict = self.decision_model.enter_permission
+        #             # print(self.robot_info.robot_enter_conflict)
+        #             # robot entet conflict
+        #             if self.decision_model.enter_permission:
+        #                 self.robot_info.robot_enter_conflict_time = rospy.get_time()
+        #                 wait_time = self.robot_info.calc_wait_time()
+        #                 rospy.loginfo(f"{self.robot_name} wait time in inter{self.curr_route[1]}: {wait_time}")
+        # twist_from_decision = self.decision_model.decision_maker(twist_from_img)
+        # return twist_from_decision
         
         if self.curr_route[1] != 3:
             if self.decision_model.want_to_enter_conflict:
@@ -279,7 +278,6 @@ class RobotDecision:
                         wait_time = self.robot_info.calc_wait_time()
                         rospy.loginfo(f"{self.robot_name} wait time in inter{self.curr_route[1]}: {wait_time}")
             twist_from_decision = self.decision_model.decision_maker(twist_from_img)
-        
         else:
             robot_id_list = self.local_inter_info.robot_id_list
             robot_info_list = self.local_inter_info.robot_info
