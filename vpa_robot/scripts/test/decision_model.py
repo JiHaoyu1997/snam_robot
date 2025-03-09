@@ -21,6 +21,7 @@ class VSCSModel:
         self.robot_name = robot_dict[robot_id]
         self.L = []
         self.cp_matrix = []
+        self.vscs_solver = VSCS()
 
     def generate_pass_cp_flag_dict(self, new_route):
         route_in_tuple = tuple(new_route)
@@ -74,7 +75,7 @@ class VSCSModel:
         return L, cp_matrix
 
     def calc_control_gain(self):
-        # K = self.vscs_solver.sol_lmi(self.L)
+        K = self.vscs_solver.sol_lmi(self.L)
         K = np.array([
             [-5.19884665,  8.54126546]
             ])

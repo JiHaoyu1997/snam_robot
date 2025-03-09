@@ -106,7 +106,7 @@ class VSCS:
         constraints = []
         constraints.append(Q >> 0)
         constraints.append(H >> 0)
-        constraints.append(alpha >= 2e-6)
+        constraints.append(alpha >= 3e-6)
         constraints.append(delta >= 1e-6)
         constraints.append(epsilon >= 1e-6)
         constraints.append(LMT1 >= 1e-6)
@@ -136,5 +136,4 @@ class VSCS:
 
 if __name__ == "__main__":
     vcsc = VSCS()
-    vcsc.init_vscs_model()
     vcsc.sol_lmi()
