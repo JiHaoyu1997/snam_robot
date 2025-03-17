@@ -221,7 +221,7 @@ class VSCSModel:
             twist = Twist()
             delta_t = 0.05
             self.L, self.cp_matrix = self.generate_L(robot_info_list=robot_info_list)
-            controller_gain = self.calc_control_gain()
+            controller_gain = self.calc_control_gain(N)
             cumulative_error = self.calc_cumulative_error(robot_id_list, robot_info_list)
             # print(cumulative_error)
             calc_control_input = controller_gain @ cumulative_error
@@ -255,11 +255,16 @@ class VSCSModel:
         # print(cp_matrix)
         return L, cp_matrix
 
-    def calc_control_gain(self):
+    def calc_control_gain(self, N):
         # K = self.vscs_solver.sol_lmi(self.L)
-        K = np.array([
-            [-14.00904388,  23.55785533]
-            ])
+        if N == 2:
+            K = np.array([
+                [-4.28974764,  7.07289627]
+                ])
+        else:    
+            K = np.array([
+                [-5.50144977,  9.04496456]
+                ])
         return K
 
     def calc_cumulative_error(self, robot_id_list: List[int], robot_info_list: List[RobotInfo]):
@@ -356,13 +361,12 @@ if __name__ == '__main__':
     vscs = VSCSModel(robot_id=1)
     robot_id_list = [1, 7]
     robot_info_list = [
-        # RobotInfo(
-        #     name="luna",
-        #     robot_id=8,
-        #     robot_route=(5, 3, 1),
-        #     coordinate=(2.016, 0.71),
-        #     v=0.25
-        # ),
+        RobotInfo(
+            name="luna",
+            robot_id=8,
+            robot_route=(5, 3, 1),
+            v=0.25
+        ),
         RobotInfo(
             name="mingna",
             robot_id=1,
