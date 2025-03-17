@@ -116,11 +116,13 @@ class RobotVision:
             rospy.logerr(f"service call failed: {e}")
 
     def global_brake_sub_cb(self, msg: Bool):
-        if not msg.data:
-            time_sleep = find_dep_delay(self.robot_id)
-            rospy.loginfo(f"{self.robot_name} departure delay is {time_sleep} s")
-            rospy.sleep(time_sleep)
-            self.curr_route = [6, 6, 2]
+        if not self.departure_flag:
+            if not msg.data:
+                time_sleep = find_dep_delay(self.robot_id)
+                rospy.loginfo(f"{self.robot_name} departure delay is {time_sleep} s")
+                rospy.sleep(time_sleep)
+                self.curr_route = [6, 6, 2]
+                self.departure_flag = True
 
 
     def status_flag_init(self):
@@ -128,6 +130,7 @@ class RobotVision:
         self.current_zone = Zone.BUFFER_AREA
         self.last_target = None
         self.detect_green_lock = False
+        self.departure_flag = False
 
         self.cross_inter_boundary_timer = None
         self.cross_inter_boundary_line_count = 0

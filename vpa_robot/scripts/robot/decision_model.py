@@ -71,8 +71,8 @@ class GridBasedModel:
             return twist_from_img
 
     def check_enter_permission(self, robot_info_list: List[RobotInfo]):
-        print(self.curr_route)
-        print(robot_info_list)
+        # print(self.curr_route)
+        # print(robot_info_list)
         """
         Check the status of robots in the queue:
         """
@@ -82,7 +82,7 @@ class GridBasedModel:
         for robot_info in robot_info_list:            
             # reccord curr route and skip self
             if robot_info.robot_id == self.robot_id:
-                print(robot_info.robot_route)
+                # print(robot_info.robot_route)
                 self.curr_route  = [route for route in robot_info.robot_route]
                 continue
 
