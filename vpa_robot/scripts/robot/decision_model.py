@@ -226,8 +226,7 @@ class VSCSModel:
             # print(cumulative_error)
             calc_control_input = controller_gain @ cumulative_error
             control_input = np.clip(calc_control_input, -6, 4)
-            # print(control_input)
-            # print(control_input)
+            print(control_input)
             delta_v = control_input * delta_t
             # print(delta_v)
             twist.linear.x = 0.3 + delta_v
