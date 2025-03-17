@@ -104,7 +104,7 @@ class RobotDecision:
             rospy.logerr("Route message does not contain 3 elements.")
             return NewRouteResponse(success=False, message='Update Error') 
         
-        # Init
+        # Loop Init
         if new_route == [6, 6, 2]:
             self.curr_route = [6, 6, 2]
             self.robot_info.robot_route = self.curr_route
@@ -131,14 +131,13 @@ class RobotDecision:
             #     rospy.loginfo(f"{self.robot_name} travel time until now: {travel_time}")
 
             # update global info
-            self.update_global_inter_info()
+            self.update_global_inter_info(new_route=new_route)
 
             # update inter_x info sub 
-            self.update_inter_sub()
+            self.update_inter_sub(new_route=new_route)
 
             # update local info
             self.curr_route = new_route
-            self.local_inter_id = new_route[1]
             # rospy.loginfo(f"{self.robot_name} travel total distance in inter{self.curr_route[0]}: {self.robot_info.robot_p}")
 
             # update pub info
@@ -164,7 +163,7 @@ class RobotDecision:
             rospy.logerr(f"Route update sequence mismatch: {self.curr_route} and {new_route}.") 
             return      
 
-    def update_global_inter_info(self):
+    def update_global_inter_info(self, new_route):
         """
         Request to update global inter_info.
         """
@@ -173,8 +172,8 @@ class RobotDecision:
             req = InterMngRequest()
             req.header.stamp = rospy.Time.now()
             req.robot_id = self.robot_id
-            req.last_inter_id = self.curr_route[0]
-            req.curr_inter_id = self.curr_route[1]
+            req.last_inter_id = new_route[0]
+            req.curr_inter_id = new_route[1]
             resp: InterMngResponse = self.inter_mng_client.call(req)
             if resp.success:
                 rospy.loginfo(f'{self.robot_name} - {resp.message}')
@@ -185,7 +184,7 @@ class RobotDecision:
             rospy.logerr(f'{self.robot_name}: Service call failed - {e}')
             return
 
-    def update_inter_sub(self):
+    def update_inter_sub(self, new_route):
         """
         Update local subscribed inter_info/x.
         """
@@ -196,7 +195,8 @@ class RobotDecision:
         if self.local_inter_id == 6:
             rospy.loginfo(f"{self.robot_name} drives back to buffer area")
             return
-
+        
+        self.local_inter_id = new_route[1]
         self.local_inter_info_topic = f'/inter_info/{self.local_inter_id}'
         self.inter_info_sub = rospy.Subscriber(self.local_inter_info_topic, InterInfoMsg, self.inter_info_cb)
         rospy.loginfo(f"{self.robot_name} updated inter_info_sub to {self.local_inter_info_topic}")
