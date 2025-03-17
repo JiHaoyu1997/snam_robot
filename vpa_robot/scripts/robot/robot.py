@@ -38,7 +38,7 @@ def find_dep_delay(robot_id):
     loc = robot_departure_delay_dict[robot_id]
     if loc == 0:
         return 0
-    scale = 2
+    scale = 1
     departure_delay = np.random.normal(loc=loc, scale=scale)
     return departure_delay
 
