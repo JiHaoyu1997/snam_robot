@@ -130,15 +130,15 @@ class RobotDecision:
             #     travel_time = now_time - self.departure_time
             #     rospy.loginfo(f"{self.robot_name} travel time until now: {travel_time}")
 
+            # update local info
+            self.curr_route = new_route
+            # rospy.loginfo(f"{self.robot_name} travel total distance in inter{self.curr_route[0]}: {self.robot_info.robot_p}")
+
             # update global info
             self.update_global_inter_info(new_route=new_route)
 
             # update inter_x info sub 
             self.update_inter_sub(new_route=new_route)
-
-            # update local info
-            self.curr_route = new_route
-            # rospy.loginfo(f"{self.robot_name} travel total distance in inter{self.curr_route[0]}: {self.robot_info.robot_p}")
 
             # update pub info
             self.robot_info.robot_route = self.curr_route
