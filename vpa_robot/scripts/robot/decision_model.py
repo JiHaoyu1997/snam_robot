@@ -226,7 +226,7 @@ class VSCSModel:
             # print(cumulative_error)
             calc_control_input = controller_gain @ cumulative_error
             control_input = np.clip(calc_control_input, -6, 4)
-            print(control_input)
+            # print(control_input)
             # print(control_input)
             delta_v = control_input * delta_t
             # print(delta_v)
@@ -294,6 +294,7 @@ class VSCSModel:
                 factor = self.find_s_scaling_factor(route_j)
                 coor_j = robot_info.robot_coordinate
                 s_j = self.calc_distance_to_cp(cp_coor, coor_j) * factor
+                print(f"{robot_info.robot_name}: {s_j}")
                 v_j = robot_info.robot_v
 
             if robot_info.robot_id == self.robot_id:
@@ -301,6 +302,7 @@ class VSCSModel:
                 factor = self.find_s_scaling_factor(route_i)
                 coor_i = robot_info.robot_coordinate
                 s_i = self.calc_distance_to_cp(cp_coor, coor_i) * factor
+                print(f"{robot_info.robot_name}: {s_i}")
                 v_i = robot_info.robot_v
         
         if s_i is None or s_j is None or v_i is None or v_j is None:
