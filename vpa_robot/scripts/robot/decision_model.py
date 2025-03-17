@@ -4,7 +4,13 @@ import math
 import numpy as np
 from typing import List
 
-from map.map import local_map_grid_model, find_conflict_point_list, find_conflict_point, find_conflict_point_coordinate
+from map.map import (
+    local_mapper, 
+    local_map_grid_model, 
+    find_conflict_point_list, 
+    find_conflict_point, 
+    find_conflict_point_coordinate
+)
 from robot.robot import robot_dict, RobotInfo
 # from vscs import VSCS
 
@@ -218,8 +224,9 @@ class VSCSModel:
             controller_gain = self.calc_control_gain()
             cumulative_error = self.calc_cumulative_error(robot_id_list, robot_info_list)
             # print(cumulative_error)
-            control_input = controller_gain @ cumulative_error
-            # print(control_input)
+            calc_control_input = controller_gain @ cumulative_error
+            control_input = np.clip(calc_control_input, -6, 4)
+            print(control_input)
             # print(control_input)
             delta_v = control_input * delta_t
             # print(delta_v)
@@ -229,7 +236,6 @@ class VSCSModel:
     
     def generate_L(self, robot_info_list: List[RobotInfo]):
         N = len(robot_info_list)
-        print(N)
         L = np.zeros((N, N), dtype=int)
         cp_matrix = np.zeros((N, N), dtype=int)
         for i in range(N):
@@ -284,13 +290,17 @@ class VSCSModel:
         
         for robot_info in robot_info_list:
             if robot_info.robot_id == j:
+                route_j = robot_info.robot_route
+                factor = self.find_s_scaling_factor(route_j)
                 coor_j = robot_info.robot_coordinate
-                s_j = self.calc_distance_to_cp(cp_coor, coor_j)
+                s_j = self.calc_distance_to_cp(cp_coor, coor_j) * factor
                 v_j = robot_info.robot_v
 
             if robot_info.robot_id == self.robot_id:
+                route_i = robot_info.robot_route
+                factor = self.find_s_scaling_factor(route_i)
                 coor_i = robot_info.robot_coordinate
-                s_i = self.calc_distance_to_cp(cp_coor, coor_i)
+                s_i = self.calc_distance_to_cp(cp_coor, coor_i) * factor
                 v_i = robot_info.robot_v
         
         if s_i is None or s_j is None or v_i is None or v_j is None:
@@ -327,6 +337,15 @@ class VSCSModel:
             self.pass_cp_flag_dict[cp] = True
             return
     
+    def find_s_scaling_factor(self, route):
+        action =  local_mapper(last=route[0], current=route[1], next=route[2])
+        if action == 0:
+            return 1
+        elif action == 1:
+            return 1.2
+        else:
+            return 1.1
+
     def calc_distance_to_cp(self, cp_coor, robot_coor):
         distance_to_cp = math.sqrt((robot_coor[0] - cp_coor[0])**2 + (robot_coor[1] - cp_coor[1])**2)
         return distance_to_cp
