@@ -7,6 +7,7 @@
 
 import rospy
 import math
+import numpy as np
 from map.map import find_lane_total_distance
 from vpa_robot.msg import RobotInfo as RobotInfoMsg
 
@@ -21,10 +22,10 @@ robot_dict = {
 }
 
 robot_departure_delay_dict = {
-    1:5,
+    1:0,
     2:0,
     6:0,
-    7:10.5,
+    7:0,
     8:0,
     9:0,
     10:0,
@@ -34,7 +35,10 @@ def find_id_by_robot_name(robot_name):
     return next((key for key, value in robot_dict.items() if value == robot_name), None)
 
 def find_dep_delay(robot_id):
-    return robot_departure_delay_dict[robot_id]
+    loc = robot_departure_delay_dict[robot_id]
+    scale = 2
+    departure_delay = np.random.normal(loc=loc, scale=scale)
+    return departure_delay
 
 
 class RobotInfo:

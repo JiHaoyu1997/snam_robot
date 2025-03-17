@@ -118,6 +118,7 @@ class RobotVision:
     def global_brake_sub_cb(self, msg: Bool):
         if not msg.data:
             time_sleep = find_dep_delay(self.robot_id)
+            rospy.loginfo(f"{self.robot_name} departure delay is {time_sleep} s")
             rospy.sleep(time_sleep)
             self.curr_route = [6, 6, 2]
 
