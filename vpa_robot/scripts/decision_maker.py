@@ -192,11 +192,11 @@ class RobotDecision:
         if hasattr(self, 'inter_info_sub'):
             self.inter_info_sub.unregister()
         
+        self.local_inter_id = new_route[1]
         if self.local_inter_id == 6:
             rospy.loginfo(f"{self.robot_name} drives back to buffer area")
             return
         
-        self.local_inter_id = new_route[1]
         self.local_inter_info_topic = f'/inter_info/{self.local_inter_id}'
         self.inter_info_sub = rospy.Subscriber(self.local_inter_info_topic, InterInfoMsg, self.inter_info_cb)
         rospy.loginfo(f"{self.robot_name} updated inter_info_sub to {self.local_inter_info_topic}")
