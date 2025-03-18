@@ -333,6 +333,7 @@ class RobotDecision:
     
     def global_brake_sub_cb(self, msg: Bool):
         if not msg.data:
+            print(1)
             self.departure_time = round(rospy.get_time(), 5)
 
     def pub_robot_info(self, event):
