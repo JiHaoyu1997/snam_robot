@@ -160,26 +160,26 @@ class VSCSModel:
 
 if __name__ == '__main__':
     vscs = VSCSModel(robot_id=1)
-    robot_id_list = [8, 7 ,1]
+    robot_id_list = [8,1]
     robot_info_list = [
         RobotInfo(
             name="mingna",
             robot_id=1,
-            robot_route=(5, 3, 2),
+            robot_route=(2, 3, 4),
             coordinate=(1.193, 1.208),
             v=0.28
         ),
-        RobotInfo(
-            name="henry",
-            robot_id=7,
-            robot_route=(4, 3, 2),
-            coordinate=(1.826, 2.216),
-            v=0.31
-        ),
+        # RobotInfo(
+        #     name="henry",
+        #     robot_id=7,
+        #     robot_route=(1, 3, 5),
+        #     coordinate=(1.826, 2.216),
+        #     v=0.31
+        # ),
         RobotInfo(
             name="luna",
             robot_id=8,
-            robot_route=(1, 3, 2),
+            robot_route=(5, 3, 1),
             coordinate=(2.016, 0.71),
             v=0.25
         ),
