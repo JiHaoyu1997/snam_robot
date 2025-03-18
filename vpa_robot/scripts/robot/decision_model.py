@@ -322,7 +322,7 @@ class VSCSModel:
                 # factor = self.find_s_scaling_factor(route_i)
                 coor_i = robot_info.robot_coordinate
                 s_i = self.calc_distance_to_cp(cp_coor, coor_i)
-                # print(f"{robot_info.robot_name}: {s_i}")
+                print(f"{robot_info.robot_name}: {s_i}")
                 v_i = robot_info.robot_v
         
         if s_i is None or s_j is None or v_i is None or v_j is None:
