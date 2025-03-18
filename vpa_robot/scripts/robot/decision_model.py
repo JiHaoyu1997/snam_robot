@@ -94,6 +94,7 @@ class GridBasedModel:
             if robot_info.robot_enter_conflict:
                 route = robot_info.robot_route
                 if route == self.curr_route:
+                    print(f"same route with {robot_info.robot_name}")
                     continue
                 occupied_grid = local_map_grid_model(route[0], route[1], route[2])
                 self.record_occupied_grid(occupied_grid=occupied_grid)
@@ -208,6 +209,7 @@ class VSCSModel:
         self.L = []
         self.cp_matrix = []
         self.break_virtual_spring_flag_dict = {}
+        self.last_control_input = 0
 
     def update_break_virtual_spring_flag_dict(self, new_robot_id_list):
         if len(new_robot_id_list) <= 1:
@@ -240,7 +242,10 @@ class VSCSModel:
             cumulative_error = self.calc_cumulative_error(robot_id_list, robot_info_list)
             # print(cumulative_error)
             calc_control_input = controller_gain @ cumulative_error
-            control_input = np.clip(calc_control_input, -6, 4)
+            truncated_control_input = np.clip(calc_control_input, -6, 4)
+            beta = 0.75
+            control_input = self.last_control_input * (1 - beta) + truncated_control_input * beta
+            self.last_control_input = control_input
             # print(control_input)
             delta_v = control_input * delta_t
             # print(delta_v)
