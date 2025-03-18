@@ -240,7 +240,7 @@ class VSCSModel:
             beta = 0.75
             control_input = self.last_control_input * (1 - beta) + truncated_control_input * beta
             self.last_control_input = control_input
-            # print(control_input)
+            print(control_input)
             delta_v = control_input * delta_t
             # print(delta_v)
             twist.linear.x = 0.3 + delta_v
@@ -323,7 +323,7 @@ class VSCSModel:
                 factor_i = self.find_check_break_scaling_factor(route_i)
                 coor_i = robot_info.robot_coordinate
                 s_i = self.calc_distance_to_cp(cp_coor, coor_i)
-                print(f"{robot_info.robot_name}: {s_i}")
+                # print(f"{robot_info.robot_name}: {s_i}")
                 v_i = robot_info.robot_v
         
         if s_i is None or s_j is None or v_i is None or v_j is None:
