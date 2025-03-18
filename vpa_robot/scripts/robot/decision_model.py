@@ -58,7 +58,7 @@ class GridBasedModel:
     def __init__(self, robot_id=0) -> None:
         self.robot_id = robot_id
         self.robot_name = robot_dict[robot_id]
-        self.curr_route = []
+        self.curr_route = ()
         self.occupied_grid_matrix = np.zeros((2,2), dtype=int)
         
         self.want_to_enter_conflict = False
@@ -89,12 +89,14 @@ class GridBasedModel:
             # reccord curr route and skip self
             if robot_info.robot_id == self.robot_id:
                 # print(robot_info.robot_route)
-                self.curr_route  = [route for route in robot_info.robot_route]
+                self.curr_route  = (route for route in robot_info.robot_route)
                 continue
 
             # When some one robot has already entered the conflict zone
             if robot_info.robot_enter_conflict:
                 route = robot_info.robot_route
+                if route == self.curr_route:
+                    continue
                 occupied_grid = local_map_grid_model(route[0], route[1], route[2])
                 self.record_occupied_grid(occupied_grid=occupied_grid)
 
@@ -241,7 +243,7 @@ class VSCSModel:
             # print(cumulative_error)
             calc_control_input = controller_gain @ cumulative_error
             control_input = np.clip(calc_control_input, -6, 4)
-            print(control_input)
+            # print(control_input)
             delta_v = control_input * delta_t
             # print(delta_v)
             twist.linear.x = 0.3 + delta_v
@@ -266,7 +268,7 @@ class VSCSModel:
         for i in range(N):
             L[i][i] = -np.sum(L[i])
 
-        rospy.loginfo_once('laplacian: \n%s', np.array2string(L))
+        # rospy.loginfo_once('laplacian: \n%s', np.array2string(L))
         # print(cp_matrix)
         return L, cp_matrix
 
@@ -311,17 +313,17 @@ class VSCSModel:
         for robot_info in robot_info_list:
             if robot_info.robot_id == j:
                 route_j = robot_info.robot_route
-                factor = self.find_s_scaling_factor(route_j)
+                # factor = self.find_s_scaling_factor(route_j)
                 coor_j = robot_info.robot_coordinate
-                s_j = self.calc_distance_to_cp(cp_coor, coor_j) * factor
+                s_j = self.calc_distance_to_cp(cp_coor, coor_j)
                 # print(f"{robot_info.robot_name}: {s_j}")
                 v_j = robot_info.robot_v
 
             if robot_info.robot_id == self.robot_id:
                 route_i = robot_info.robot_route
-                factor = self.find_s_scaling_factor(route_i)
+                # factor = self.find_s_scaling_factor(route_i)
                 coor_i = robot_info.robot_coordinate
-                s_i = self.calc_distance_to_cp(cp_coor, coor_i) * factor
+                s_i = self.calc_distance_to_cp(cp_coor, coor_i)
                 # print(f"{robot_info.robot_name}: {s_i}")
                 v_i = robot_info.robot_v
         
@@ -360,14 +362,13 @@ class VSCSModel:
             return
     
     def find_s_scaling_factor(self, route):
-        return 1
         action =  local_mapper(last=route[0], current=route[1], next=route[2])
         if action == 0:
             return 1
         elif action == 1:
-            return 1
+            return 1.1
         else:
-            return 
+            return 1.05
 
     def calc_distance_to_cp(self, cp_coor, robot_coor):
         distance_to_cp = math.sqrt((robot_coor[0] - cp_coor[0])**2 + (robot_coor[1] - cp_coor[1])**2)
