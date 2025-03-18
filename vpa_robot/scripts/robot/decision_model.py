@@ -305,7 +305,7 @@ class VSCSModel:
     def calc_eij(self, j, cp, robot_info_list: List[RobotInfo]):
         cp_coor = find_conflict_point_coordinate(inter=3, cp=cp)
         N = len(robot_info_list)
-        lr = 0.25 * N
+        lr = 0.5
         s_i, s_j, v_i, v_j = None, None, None, None
         
         for robot_info in robot_info_list:
