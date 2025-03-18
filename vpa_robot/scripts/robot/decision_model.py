@@ -86,10 +86,8 @@ class GridBasedModel:
 
         # Step1 record which grids are already occupied
         for robot_info in robot_info_list:            
-            # reccord curr route and skip self
             if robot_info.robot_id == self.robot_id:
-                # print(robot_info.robot_route)
-                self.curr_route  = (route for route in robot_info.robot_route)
+                self.curr_route = robot_info.robot_route
                 continue
 
             # When some one robot has already entered the conflict zone
