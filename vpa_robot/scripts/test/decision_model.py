@@ -160,7 +160,7 @@ class VSCSModel:
 
 if __name__ == '__main__':
     vscs = VSCSModel(robot_id=1)
-    robot_id_list = [8,1]
+    robot_id_list = [1, 7 ,8]
     robot_info_list = [
         RobotInfo(
             name="mingna",
@@ -169,13 +169,13 @@ if __name__ == '__main__':
             coordinate=(1.193, 1.208),
             v=0.28
         ),
-        # RobotInfo(
-        #     name="henry",
-        #     robot_id=7,
-        #     robot_route=(1, 3, 5),
-        #     coordinate=(1.826, 2.216),
-        #     v=0.31
-        # ),
+        RobotInfo(
+            name="henry",
+            robot_id=7,
+            robot_route=(1, 3, 5),
+            coordinate=(1.826, 2.216),
+            v=0.31
+        ),
         RobotInfo(
             name="luna",
             robot_id=8,
