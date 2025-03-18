@@ -200,15 +200,19 @@ class RobotDecision:
         """
         Updates local intersection information.
         """
+        # update_break_virtual_spring_flag_dict
+        if self.local_inter_id == 3:
+            if self.local_inter_info.robot_id_list != inter_info_msg.robot_id_list:
+                rospy.logwarn("robot_id_list change")
+                self.vscs_model.update_break_virtual_spring_flag_dict(new_robot_id_list=inter_info_msg.robot_id_list)
+
+        # update inter_id
         self.local_inter_info.inter_id = inter_info_msg.inter_id
 
-        if self.local_inter_info.robot_id_list == inter_info_msg.robot_id_list:
-            pass
-        else:
-            self.local_inter_info.robot_id_list = inter_info_msg.robot_id_list
-            # rospy.logwarn("robot_id_list change")
+        # update robot_id_list
+        self.local_inter_info.robot_id_list = inter_info_msg.robot_id_list
 
-        
+        # update robot_info_list
         robot_info: List[RobotInfoMsg] = inter_info_msg.robot_info
         self.local_inter_info.robot_info = [
             RobotInfo(

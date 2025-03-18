@@ -207,6 +207,21 @@ class VSCSModel:
         self.robot_name = robot_dict[robot_id]
         self.L = []
         self.cp_matrix = []
+        self.break_virtual_spring_flag_dict = {}
+
+    def update_break_virtual_spring_flag_dict(self, new_robot_id_list):
+        if len(new_robot_id_list) <= 1:
+            rospy.loginfo(f"{self.robot_name} first approach to Inter3")
+            return
+
+        if len(self.break_virtual_spring_flag_dict) == 0:
+            rospy.loginfo("init break_virtual_spring_flag_dict")
+
+        for other_id in new_robot_id_list:
+            if other_id != self.robot_id:
+                key = (self.robot_id, other_id)
+                if key not in self.break_virtual_spring_flag_dict:
+                    self.break_virtual_spring_flag_dict[key] = False
 
     def generate_pass_cp_flag_dict(self, new_route):
         route_in_tuple = tuple(new_route)
@@ -279,7 +294,8 @@ class VSCSModel:
             if conflict == -1:
                 conflict_robot_id = robot_id_list[idx]
                 cp = cp_list[idx]
-                if self.pass_cp_flag_dict[cp]:
+                key = (self.robot_id, conflict_robot_id)
+                if self.break_virtual_spring_flag_dict[key]:
                     cumu_error += 0
                 else:
                     eij = self.calc_eij(conflict_robot_id, cp, robot_info_list)
@@ -321,26 +337,26 @@ class VSCSModel:
 
         eij = np.array([e_s, e_v]).reshape((2,1))
         error = abs(e_s)
-        # if cp == 3:
-            # print(s_i)
 
-        pass_cp_flag = self.break_virtual_spring(s_i, s_j, error, cp)
+        pass_cp_flag = self.break_virtual_spring(s_i, s_j, j, error, cp)
         return eij
     
-    def break_virtual_spring(self, s_i, s_j, error, cp):
+    def break_virtual_spring(self, s_i, s_j, other_id, error, cp):
+        key = (self.robot_id, other_id)
+
         if s_i < 0.05:
             rospy.loginfo_once(f"{self.robot_name} self pass cp={cp}")
-            self.pass_cp_flag_dict[cp] = True
+            self.break_virtual_spring_flag_dict[key] = True
             return 
 
         if s_j < 0.05:
-            rospy.loginfo_once(f"{self.robot_name} conflicting robot pass cp={cp}")
-            self.pass_cp_flag_dict[cp] = True
+            rospy.loginfo_once(f"{self.robot_name} conflicting robot {robot_dict[other_id]} pass cp={cp}")
+            self.break_virtual_spring_flag_dict[key] = True
             return
 
         if error < 0.05:
             rospy.loginfo_once(f"{self.robot_name} befor cp={cp} reach harmony")
-            self.pass_cp_flag_dict[cp] = True
+            self.break_virtual_spring_flag_dict[key] = True
             return
     
     def find_s_scaling_factor(self, route):
