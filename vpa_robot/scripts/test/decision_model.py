@@ -72,7 +72,7 @@ class VSCSModel:
 
         rospy.loginfo_once('laplacian: \n%s', np.array2string(L))
         print(L)
-        # print(cp_matrix)
+        print(cp_matrix)
         return L, cp_matrix
 
     def calc_control_gain(self):
