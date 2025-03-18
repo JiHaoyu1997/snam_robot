@@ -160,7 +160,7 @@ class VSCSModel:
 
 if __name__ == '__main__':
     vscs = VSCSModel(robot_id=1)
-    robot_id_list = [7 ,1]
+    robot_id_list = [8, 7 ,1]
     robot_info_list = [
         RobotInfo(
             name="mingna",
@@ -176,13 +176,13 @@ if __name__ == '__main__':
             coordinate=(1.826, 2.216),
             v=0.31
         ),
-        # RobotInfo(
-        #     name="luna",
-        #     robot_id=8,
-        #     robot_route=(1, 3, 2),
-        #     coordinate=(2.016, 0.71),
-        #     v=0.25
-        # ),
+        RobotInfo(
+            name="luna",
+            robot_id=8,
+            robot_route=(1, 3, 2),
+            coordinate=(2.016, 0.71),
+            v=0.25
+        ),
     ]
     vscs.calc_twist(twist_from_img=Twist(), robot_id_list=robot_id_list, robot_info_list=robot_info_list)
     # vscs.generate_pass_cp_flag_dict(new_route=[2, 3, 4])
