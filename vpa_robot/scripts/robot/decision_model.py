@@ -314,7 +314,7 @@ class VSCSModel:
                 factor = self.find_s_scaling_factor(route_j)
                 coor_j = robot_info.robot_coordinate
                 s_j = self.calc_distance_to_cp(cp_coor, coor_j) * factor
-                print(f"{robot_info.robot_name}: {s_j}")
+                # print(f"{robot_info.robot_name}: {s_j}")
                 v_j = robot_info.robot_v
 
             if robot_info.robot_id == self.robot_id:
@@ -322,7 +322,7 @@ class VSCSModel:
                 factor = self.find_s_scaling_factor(route_i)
                 coor_i = robot_info.robot_coordinate
                 s_i = self.calc_distance_to_cp(cp_coor, coor_i) * factor
-                print(f"{robot_info.robot_name}: {s_i}")
+                # print(f"{robot_info.robot_name}: {s_i}")
                 v_i = robot_info.robot_v
         
         if s_i is None or s_j is None or v_i is None or v_j is None:
@@ -355,7 +355,7 @@ class VSCSModel:
             return
 
         if error < 0.05:
-            rospy.loginfo_once(f"{self.robot_name} befor cp={cp} reach harmony")
+            rospy.loginfo_once(f"{self.robot_name} with {robot_dict[other_id]} befor cp={cp} reach harmony")
             self.break_virtual_spring_flag_dict[key] = True
             return
     
@@ -364,9 +364,9 @@ class VSCSModel:
         if action == 0:
             return 1
         elif action == 1:
-            return 1.2
-        else:
             return 1.1
+        else:
+            return 1.05
 
     def calc_distance_to_cp(self, cp_coor, robot_coor):
         distance_to_cp = math.sqrt((robot_coor[0] - cp_coor[0])**2 + (robot_coor[1] - cp_coor[1])**2)
