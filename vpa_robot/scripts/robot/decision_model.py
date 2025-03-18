@@ -327,6 +327,9 @@ class VSCSModel:
         if s_i is None or s_j is None or v_i is None or v_j is None:
             raise ValueError("Unable to find robot info for the given robot IDs.")
         
+        if abs(s_j - s_i) > 1.5:
+            return 0
+        
         if s_i < s_j:
             e_s = (s_j - s_i) - lr
         else:
