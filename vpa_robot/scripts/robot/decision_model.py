@@ -311,7 +311,7 @@ class VSCSModel:
         for robot_info in robot_info_list:
             if robot_info.robot_id == j:
                 route_j = robot_info.robot_route
-                # factor = self.find_s_scaling_factor(route_j)
+                factor_j = self.find_check_break_scaling_factor(route_j)
                 coor_j = robot_info.robot_coordinate
                 s_j = self.calc_distance_to_cp(cp_coor, coor_j)
                 # print(f"{robot_info.robot_name}: {s_j}")
@@ -319,7 +319,7 @@ class VSCSModel:
 
             if robot_info.robot_id == self.robot_id:
                 route_i = robot_info.robot_route
-                # factor = self.find_s_scaling_factor(route_i)
+                factor_i = self.find_check_break_scaling_factor(route_i)
                 coor_i = robot_info.robot_coordinate
                 s_i = self.calc_distance_to_cp(cp_coor, coor_i)
                 print(f"{robot_info.robot_name}: {s_i}")
@@ -341,18 +341,18 @@ class VSCSModel:
         eij = np.array([e_s, e_v]).reshape((2,1))
         error = abs(e_s)
 
-        pass_cp_flag = self.break_virtual_spring(s_i, s_j, j, error, cp)
+        pass_cp_flag = self.break_virtual_spring(s_i, factor_i, s_j, factor_j, j, error, cp)
         return eij
     
-    def break_virtual_spring(self, s_i, s_j, other_id, error, cp):
+    def break_virtual_spring(self, s_i, factor_i, s_j, factor_j, other_id, error, cp):
         key = (self.robot_id, other_id)
 
-        if s_i < 0.05:
+        if s_i < 0.05 * factor_i:
             rospy.loginfo_once(f"{self.robot_name} self pass cp={cp}")
             self.break_virtual_spring_flag_dict[key] = True
             return 
 
-        if s_j < 0.05:
+        if s_j < 0.05 * factor_j:
             rospy.loginfo_once(f"{self.robot_name} conflicting robot {robot_dict[other_id]} pass cp={cp}")
             self.break_virtual_spring_flag_dict[key] = True
             return
@@ -370,6 +370,15 @@ class VSCSModel:
             return 1.1
         else:
             return 1.05
+        
+    def find_check_break_scaling_factor(self, route):
+        action =  local_mapper(last=route[0], current=route[1], next=route[2])
+        if action == 0:
+            return 1
+        elif action == 1:
+            return 1
+        else:
+            return 2
 
     def calc_distance_to_cp(self, cp_coor, robot_coor):
         distance_to_cp = math.sqrt((robot_coor[0] - cp_coor[0])**2 + (robot_coor[1] - cp_coor[1])**2)
