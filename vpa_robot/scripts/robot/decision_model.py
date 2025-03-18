@@ -76,7 +76,7 @@ class GridBasedModel:
         else:
             return twist_from_img
 
-    def check_enter_permission(self, curr_route, robot_info_list: List[RobotInfo]):
+    def check_enter_permission(self, robot_info_list: List[RobotInfo]):
         """
         Check the status of robots in the queue:
         """
