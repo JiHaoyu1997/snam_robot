@@ -77,8 +77,6 @@ class GridBasedModel:
             return twist_from_img
 
     def check_enter_permission(self, robot_info_list: List[RobotInfo]):
-        # print(self.curr_route)
-        # print(robot_info_list)
         """
         Check the status of robots in the queue:
         """
@@ -93,6 +91,7 @@ class GridBasedModel:
             # When some one robot has already entered the conflict zone
             if robot_info.robot_enter_conflict:
                 route = robot_info.robot_route
+                print(route)
                 if route == self.curr_route:
                     print(f"same route with {robot_info.robot_name}")
                     continue
