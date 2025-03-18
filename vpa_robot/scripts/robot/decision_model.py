@@ -360,13 +360,14 @@ class VSCSModel:
             return
     
     def find_s_scaling_factor(self, route):
+        return 1
         action =  local_mapper(last=route[0], current=route[1], next=route[2])
         if action == 0:
             return 1
         elif action == 1:
-            return 1.1
+            return 1
         else:
-            return 1.05
+            return 
 
     def calc_distance_to_cp(self, cp_coor, robot_coor):
         distance_to_cp = math.sqrt((robot_coor[0] - cp_coor[0])**2 + (robot_coor[1] - cp_coor[1])**2)
