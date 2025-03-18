@@ -31,6 +31,16 @@ robot_departure_delay_dict = {
     10:0,
 }
 
+robot_352_turn_right_factor = {
+    1:0.7,
+    2:0.7,
+    6:0.7,
+    7:0.725,
+    8:0.7,
+    9:0.7,
+    10:0.7,
+}
+
 def find_id_by_robot_name(robot_name):
     return next((key for key, value in robot_dict.items() if value == robot_name), None)
 
@@ -42,6 +52,8 @@ def find_dep_delay(robot_id):
     departure_delay = np.random.normal(loc=loc, scale=scale)
     return departure_delay
 
+def find_352_turn_right_factor(robot_id):
+    return robot_352_turn_right_factor[robot_id]
 
 class RobotInfo:
     def __init__(

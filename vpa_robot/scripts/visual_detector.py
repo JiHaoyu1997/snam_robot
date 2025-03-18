@@ -9,7 +9,7 @@ from enum import Enum
 import cv2
 from cv_bridge import CvBridge
 
-from robot.robot import find_id_by_robot_name, find_dep_delay
+from robot.robot import find_id_by_robot_name, find_dep_delay, find_352_turn_right_factor
 from map import map
 from hsv import hsv, search_pattern
 from pid_controller import pid_controller
@@ -482,10 +482,8 @@ class RobotVision:
             self.current_zone = Zone.CONFLICT
             target_x = search_pattern.search_inter_guide_line2(self.right_guide_hsv, cv_hsv_img, 2)
             if target_x is None:
-                if self.robot_id in [2, 6, 8]:
-                    target_x = self.image_width * 0.7
-                else:
-                    target_x = self.image_width * 0.7
+                factor = find_352_turn_right_factor(self.robot_id)
+                target_x = self.image_width * factor
         cv2.circle(cv_img, (int(target_x), int(cv_hsv_img.shape[0]/2)), 5, (255, 255, 0), 5)
 
         return target_x, cv_img
