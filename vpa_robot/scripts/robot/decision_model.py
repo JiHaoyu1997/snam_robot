@@ -76,7 +76,7 @@ class GridBasedModel:
         else:
             return twist_from_img
 
-    def check_enter_permission(self, robot_info_list: List[RobotInfo]):
+    def check_enter_permission(self, curr_route, robot_info_list: List[RobotInfo]):
         """
         Check the status of robots in the queue:
         """
@@ -84,11 +84,6 @@ class GridBasedModel:
 
         # Step1 record which grids are already occupied
         for robot_info in robot_info_list:            
-            if robot_info.robot_id == self.robot_id:
-                self.curr_route = robot_info.robot_route
-                continue
-
-            # When some one robot has already entered the conflict zone
             if robot_info.robot_enter_conflict:
                 route = robot_info.robot_route
                 print(route)
@@ -212,7 +207,7 @@ class VSCSModel:
 
     def update_break_virtual_spring_flag_dict(self, new_robot_id_list):
         if len(new_robot_id_list) <= 1:
-            rospy.loginfo(f"{self.robot_name} first approach to Inter3")
+            rospy.loginfo(f"only {self.robot_name} in Inter3")
             return
 
         if len(self.break_virtual_spring_flag_dict) == 0:

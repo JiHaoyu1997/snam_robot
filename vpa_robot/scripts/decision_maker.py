@@ -138,6 +138,7 @@ class RobotDecision:
             # update decision flag
             self.decision_model.want_to_enter_conflict = False
             self.decision_model.enter_permission = False
+            self.decision_model.curr_route = tuple(new_route)
 
             # update global info
             self.update_global_inter_info(new_route=new_route)
@@ -267,7 +268,7 @@ class RobotDecision:
         if self.curr_route[1] != 3:
             if self.decision_model.want_to_enter_conflict:
                 if not self.decision_model.enter_permission:
-                    self.decision_model.enter_permission = self.decision_model.check_enter_permission(self.local_inter_info.robot_info)
+                    self.decision_model.enter_permission = self.decision_model.check_enter_permission(self.curr_route, self.local_inter_info.robot_info)
                     # print(self.decision_model.enter_permission)
                     self.robot_info.robot_enter_conflict = self.decision_model.enter_permission
                     # print(self.robot_info.robot_enter_conflict)
