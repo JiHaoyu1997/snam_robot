@@ -106,11 +106,10 @@ class VSCS:
         constraints = []
         constraints.append(Q >> 0)
         constraints.append(H >> 0)
-        constraints.append(alpha >= 1e-6)
-        constraints.append(delta >= 1e-6)
-        constraints.append(epsilon >= 1e-6)
-        constraints.append(LMT1 >= 1e-6)
-        constraints.append(X <= -1e-6 * np.eye(4))
+        constraints.append(delta >= 1e-9)
+        constraints.append(epsilon >= 1e-9)
+        constraints.append(LMT1 >= 1e-9)
+        constraints.append(X <= -1e-9 * np.eye(4))
 
         prob = cp.Problem(objective, constraints)
         result = prob.solve(solver=cp.SCS, verbose=False)

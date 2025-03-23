@@ -275,12 +275,14 @@ class VSCSModel:
             K = np.array([
                 [-5.19884665,  8.54126546]
                 ])
-        else:    
+        elif N == 3:    
             K = np.array([
                 # [-11.72353634,  18.81520133] #sce3
                 # [-14.00904388,  23.55785533] #sce2
-                [-15.3, 24.22] #sce4
+                [-14, 23.56] #sce4
                 ])
+        elif N == 4:
+            K = np.array([-15.3, 24.22])
         return K
 
     def calc_cumulative_error(self, robot_id_list: List[int], robot_info_list: List[RobotInfo]):
