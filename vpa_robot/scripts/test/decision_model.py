@@ -172,14 +172,14 @@ if __name__ == '__main__':
         RobotInfo(
             name="henry",
             robot_id=7,
-            robot_route=(1, 3, 5),
+            robot_route=(5, 3, 2),
             coordinate=(1.826, 2.216),
             v=0.31
         ),
         RobotInfo(
             name="luna",
             robot_id=8,
-            robot_route=(5, 3, 1),
+            robot_route=(1, 3, 5),
             coordinate=(2.016, 0.71),
             v=0.25
         ),
