@@ -45,6 +45,7 @@ class RobotDecision:
 
         # Initialize route and intersection information
         self.curr_route = [0, 0, 0]
+        self.prev_robot_id_list = []
         self.local_inter_id = 0
         self.local_inter_info = InterInfo()
         self.local_inter_info_topic = f'/inter_info/{self.local_inter_id}'
@@ -201,11 +202,6 @@ class RobotDecision:
         """
         Updates local intersection information.
         """
-        # update_break_virtual_spring_flag_dict
-        if self.local_inter_id == 3:
-            if self.local_inter_info.robot_id_list != inter_info_msg.robot_id_list:
-                rospy.logwarn("robot_id_list change")
-                self.vscs_model.update_robot_pass_cp_flag_dict(inter_info_msg.robot_id_list, self.local_inter_info.robot_info)
 
         # update inter_id
         self.local_inter_info.inter_id = inter_info_msg.inter_id
@@ -235,6 +231,14 @@ class RobotDecision:
             ) for info in robot_info
         ]
 
+        # update_robot_pass_cp_flag_dict
+        if self.local_inter_id == 3:
+            if self.local_inter_info.robot_id_list != self.prev_robot_id_list:
+                new_robot_id_list = self.local_inter_info.robot_id_list
+                robot_info_list = self.local_inter_info.robot_info
+                rospy.logwarn("robot_id_list change")
+                self.vscs_model.update_robot_pass_cp_flag_dict(new_robot_id_list, robot_info_list)
+                self.prev_robot_id_list = new_robot_id_list
         return
 
     def cmd_vel_from_img_cb(self, msg: Twist):
