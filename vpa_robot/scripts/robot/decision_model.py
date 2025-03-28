@@ -265,7 +265,7 @@ class VSCSModel:
             beta = 0.5
             control_input = self.last_control_input * (1 - beta) + truncated_control_input * beta
             self.last_control_input = control_input
-            # print(control_input)
+            print("control_pint", control_input)
             delta_v = control_input * delta_t
             # print(delta_v)
             twist.linear.x = 0.3 + delta_v
@@ -373,7 +373,7 @@ class VSCSModel:
             e_s = (s_j - s_i) - lr
         else:
             e_s = (s_j - s_i) + lr
-        print(e_s)
+        print("e_s", e_s)
 
         e_v = v_j - v_i
 
