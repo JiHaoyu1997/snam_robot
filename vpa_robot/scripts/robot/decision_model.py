@@ -227,6 +227,7 @@ class VSCSModel:
             self.robot_pass_cp_flag_dict.pop(robot_id, None)
 
         self.prev_robot_id_list = new_robot_id_list
+        print(self.robot_pass_cp_flag_dict)
         return self.robot_pass_cp_flag_dict
 
     def update_break_virtual_spring_flag_dict(self, new_robot_id_list):
