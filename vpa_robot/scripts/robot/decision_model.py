@@ -259,13 +259,13 @@ class VSCSModel:
             self.L, self.cp_matrix = self.generate_L(robot_info_list=robot_info_list)
             controller_gain = self.calc_control_gain(N)
             cumulative_error = self.calc_cumulative_error(robot_id_list, robot_info_list)
-            print(cumulative_error)
+            # print(cumulative_error)
             calc_control_input = controller_gain @ cumulative_error
             truncated_control_input = np.clip(calc_control_input, -6, 4)
             beta = 0.75
             control_input = self.last_control_input * (1 - beta) + truncated_control_input * beta
             self.last_control_input = control_input
-            print(control_input)
+            # print(control_input)
             delta_v = control_input * delta_t
             # print(delta_v)
             twist.linear.x = 0.3 + delta_v
@@ -373,12 +373,14 @@ class VSCSModel:
             e_s = (s_j - s_i) - lr
         else:
             e_s = (s_j - s_i) + lr
+        print(e_s)
 
         e_v = v_j - v_i
 
         eij = np.array([e_s, e_v]).reshape((2,1))
-        error = abs(e_s)
 
+
+        # error = abs(e_s)
         # pass_cp_flag = self.break_virtual_spring(s_i, factor_i, s_j, factor_j, j, error, cp)
         return eij
     
