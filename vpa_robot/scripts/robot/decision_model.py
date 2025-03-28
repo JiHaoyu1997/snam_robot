@@ -200,10 +200,34 @@ class VSCSModel:
     def __init__(self, robot_id=0) -> None:
         self.robot_id = robot_id
         self.robot_name = robot_dict[robot_id]
+
+        self.prev_robot_id_list = []
         self.L = []
         self.cp_matrix = []
+        self.robot_pass_cp_flag_dict = {}
         self.break_virtual_spring_flag_dict = {}
         self.last_control_input = 0
+
+    def update_robot_pass_cp_flag_dict(self, new_robot_id_list: List[int], robot_info_list: List[RobotInfo]):
+        if new_robot_id_list == self.prev_robot_id_list:
+            return self.robot_pass_cp_flag_dict
+        
+        new_robot_id_set = set(new_robot_id_list)
+        prev_robot_id_set = set(self.prev_robot_id_list)
+
+        for robot_id in new_robot_id_set - prev_robot_id_set:
+            robot_info = next((robot_info for robot_info in robot_info_list if robot_info.robot_id == robot_id), None)
+            if robot_info:
+                cp_list = find_conflict_point_list(robot_info.robot_route)
+                self.robot_pass_cp_flag_dict[robot_id] = {cp: False for cp in cp_list}
+            else:
+                rospy.logwarn(f"robot_info of {robot_id} not found")
+        
+        for robot_id in prev_robot_id_set - new_robot_id_set:
+            self.robot_pass_cp_flag_dict.pop(robot_id, None)
+
+        self.prev_robot_id_list = new_robot_id_list
+        return self.robot_pass_cp_flag_dict
 
     def update_break_virtual_spring_flag_dict(self, new_robot_id_list):
         if len(new_robot_id_list) <= 1:
@@ -318,6 +342,7 @@ class VSCSModel:
                 factor_j = self.find_check_break_scaling_factor(route_j)
                 coor_j = robot_info.robot_coordinate
                 s_j = self.calc_distance_to_cp(cp_coor, coor_j)
+                self.update_robot_pass_cp_flag(s_j, factor_j, j, cp)
                 # print(f"{robot_info.robot_name}: {s_j}")
                 v_j = robot_info.robot_v
 
@@ -326,6 +351,7 @@ class VSCSModel:
                 factor_i = self.find_check_break_scaling_factor(route_i)
                 coor_i = robot_info.robot_coordinate
                 s_i = self.calc_distance_to_cp(cp_coor, coor_i)
+                self.update_robot_pass_cp_flag(s_i, factor_i, self.robot_id, cp)
                 # print(f"{robot_info.robot_name}: {s_i}")
                 v_i = robot_info.robot_v
         
@@ -347,6 +373,15 @@ class VSCSModel:
 
         pass_cp_flag = self.break_virtual_spring(s_i, factor_i, s_j, factor_j, j, error, cp)
         return eij
+    
+    def update_robot_pass_cp_flag(self, s, factor, robot_id, cp):
+        if self.robot_pass_cp_flag_dict[robot_id][cp]:
+            return
+
+        if s < 0.05 * factor:
+            rospy.loginfo_once(f"{robot_dict[robot_id]} pass cp={cp}")
+            self.robot_pass_cp_flag_dict[robot_id][cp] = True
+            return 
     
     def break_virtual_spring(self, s_i, factor_i, s_j, factor_j, other_id, error, cp):
         key = (self.robot_id, other_id)
@@ -387,31 +422,3 @@ class VSCSModel:
     def calc_distance_to_cp(self, cp_coor, robot_coor):
         distance_to_cp = math.sqrt((robot_coor[0] - cp_coor[0])**2 + (robot_coor[1] - cp_coor[1])**2)
         return distance_to_cp
-                
-
-if __name__ == '__main__':
-    vscs = VSCSModel(robot_id=1)
-    robot_id_list = [1, 7]
-    robot_info_list = [
-        RobotInfo(
-            name="luna",
-            robot_id=8,
-            robot_route=(5, 3, 1),
-            v=0.25
-        ),
-        RobotInfo(
-            name="mingna",
-            robot_id=1,
-            robot_route=(2, 3, 4),
-            coordinate=(1.193, 1.208),
-            v=0.28
-        ),
-        RobotInfo(
-            name="henry",
-            robot_id=7,
-            robot_route=(1, 3, 5),
-            coordinate=(1.826, 2.216),
-            v=0.31
-        ),
-    ]
-    vscs.calc_twist(twist_from_img=Twist(), robot_id_list=robot_id_list, robot_info_list=robot_info_list)

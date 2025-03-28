@@ -19,9 +19,35 @@ class VSCSModel:
     def __init__(self, robot_id=0) -> None:
         self.robot_id = robot_id
         self.robot_name = robot_dict[robot_id]
+
+        self.prev_robot_id_list = []
         self.L = []
         self.cp_matrix = []
-        self.vscs_solver = VSCS()
+        self.robot_pass_cp_flag_dict = {}
+        self.break_virtual_spring_flag_dict = {}
+        self.last_control_input = 0
+    
+    def update_robot_pass_cp_flag_dict(self, new_robot_id_list: List[int], robot_info_list: List[RobotInfo]):
+        if new_robot_id_list == self.prev_robot_id_list:
+            return self.robot_pass_cp_flag_dict
+        
+        new_robot_id_set = set(new_robot_id_list)
+        prev_robot_id_set = set(self.prev_robot_id_list)
+
+        for robot_id in new_robot_id_set - prev_robot_id_set:
+            print(robot_id)
+            robot_info = next((robot_info for robot_info in robot_info_list if robot_info.robot_id == robot_id), None)
+            if robot_info:
+                cp_list = find_conflict_point_list(robot_info.robot_route)
+                self.robot_pass_cp_flag_dict[robot_id] = {cp: False for cp in cp_list}
+            else:
+                rospy.logwarn(f"robot_info of {robot_id} not found")
+        
+        for robot_id in prev_robot_id_set - new_robot_id_set:
+            self.robot_pass_cp_flag_dict.pop(robot_id, None)
+
+        self.prev_robot_id_list = new_robot_id_list
+        return self.robot_pass_cp_flag_dict
 
     def generate_pass_cp_flag_dict(self, new_route):
         route_in_tuple = tuple(new_route)
@@ -160,36 +186,32 @@ class VSCSModel:
 
 if __name__ == '__main__':
     vscs = VSCSModel(robot_id=1)
-    robot_id_list = [1, 2, 8]
+    robot_id_list = [8, 7, 1]
     robot_info_list = [
-        RobotInfo(
-            name="mingna",
-            robot_id=1,
-            robot_route=(1, 3, 5),
-            coordinate=(1.193, 1.208),
-            v=0.28
-        ),
-        RobotInfo(
-            name="vivian",
-            robot_id=2,
-            robot_route=(4, 3, 1),
-            coordinate=(2.016, 0.71),
-            v=0.25
-        ),
-        # RobotInfo(
-        #     name="henry",
-        #     robot_id=7,
-        #     robot_route=(5, 3, 1),
-        #     coordinate=(1.826, 2.216),
-        #     v=0.31
-        # ),
         RobotInfo(
             name="luna",
             robot_id=8,
-            robot_route=(2, 3, 4),
-            coordinate=(2.016, 0.71),
+            robot_route=(1, 3, 5),
             v=0.25
         ),
+        RobotInfo(
+            name="henry",
+            robot_id=7,
+            robot_route=(5, 3, 1),
+            coordinate=(1.826, 2.216),
+            v=0.31
+        ),
+        RobotInfo(
+            name="mingna",
+            robot_id=1,
+            robot_route=(2, 3, 4),
+            coordinate=(1.193, 1.208),
+            v=0.28
+        ),
     ]
-    vscs.calc_twist(twist_from_img=Twist(), robot_id_list=robot_id_list, robot_info_list=robot_info_list)
-    # vscs.generate_pass_cp_flag_dict(new_route=[2, 3, 4])
+    robot_pass_cp_flag_dict = vscs.update_robot_pass_cp_flag_dict([1], robot_info_list)
+    vscs.robot_pass_cp_flag_dict[1][1] = True
+    robot_pass_cp_flag_dict = vscs.update_robot_pass_cp_flag_dict([7, 1], robot_info_list)
+    print(robot_pass_cp_flag_dict)
+    robot_id_list = [8, 7]
+    print(vscs.prev_robot_id_list)
