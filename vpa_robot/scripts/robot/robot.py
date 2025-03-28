@@ -50,7 +50,7 @@ def find_dep_delay(robot_id):
         return 0
     scale = 2
     departure_delay = np.random.normal(loc=loc, scale=scale)
-    return departure_delay
+    return loc
 
 def find_352_turn_right_factor(robot_id):
     return robot_352_turn_right_factor[robot_id]
