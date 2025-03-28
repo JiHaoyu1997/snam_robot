@@ -20,12 +20,15 @@ class VSCSModel:
         self.robot_id = robot_id
         self.robot_name = robot_dict[robot_id]
 
+
+        self.vscs_solver = VSCS()
         self.prev_robot_id_list = []
         self.L = []
         self.cp_matrix = []
         self.robot_pass_cp_flag_dict = {}
         self.break_virtual_spring_flag_dict = {}
         self.last_control_input = 0
+        
     
     def update_robot_pass_cp_flag_dict(self, new_robot_id_list: List[int], robot_info_list: List[RobotInfo]):
         if new_robot_id_list == self.prev_robot_id_list:
@@ -186,18 +189,18 @@ class VSCSModel:
 
 if __name__ == '__main__':
     vscs = VSCSModel(robot_id=1)
-    robot_id_list = [8, 7, 1]
+    robot_id_list = [7, 1]
     robot_info_list = [
-        RobotInfo(
-            name="luna",
-            robot_id=8,
-            robot_route=(1, 3, 5),
-            v=0.25
-        ),
+        # RobotInfo(
+        #     name="luna",
+        #     robot_id=8,
+        #     robot_route=(1, 3, 5),
+        #     v=0.25
+        # ),
         RobotInfo(
             name="henry",
             robot_id=7,
-            robot_route=(5, 3, 1),
+            robot_route=(1, 3, 5),
             coordinate=(1.826, 2.216),
             v=0.31
         ),
@@ -209,9 +212,10 @@ if __name__ == '__main__':
             v=0.28
         ),
     ]
-    robot_pass_cp_flag_dict = vscs.update_robot_pass_cp_flag_dict([1], robot_info_list)
-    vscs.robot_pass_cp_flag_dict[1][1] = True
-    robot_pass_cp_flag_dict = vscs.update_robot_pass_cp_flag_dict([7, 1], robot_info_list)
-    print(robot_pass_cp_flag_dict)
-    robot_id_list = [8, 7]
-    print(vscs.prev_robot_id_list)
+    # robot_pass_cp_flag_dict = vscs.update_robot_pass_cp_flag_dict([1], robot_info_list)
+    # vscs.robot_pass_cp_flag_dict[1][1] = True
+    # robot_pass_cp_flag_dict = vscs.update_robot_pass_cp_flag_dict([7, 1], robot_info_list)
+    # print(robot_pass_cp_flag_dict)
+    # robot_id_list = [8, 7]
+    # print(vscs.prev_robot_id_list)
+    vscs.calc_twist(twist_from_img=Twist(), robot_id_list=robot_id_list, robot_info_list=robot_info_list)

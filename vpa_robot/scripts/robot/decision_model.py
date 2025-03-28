@@ -298,7 +298,7 @@ class VSCSModel:
         # K = self.vscs_solver.sol_lmi(self.L)
         if N == 2:
             K = np.array([
-                [-5.19884665,  8.54126546]
+                [-12.24,  19.32]
                 ])
         elif N == 3:    
             K = np.array([
