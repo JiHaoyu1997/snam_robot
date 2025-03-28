@@ -391,6 +391,7 @@ class VSCSModel:
         if s < 0.1:
             rospy.loginfo_once(f"{robot_dict[robot_id]} pass cp={cp}")
             self.robot_pass_cp_flag_dict[robot_id][cp] = True
+            print(self.robot_pass_cp_flag_dict)
             return 
     
     def break_virtual_spring(self, s_i, factor_i, s_j, factor_j, other_id, error, cp):
