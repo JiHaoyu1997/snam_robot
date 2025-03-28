@@ -389,7 +389,7 @@ class VSCSModel:
             return
 
         if s < 0.1:
-            rospy.loginfo_once(f"{robot_dict[robot_id]} pass cp={cp}")
+            rospy.loginfo(f"{robot_dict[robot_id]} pass cp={cp}")
             self.robot_pass_cp_flag_dict[robot_id][cp] = True
             print(self.robot_pass_cp_flag_dict)
             return 
