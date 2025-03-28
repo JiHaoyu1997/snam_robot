@@ -258,7 +258,7 @@ class VSCSModel:
             self.L, self.cp_matrix = self.generate_L(robot_info_list=robot_info_list)
             controller_gain = self.calc_control_gain(N)
             cumulative_error = self.calc_cumulative_error(robot_id_list, robot_info_list)
-            # print(cumulative_error)
+            print(cumulative_error)
             calc_control_input = controller_gain @ cumulative_error
             truncated_control_input = np.clip(calc_control_input, -6, 4)
             beta = 0.75
@@ -322,11 +322,14 @@ class VSCSModel:
                 conflict_robot_id = robot_id_list[idx]
                 cp = cp_list[idx]
                 key = (self.robot_id, conflict_robot_id)
-                if self.break_virtual_spring_flag_dict[key]:
-                    cumu_error += 0
-                else:
-                    eij = self.calc_eij(conflict_robot_id, cp, robot_info_list)
-                    cumu_error += eij
+                eij = self.calc_eij(conflict_robot_id, cp, robot_info_list)
+                cumu_error += eij
+
+                # if self.break_virtual_spring_flag_dict[key]:
+                #     cumu_error += 0
+                # else:
+                #     eij = self.calc_eij(conflict_robot_id, cp, robot_info_list)
+                #     cumu_error += eij
         
         return cumu_error
     
@@ -343,6 +346,8 @@ class VSCSModel:
                 coor_j = robot_info.robot_coordinate
                 s_j = self.calc_distance_to_cp(cp_coor, coor_j)
                 self.update_robot_pass_cp_flag(s_j, factor_j, j, cp)
+                if self.robot_pass_cp_flag_dict[j][cp]:
+                    s_j = - s_j
                 # print(f"{robot_info.robot_name}: {s_j}")
                 v_j = robot_info.robot_v
 
@@ -352,6 +357,8 @@ class VSCSModel:
                 coor_i = robot_info.robot_coordinate
                 s_i = self.calc_distance_to_cp(cp_coor, coor_i)
                 self.update_robot_pass_cp_flag(s_i, factor_i, self.robot_id, cp)
+                if self.robot_pass_cp_flag_dict[self.robot_id][cp]:
+                    s_i = - s_i
                 # print(f"{robot_info.robot_name}: {s_i}")
                 v_i = robot_info.robot_v
         
@@ -371,7 +378,7 @@ class VSCSModel:
         eij = np.array([e_s, e_v]).reshape((2,1))
         error = abs(e_s)
 
-        pass_cp_flag = self.break_virtual_spring(s_i, factor_i, s_j, factor_j, j, error, cp)
+        # pass_cp_flag = self.break_virtual_spring(s_i, factor_i, s_j, factor_j, j, error, cp)
         return eij
     
     def update_robot_pass_cp_flag(self, s, factor, robot_id, cp):

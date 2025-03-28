@@ -205,7 +205,7 @@ class RobotDecision:
         if self.local_inter_id == 3:
             if self.local_inter_info.robot_id_list != inter_info_msg.robot_id_list:
                 rospy.logwarn("robot_id_list change")
-                self.vscs_model.update_break_virtual_spring_flag_dict(new_robot_id_list=inter_info_msg.robot_id_list)
+                self.vscs_model.update_robot_pass_cp_flag_dict(inter_info_msg.robot_id_list, self.local_inter_info.robot_info)
 
         # update inter_id
         self.local_inter_info.inter_id = inter_info_msg.inter_id
