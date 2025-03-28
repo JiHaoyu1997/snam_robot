@@ -262,7 +262,7 @@ class VSCSModel:
             # print(cumulative_error)
             calc_control_input = controller_gain @ cumulative_error
             truncated_control_input = np.clip(calc_control_input, -6, 4)
-            beta = 0.75
+            beta = 0.5
             control_input = self.last_control_input * (1 - beta) + truncated_control_input * beta
             self.last_control_input = control_input
             # print(control_input)
@@ -388,7 +388,7 @@ class VSCSModel:
         if self.robot_pass_cp_flag_dict[robot_id][cp]:
             return
 
-        if s < 0.05 * factor:
+        if s < 0.1:
             rospy.loginfo_once(f"{robot_dict[robot_id]} pass cp={cp}")
             self.robot_pass_cp_flag_dict[robot_id][cp] = True
             return 
